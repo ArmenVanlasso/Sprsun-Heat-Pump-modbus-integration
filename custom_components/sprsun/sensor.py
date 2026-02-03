@@ -46,10 +46,10 @@ async def async_setup_entry(
 
 
 class ReturnTemperatureSensor(SensorEntity):
-    """Sensor 'Sprsun temperatura powrotu' jako INT16 * 0.1."""
+    """Sensor 'Temperatura powrotu' jako INT16 * 0.1."""
 
     _attr_should_poll = False
-    _attr_name = "Sprsun temperatura powrotu"
+    _attr_name = "Temperatura powrotu"
     _attr_device_class = "temperature"
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
     _attr_icon = "mdi:thermometer"
