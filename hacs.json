@@ -1,5 +1,5 @@
 {
-  "name": "Sprsun Heat pump modbus integration",
+  "name": "Sprsun heat pump modbus integration",
   "domains": [
     "sprsun"
   ],
