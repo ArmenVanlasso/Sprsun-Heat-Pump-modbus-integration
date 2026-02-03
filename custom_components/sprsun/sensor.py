@@ -61,7 +61,7 @@ def _sensor_definitions():
         elif clean_name == "zawor_eev":
             friendly = "Zawór rozprężny"
             icon = "mdi:valve"
-            unit = None
+            unit = "steps"
             scale = 1
             signed = False
 
@@ -73,6 +73,14 @@ def _sensor_definitions():
             scale = 1
             signed = False
             state_class = "measurement"
+
+        # Prąd falownika
+        elif clean_name == "prad_falownika":
+            unit = "A"
+            device_class = "current"
+            icon = "mdi:current-ac"
+            scale = 0.1
+            signed = False
 
         # Moc pobierana
         elif clean_name == "moc_pobierana":
@@ -199,7 +207,9 @@ class SprsunGenericSensor(SensorEntity):
         value = self._attr_native_value
         uid = self._def["unique_id"]
 
-        # STATUS — dynamiczny tekst + ikona
+        # -----------------------------
+        # STATUS (główny)
+        # -----------------------------
         if uid == "status":
             mapping = {
                 0: ("Przygotowanie", "mdi:information"),
@@ -214,11 +224,15 @@ class SprsunGenericSensor(SensorEntity):
                 9: ("Stop AC linkage", "mdi:alert-circle"),
                 10: ("Zmiana trybu", "mdi:swap-horizontal"),
             }
-            if value in mapping:
-                self._attr_name = mapping[value][0]
-                return mapping[value][1]
 
+            if value in mapping:
+                text, icon = mapping[value]
+                self._attr_native_value = text
+                return icon
+
+        # -----------------------------
         # STATUS 2
+        # -----------------------------
         if uid == "status_2":
             mapping = {
                 0: "OK",
@@ -226,7 +240,22 @@ class SprsunGenericSensor(SensorEntity):
                 2: "Graniczny",
             }
             if value in mapping:
-                self._attr_name = f"Status 2: {mapping[value]}"
+                self._attr_native_value = mapping[value]
+            return self._def["icon"]
+
+        # -----------------------------
+        # TRYB PRACY POMPY
+        # -----------------------------
+        if uid == "tryb_pracy_pompy":
+            mapping = {
+                0: "Stop",
+                1: "Praca",
+                2: "Sterowanie",
+                3: "Ręczny",
+            }
+            if value in mapping:
+                self._attr_native_value = mapping[value]
+            return self._def["icon"]
 
         return self._def["icon"]
 
