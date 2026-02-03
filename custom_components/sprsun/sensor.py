@@ -8,35 +8,112 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.config_entries import ConfigEntry
 
-from .const import (
-    DOMAIN,
-    CONF_SCAN_INTERVAL,
-    DEFAULT_SCAN_INTERVAL,
-    REG_RETURN_TEMP,
-)
+from .const import *
 from .modbus_client import HeatPumpModbusClient
 
 _LOGGER = logging.getLogger(__name__)
 
+
+# ---------------------------------------------------------
+# AUTOMATYCZNE MAPOWANIE SENSORÓW NA PODSTAWIE const.py
+# ---------------------------------------------------------
+
+def _sensor_definitions():
+    """Automatyczne generowanie definicji sensorów na podstawie stałych REG_* w const.py."""
+    sensors = []
+
+    for name, value in globals().items():
+        if not name.startswith("REG_"):
+            continue
+
+        register = value
+        clean_name = name.replace("REG_", "")
+
+        # Przyjazna nazwa (z podkreślników → spacje)
+        friendly = clean_name.replace("_", " ").capitalize()
+
+        # Automatyczne typowanie
+        if "temperatura" in clean_name or "temp" in clean_name:
+            unit = "°C"
+            device_class = "temperature"
+            icon = "mdi:thermometer"
+            scale = 0.1
+            signed = True
+        elif "cisnienie" in clean_name:
+            unit = "bar"
+            device_class = None
+            icon = "mdi:gauge"
+            scale = 0.01
+            signed = False
+        elif "obroty" in clean_name or "wentylator" in clean_name:
+            unit = "rpm"
+            device_class = None
+            icon = "mdi:fan"
+            scale = 1
+            signed = False
+        elif "moc" in clean_name or "prad" in clean_name or "napiecie" in clean_name:
+            unit = None
+            device_class = None
+            icon = "mdi:flash"
+            scale = 1
+            signed = False
+        elif "status" in clean_name or "tryb" in clean_name or "zabezpieczenie" in clean_name:
+            unit = None
+            device_class = None
+            icon = "mdi:information"
+            scale = 1
+            signed = False
+        else:
+            # Domyślne
+            unit = None
+            device_class = None
+            icon = "mdi:checkbox-blank-circle-outline"
+            scale = 1
+            signed = False
+
+        sensors.append({
+            "unique_id": clean_name,
+            "name": friendly,
+            "register": register,
+            "unit": unit,
+            "device_class": device_class,
+            "icon": icon,
+            "scale": scale,
+            "signed": signed,
+        })
+
+    return sensors
+
+
+SENSORS = _sensor_definitions()
+
+
+# ---------------------------------------------------------
+# SETUP ENTRY
+# ---------------------------------------------------------
 
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Setup platformy sensor z config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
     client: HeatPumpModbusClient = data["client"]
-    model: str = data["model"]  # <-- pobieramy model urządzenia
+    model: str = data["model"]
 
     scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
 
-    sensor = ReturnTemperatureSensor(client, entry.entry_id, model)
-    async_add_entities([sensor])
+    entities = [
+        SprsunGenericSensor(client, entry.entry_id, model, definition)
+        for definition in SENSORS
+    ]
+
+    async_add_entities(entities)
 
     async def _periodic_update(now):
-        await sensor.async_update()
-        sensor.async_write_ha_state()
+        for entity in entities:
+            await entity.async_update()
+            entity.async_write_ha_state()
 
     async_track_time_interval(
         hass,
@@ -45,30 +122,38 @@ async def async_setup_entry(
     )
 
 
-class ReturnTemperatureSensor(SensorEntity):
-    """Sensor 'Temperatura powrotu' jako INT16 * 0.1."""
+# ---------------------------------------------------------
+# UNIWERSALNY SENSOR
+# ---------------------------------------------------------
+
+class SprsunGenericSensor(SensorEntity):
+    """Uniwersalny sensor SPRSUN generowany automatycznie."""
 
     _attr_should_poll = False
-    _attr_name = "Temperatura powrotu"
-    _attr_device_class = "temperature"
-    _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
-    _attr_icon = "mdi:thermometer"
 
-    def __init__(self, client: HeatPumpModbusClient, entry_id: str, model: str):
+    def __init__(self, client, entry_id, model, definition):
         self._client = client
         self._entry_id = entry_id
         self._model = model
+        self._def = definition
         self._attr_available = False
 
-        # unikalne ID zgodne z domeną sprsun
-        self._attr_unique_id = f"sprsun_return_temp_{entry_id}"
+        # Nazwa wyświetlana
+        self._attr_name = definition["name"]
 
-        # stabilne entity_id z prefiksem domeny
-        self.entity_id = f"sensor.sprsun_return_temp_{entry_id}"
+        # Unikalne ID
+        self._attr_unique_id = f"sprsun_{definition['unique_id']}_{entry_id}"
+
+        # Entity ID
+        self.entity_id = f"sensor.sprsun_{definition['unique_id']}_{entry_id}"
+
+        # Ikona, jednostka, device_class
+        self._attr_icon = definition["icon"]
+        self._attr_device_class = definition["device_class"]
+        self._attr_native_unit_of_measurement = definition["unit"]
 
     @property
     def device_info(self):
-        """Grupowanie encji w jedno urządzenie."""
         return {
             "identifiers": {(DOMAIN, self._entry_id)},
             "name": "Sprsun Heat Pump",
@@ -76,22 +161,22 @@ class ReturnTemperatureSensor(SensorEntity):
             "model": self._model,
         }
 
-    async def async_update(self) -> None:
-        """Odczyt temperatury powrotu z Modbus (INT16, skala 0.1)."""
-        regs = await self._client.read_holding_registers(REG_RETURN_TEMP, 1)
+    async def async_update(self):
+        reg = self._def["register"]
+        scale = self._def["scale"]
+        signed = self._def["signed"]
+
+        regs = await self._client.read_holding_registers(reg, 1)
         if not regs:
             self._attr_available = False
             return
 
         raw = regs[0]
 
-        # Konwersja na int16 ze znakiem
-        if raw > 32767:
-            raw_signed = raw - 65536
-        else:
-            raw_signed = raw
+        if signed and raw > 32767:
+            raw -= 65536
 
-        temp = raw_signed * 0.1
+        value = raw * scale
 
-        self._attr_native_value = round(temp, 1)
+        self._attr_native_value = round(value, 2)
         self._attr_available = True
