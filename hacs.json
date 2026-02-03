@@ -1,6 +1,6 @@
 {
   "name": "Sprsun heat pump modbus integration",
-  "domains": ["sprsun"]
+  "domains": ["sprsun"],
   "country": "PL",
   "render_readme": true,
   "homeassistant": "2023.0.0"
