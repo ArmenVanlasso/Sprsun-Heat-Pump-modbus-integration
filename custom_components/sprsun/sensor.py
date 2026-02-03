@@ -27,10 +27,11 @@ async def async_setup_entry(
     """Setup platformy sensor z config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
     client: HeatPumpModbusClient = data["client"]
+    model: str = data["model"]  # <-- pobieramy model urządzenia
 
     scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
 
-    sensor = ReturnTemperatureSensor(client, entry.entry_id)
+    sensor = ReturnTemperatureSensor(client, entry.entry_id, model)
     async_add_entities([sensor])
 
     async def _periodic_update(now):
@@ -53,12 +54,27 @@ class ReturnTemperatureSensor(SensorEntity):
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
     _attr_icon = "mdi:thermometer"
 
-    def __init__(self, client: HeatPumpModbusClient, entry_id: str):
+    def __init__(self, client: HeatPumpModbusClient, entry_id: str, model: str):
         self._client = client
+        self._entry_id = entry_id
+        self._model = model
         self._attr_available = False
 
         # unikalne ID zgodne z domeną sprsun
         self._attr_unique_id = f"sprsun_return_temp_{entry_id}"
+
+        # stabilne entity_id z prefiksem domeny
+        self.entity_id = f"sensor.sprsun_return_temp_{entry_id}"
+
+    @property
+    def device_info(self):
+        """Grupowanie encji w jedno urządzenie."""
+        return {
+            "identifiers": {(DOMAIN, self._entry_id)},
+            "name": "Sprsun Heat Pump",
+            "manufacturer": "Sprsun",
+            "model": self._model,
+        }
 
     async def async_update(self) -> None:
         """Odczyt temperatury powrotu z Modbus (INT16, skala 0.1)."""
