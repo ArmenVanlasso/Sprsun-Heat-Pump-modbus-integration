@@ -33,43 +33,48 @@ def _sensor_definitions():
         friendly = clean_name.replace("_", " ").capitalize()
 
         # Automatyczne typowanie
-        if "temperatura" in clean_name or "temp" in clean_name:
+        if clean_name == "temperatura_powrotu":
             unit = "°C"
             device_class = "temperature"
             icon = "mdi:thermometer"
             scale = 0.1
             signed = True
+
+        elif "temperatura" in clean_name or "temp" in clean_name:
+            unit = "°C"
+            device_class = "temperature"
+            icon = "mdi:thermometer"
+            scale = 0.1
+            signed = True
+
         elif "cisnienie" in clean_name:
             unit = "bar"
             device_class = None
             icon = "mdi:gauge"
             scale = 0.01
             signed = False
+
         elif "obroty" in clean_name or "wentylator" in clean_name:
             unit = "rpm"
             device_class = None
             icon = "mdi:fan"
             scale = 1
             signed = False
-        elif "moc" in clean_name or "prad" in clean_name or "napiecie" in clean_name:
-            unit = None
-            device_class = None
+
+        elif "moc" in clean_name:
+            unit = "W"
+            device_class = "power"
             icon = "mdi:flash"
             scale = 1
             signed = False
-        elif "status" in clean_name or "tryb" in clean_name or "zabezpieczenie" in clean_name:
-            unit = None
-            device_class = None
-            icon = "mdi:information"
-            scale = 1
-            signed = False
+            state_class = "measurement"
         else:
-            # Domyślne
             unit = None
             device_class = None
             icon = "mdi:checkbox-blank-circle-outline"
             scale = 1
             signed = False
+            state_class = None
 
         sensors.append({
             "unique_id": clean_name,
@@ -80,6 +85,7 @@ def _sensor_definitions():
             "icon": icon,
             "scale": scale,
             "signed": signed,
+            "state_class": state_class if "state_class" in locals() else None,
         })
 
     return sensors
@@ -151,6 +157,7 @@ class SprsunGenericSensor(SensorEntity):
         self._attr_icon = definition["icon"]
         self._attr_device_class = definition["device_class"]
         self._attr_native_unit_of_measurement = definition["unit"]
+        self._attr_state_class = definition.get("state_class")
 
     @property
     def device_info(self):
@@ -161,37 +168,30 @@ class SprsunGenericSensor(SensorEntity):
             "model": self._model,
         }
 
-async def async_update(self):
-    reg = self._def["register"]
-    scale = self._def["scale"]
-    signed = self._def["signed"]
+    async def async_update(self):
+        reg = self._def["register"]
+        scale = self._def["scale"]
+        signed = self._def["signed"]
 
-    regs = await self._client.read_holding_registers(reg, 1)
-    if not regs:
-        self._attr_available = False
-        return
+        regs = await self._client.read_holding_registers(reg, 1)
+        if not regs:
+            self._attr_available = False
+            return
 
-    raw = regs[0]
+        raw = regs[0]
 
-    # Konwersja INT16
-    if signed and raw > 32767:
-        raw -= 65536
+        # Konwersja INT16
+        if signed and raw > 32767:
+            raw -= 65536
 
-    # SPECJALNE PRZYPADKI
-    # --------------------
+        # SPECJALNY PRZYPADEK: Temperatura powrotu
+        if self._def["unique_id"] == "temperatura_powrotu":
+            value = raw * 0.1
+            self._attr_native_value = round(value, 1)
+            self._attr_available = True
+            return
 
-    # Temperatura powrotu (dokładna nazwa z const.py)
-    if self._def["unique_id"] == "RETURN_TEMP" or self._attr_name == "Temperatura powrotu":
-        value = raw * 0.1
-        self._attr_native_value = round(value, 1)
+        # Domyślne skalowanie
+        value = raw * scale
+        self._attr_native_value = round(value, 2)
         self._attr_available = True
-        return
-
-    # --------------------
-    # Domyślne skalowanie
-    # --------------------
-
-    value = raw * scale
-    self._attr_native_value = round(value, 2)
-    self._attr_available = True
-
