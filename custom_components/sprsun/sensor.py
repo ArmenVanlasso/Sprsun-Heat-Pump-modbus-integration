@@ -79,7 +79,7 @@ def _sensor_definitions():
             unit = "A"
             device_class = "current"
             icon = "mdi:current-ac"
-            scale = 0.1
+            scale = 1
             signed = False
 
         # Moc pobierana
@@ -202,78 +202,74 @@ class SprsunGenericSensor(SensorEntity):
             "model": self._model,
         }
 
-    @property
-    def icon(self):
-        value = self._attr_native_value
-        uid = self._def["unique_id"]
+async def async_update(self):
+    reg = self._def["register"]
+    scale = self._def["scale"]
+    signed = self._def["signed"]
+    uid = self._def["unique_id"]
 
-        # -----------------------------
-        # STATUS (główny)
-        # -----------------------------
-        if uid == "status":
-            mapping = {
-                0: ("Przygotowanie", "mdi:information"),
-                1: ("Praca", "mdi:run"),
-                2: ("Stop", "mdi:stop"),
-                3: ("Stop timer", "mdi:timer-off"),
-                4: ("Stop obsługa", "mdi:account-wrench"),
-                5: ("Sterowanie", "mdi:remote"),
-                6: ("Stop", "mdi:stop"),
-                7: ("Tryb ręczny", "mdi:hand"),
-                8: ("Antyzamarzanie", "mdi:snowflake"),
-                9: ("Stop AC linkage", "mdi:alert-circle"),
-                10: ("Zmiana trybu", "mdi:swap-horizontal"),
-            }
+    regs = await self._client.read_holding_registers(reg, 1)
+    if not regs:
+        self._attr_available = False
+        return
 
-            if value in mapping:
-                text, icon = mapping[value]
-                self._attr_native_value = text
-                return icon
+    raw = regs[0]
 
-        # -----------------------------
-        # STATUS 2
-        # -----------------------------
-        if uid == "status_2":
-            mapping = {
-                0: "OK",
-                1: "Sterowanie",
-                2: "Graniczny",
-            }
-            if value in mapping:
-                self._attr_native_value = mapping[value]
-            return self._def["icon"]
+    if signed and raw > 32767:
+        raw -= 65536
 
-        # -----------------------------
-        # TRYB PRACY POMPY
-        # -----------------------------
-        if uid == "tryb_pracy_pompy":
-            mapping = {
-                0: "Stop",
-                1: "Praca",
-                2: "Sterowanie",
-                3: "Ręczny",
-            }
-            if value in mapping:
-                self._attr_native_value = mapping[value]
-            return self._def["icon"]
-
-        return self._def["icon"]
-
-    async def async_update(self):
-        reg = self._def["register"]
-        scale = self._def["scale"]
-        signed = self._def["signed"]
-
-        regs = await self._client.read_holding_registers(reg, 1)
-        if not regs:
-            self._attr_available = False
-            return
-
-        raw = regs[0]
-
-        if signed and raw > 32767:
-            raw -= 65536
-
-        value = raw * scale
-        self._attr_native_value = round(value, 2)
+    # -----------------------------
+    # STATUS (główny)
+    # -----------------------------
+    if uid == "status":
+        mapping = {
+            0: "Przygotowanie",
+            1: "Praca",
+            2: "Stop",
+            3: "Stop timer",
+            4: "Stop obsługa",
+            5: "Sterowanie",
+            6: "Stop",
+            7: "Tryb ręczny",
+            8: "Antyzamarzanie",
+            9: "Stop AC linkage",
+            10: "Zmiana trybu",
+        }
+        self._attr_native_value = mapping.get(raw, raw)
         self._attr_available = True
+        return
+
+    # -----------------------------
+    # STATUS 2
+    # -----------------------------
+    if uid == "status_2":
+        mapping = {
+            0: "OK",
+            1: "Sterowanie",
+            2: "Graniczny",
+        }
+        self._attr_native_value = mapping.get(raw, raw)
+        self._attr_available = True
+        return
+
+    # -----------------------------
+    # TRYB PRACY POMPY
+    # -----------------------------
+    if uid == "tryb_pracy_pompy":
+        mapping = {
+            0: "Stop",
+            1: "Praca",
+            2: "Sterowanie",
+            3: "Ręczny",
+        }
+        self._attr_native_value = mapping.get(raw, raw)
+        self._attr_available = True
+        return
+
+    # -----------------------------
+    # DOMYŚLNE SKALOWANIE
+    # -----------------------------
+    value = raw * scale
+    self._attr_native_value = round(value, 2)
+    self._attr_available = True
+
