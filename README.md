@@ -1,4 +1,4 @@
-# Sprsun-Heat-Pump-modbus-integration
+# ISprsun heat pump modbus integration to Home Assistant
 
 CGK‑025V3L
 
