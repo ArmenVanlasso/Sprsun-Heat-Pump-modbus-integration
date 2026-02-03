@@ -161,22 +161,37 @@ class SprsunGenericSensor(SensorEntity):
             "model": self._model,
         }
 
-    async def async_update(self):
-        reg = self._def["register"]
-        scale = self._def["scale"]
-        signed = self._def["signed"]
+async def async_update(self):
+    reg = self._def["register"]
+    scale = self._def["scale"]
+    signed = self._def["signed"]
 
-        regs = await self._client.read_holding_registers(reg, 1)
-        if not regs:
-            self._attr_available = False
-            return
+    regs = await self._client.read_holding_registers(reg, 1)
+    if not regs:
+        self._attr_available = False
+        return
 
-        raw = regs[0]
+    raw = regs[0]
 
-        if signed and raw > 32767:
-            raw -= 65536
+    # Konwersja INT16
+    if signed and raw > 32767:
+        raw -= 65536
 
-        value = raw * scale
+    # SPECJALNE PRZYPADKI
+    # --------------------
 
-        self._attr_native_value = round(value, 2)
+    # Temperatura powrotu (dokładna nazwa z const.py)
+    if self._def["unique_id"] == "RETURN_TEMP" or self._attr_name == "Temperatura powrotu":
+        value = raw * 0.1
+        self._attr_native_value = round(value, 1)
         self._attr_available = True
+        return
+
+    # --------------------
+    # Domyślne skalowanie
+    # --------------------
+
+    value = raw * scale
+    self._attr_native_value = round(value, 2)
+    self._attr_available = True
+
