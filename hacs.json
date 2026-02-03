@@ -1,0 +1,8 @@
+{
+  "name": "Sprsun Heat pump modbus integration",
+  "domains": [
+    "sprsun_modbus_heat_pump"
+  ],
+  "country": "PL",
+  "render_readme": true
+}
