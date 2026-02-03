@@ -19,7 +19,6 @@ _LOGGER = logging.getLogger(__name__)
 # ---------------------------------------------------------
 
 def _sensor_definitions():
-    """Automatyczne generowanie definicji sensorów na podstawie stałych REG_* w const.py."""
     sensors = []
 
     for name, value in globals().items():
@@ -28,11 +27,21 @@ def _sensor_definitions():
 
         register = value
         clean_name = name.replace("REG_", "")
-
-        # Przyjazna nazwa (z podkreślników → spacje)
         friendly = clean_name.replace("_", " ").capitalize()
 
-        # Automatyczne typowanie
+        # Domyślne wartości
+        unit = None
+        device_class = None
+        icon = "mdi:checkbox-blank-circle-outline"
+        scale = 1
+        signed = False
+        state_class = None
+
+        # ---------------------------------------------------------
+        # SPECJALNE SENSORY
+        # ---------------------------------------------------------
+
+        # Temperatura powrotu
         if clean_name == "temperatura_powrotu":
             unit = "°C"
             device_class = "temperature"
@@ -40,41 +49,66 @@ def _sensor_definitions():
             scale = 0.1
             signed = True
 
-        elif "temperatura" in clean_name or "temp" in clean_name:
+        # Przegrzanie
+        elif clean_name == "przegrzanie":
             unit = "°C"
             device_class = "temperature"
             icon = "mdi:thermometer"
             scale = 0.1
             signed = True
 
-        elif "cisnienie" in clean_name:
-            unit = "bar"
-            device_class = None
-            icon = "mdi:gauge"
-            scale = 0.01
-            signed = False
-
-        elif "obroty" in clean_name or "wentylator" in clean_name:
-            unit = "rpm"
-            device_class = None
-            icon = "mdi:fan"
+        # Zawór EEV
+        elif clean_name == "zawor_eev":
+            friendly = "Zawór rozprężny"
+            icon = "mdi:valve"
+            unit = None
             scale = 1
             signed = False
 
-        elif "moc" in clean_name:
+        # Napięcie falownika
+        elif clean_name == "napiecie_falownika":
+            unit = "V"
+            device_class = "voltage"
+            icon = "mdi:flash"
+            scale = 1
+            signed = False
+            state_class = "measurement"
+
+        # Moc pobierana
+        elif clean_name == "moc_pobierana":
             unit = "W"
             device_class = "power"
             icon = "mdi:flash"
             scale = 1
             signed = False
             state_class = "measurement"
-        else:
+
+        # Status główny
+        elif clean_name == "status":
             unit = None
             device_class = None
-            icon = "mdi:checkbox-blank-circle-outline"
+            icon = "mdi:information"
             scale = 1
             signed = False
-            state_class = None
+
+        # Status 2
+        elif clean_name == "status_2":
+            friendly = "Status 2"
+            unit = None
+            device_class = None
+            icon = "mdi:information"
+            scale = 1
+            signed = False
+
+        # ---------------------------------------------------------
+        # Automatyczne typowanie pozostałych temperatur
+        # ---------------------------------------------------------
+        elif "temperatura" in clean_name:
+            unit = "°C"
+            device_class = "temperature"
+            icon = "mdi:thermometer"
+            scale = 0.1
+            signed = True
 
         sensors.append({
             "unique_id": clean_name,
@@ -85,7 +119,7 @@ def _sensor_definitions():
             "icon": icon,
             "scale": scale,
             "signed": signed,
-            "state_class": state_class if "state_class" in locals() else None,
+            "state_class": state_class,
         })
 
     return sensors
@@ -133,8 +167,6 @@ async def async_setup_entry(
 # ---------------------------------------------------------
 
 class SprsunGenericSensor(SensorEntity):
-    """Uniwersalny sensor SPRSUN generowany automatycznie."""
-
     _attr_should_poll = False
 
     def __init__(self, client, entry_id, model, definition):
@@ -144,16 +176,10 @@ class SprsunGenericSensor(SensorEntity):
         self._def = definition
         self._attr_available = False
 
-        # Nazwa wyświetlana
         self._attr_name = definition["name"]
-
-        # Unikalne ID
         self._attr_unique_id = f"sprsun_{definition['unique_id']}_{entry_id}"
-
-        # Entity ID
         self.entity_id = f"sensor.sprsun_{definition['unique_id']}_{entry_id}"
 
-        # Ikona, jednostka, device_class
         self._attr_icon = definition["icon"]
         self._attr_device_class = definition["device_class"]
         self._attr_native_unit_of_measurement = definition["unit"]
@@ -168,6 +194,42 @@ class SprsunGenericSensor(SensorEntity):
             "model": self._model,
         }
 
+    @property
+    def icon(self):
+        value = self._attr_native_value
+        uid = self._def["unique_id"]
+
+        # STATUS — dynamiczny tekst + ikona
+        if uid == "status":
+            mapping = {
+                0: ("Przygotowanie", "mdi:information"),
+                1: ("Praca", "mdi:run"),
+                2: ("Stop", "mdi:stop"),
+                3: ("Stop timer", "mdi:timer-off"),
+                4: ("Stop obsługa", "mdi:account-wrench"),
+                5: ("Sterowanie", "mdi:remote"),
+                6: ("Stop", "mdi:stop"),
+                7: ("Tryb ręczny", "mdi:hand"),
+                8: ("Antyzamarzanie", "mdi:snowflake"),
+                9: ("Stop AC linkage", "mdi:alert-circle"),
+                10: ("Zmiana trybu", "mdi:swap-horizontal"),
+            }
+            if value in mapping:
+                self._attr_name = mapping[value][0]
+                return mapping[value][1]
+
+        # STATUS 2
+        if uid == "status_2":
+            mapping = {
+                0: "OK",
+                1: "Sterowanie",
+                2: "Graniczny",
+            }
+            if value in mapping:
+                self._attr_name = f"Status 2: {mapping[value]}"
+
+        return self._def["icon"]
+
     async def async_update(self):
         reg = self._def["register"]
         scale = self._def["scale"]
@@ -180,18 +242,9 @@ class SprsunGenericSensor(SensorEntity):
 
         raw = regs[0]
 
-        # Konwersja INT16
         if signed and raw > 32767:
             raw -= 65536
 
-        # SPECJALNY PRZYPADEK: Temperatura powrotu
-        if self._def["unique_id"] == "temperatura_powrotu":
-            value = raw * 0.1
-            self._attr_native_value = round(value, 1)
-            self._attr_available = True
-            return
-
-        # Domyślne skalowanie
         value = raw * scale
         self._attr_native_value = round(value, 2)
         self._attr_available = True
