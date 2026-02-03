@@ -45,7 +45,7 @@ async def async_setup_entry(
 
 
 class ReturnTemperatureSensor(SensorEntity):
-    """Sensor 'Temperatura powrotu' jako INT16 * 0.1 (jak w Node-RED)."""
+    """Sensor 'Temperatura powrotu' jako INT16 * 0.1."""
 
     _attr_should_poll = False
     _attr_name = "Temperatura powrotu"
@@ -56,8 +56,9 @@ class ReturnTemperatureSensor(SensorEntity):
     def __init__(self, client: HeatPumpModbusClient, entry_id: str):
         self._client = client
         self._attr_available = False
-        # unikalne ID w ramach entry (pozwala na wiele instancji integracji)
-        self._attr_unique_id = f"heat_pump_modbus_return_temp_{entry_id}"
+
+        # unikalne ID zgodne z domeną sprsun
+        self._attr_unique_id = f"sprsun_return_temp_{entry_id}"
 
     async def async_update(self) -> None:
         """Odczyt temperatury powrotu z Modbus (INT16, skala 0.1)."""
@@ -68,8 +69,7 @@ class ReturnTemperatureSensor(SensorEntity):
 
         raw = regs[0]
 
-        # Konwersja na int16 ze znakiem, jak w Node-RED:
-        # if (v > 32767) v = v - 65536;
+        # Konwersja na int16 ze znakiem
         if raw > 32767:
             raw_signed = raw - 65536
         else:
