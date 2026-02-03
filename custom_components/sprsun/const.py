@@ -22,7 +22,7 @@ MODELS = {
 }
 
 # Lista sensorów:
-REG_RETURN_TEMP = 188 # modbus 40189
+REG_temperatura_powrotu = 188 # modbus 40189
 REG_temperatura_zasilania = 189 # modbus 40190
 REG_temperatura_zewnetrzna = 190 # modbus 40191
 REG_temperatura_sprezania = 191 # modbus 40192
