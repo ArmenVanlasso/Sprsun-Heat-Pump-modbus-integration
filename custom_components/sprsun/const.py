@@ -68,7 +68,7 @@ REG_wy_niska_predkosc_went = 6 # modbus 10007
 REG_wy_zawor_4d = 7 # modbus 10008
 REG_wy_pompa_obiegowa = 8 # modbus 10009
 REG_wy_grzalka_obudowy = 9 # modbus 10010
-REG_wy_ggrzalka_sprezarki = 10 # modbus 10011
+REG_wy_grzalka_sprezarki = 10 # modbus 10011
 REG_wy_zawor_3d = 11 # modbus 10012
 REG_wy_grzalka = 12 # modbus 10013
 REG_al001 = 13 # modbus 10014
@@ -242,6 +242,76 @@ REG_wentylator = 180 # modbus 10181
 REG_we_chlodzenie = 181 # modbus 10182
 REG_we_ogrzewania = 182 # modbus 10183
 REG_wy_pompa_obiegowa_2 = 183 # modbus 10184
+
+BINARY_SENSORS = [
+    {
+        "key": "zasilanie",
+        "name": "Zasilanie",
+        "register": REG_zasilanie,
+        "device_class": "power",
+    },
+    {
+        "key": "czujnik_przeplywu",
+        "name": "Czujnik przepływu",
+        "register": REG_czujnik_przeplywu,
+        "device_class": "problem",
+    },
+    {
+        "key": "we_sterowania_zewn",
+        "name": "WE sterowania zewn",
+        "register": REG_we_sterowania_zewn,
+    },
+    {
+        "key": "we_sterowania_ac",
+        "name": "We sterowania AC",
+        "register": REG_we_sterowania_ac,
+    },
+    {
+        "key": "we_faza_zasilania",
+        "name": "We faza zasilania",
+        "register": REG_we_faza_zasilania,
+    },
+    {
+        "key": "wy_wysoka_predkosc_went",
+        "name": "Wy wysoka prędkość went",
+        "register": REG_wy_wysoka_predkosc_went,
+    },
+    {
+        "key": "wy_niska_predkosc_went",
+        "name": "Wy niska prędkość went",
+        "register": REG_wy_niska_predkosc_went,
+    },
+    {
+        "key": "wy_zawor_4d",
+        "name": "Wy zawór 4D",
+               "register": REG_wy_zawor_4d,
+    },
+    {
+        "key": "wy_pompa_obiegowa",
+        "name": "Wy pompa obiegowa",
+        "register": REG_wy_pompa_obiegowa,
+    },
+    {
+        "key": "wy_grzalka_obudowy",
+        "name": "Wy grzałka obudowy",
+        "register": REG_wy_grzalka_obudowy,
+    },
+    {
+        "key": "wy_grzalka_sprezarki",
+        "name": "Wy grzałka sprężarki",
+        "register": REG_wy_ggrzalka_sprezarki,
+    },
+    {
+        "key": "wy_zawor_3d",
+        "name": "Wy zawór trójdrogowy",   # Twój wyjątek
+        "register": REG_wy_zawor_3d,
+    },
+    {
+        "key": "wy_grzalka",
+        "name": "Wy grzałka",
+        "register": REG_wy_grzalka,
+    },
+]
 
 # Platformy obsługiwane przez integrację
 PLATFORMS: list[str] = ["sensor, binary_sensor"]
