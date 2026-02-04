@@ -1,119 +1,37 @@
+# sensor.py
 import logging
+from datetime import timedelta
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
-from .modbus_client import HeatPumpModbusClient  # zostawione, jeśli kiedyś będzie potrzebne
+from .const import (
+    DOMAIN,
+    CONF_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL,
+)
+from .modbus_client import HeatPumpModbusClient
+
+# importy list sensorów per model
+from .sensor_cgk_025v3l import SENSORS_CGK_025V3L
+from .sensor_cgk_030v3l import SENSORS_CGK_030V3L
+# z czasem dodasz:
+# from .sensor_cgk_040v3l import SENSORS_CGK_040V3L
+# from .sensor_cgk_050v3l import SENSORS_CGK_050V3L
+# from .sensor_cgk_060v3l import SENSORS_CGK_060V3L
 
 _LOGGER = logging.getLogger(__name__)
 
-
-def _sensor_definitions():
-    sensors = []
-
-    for name, value in globals().items():
-        if not name.startswith("REG_"):
-            continue
-
-        register = value
-        clean_name = name.replace("REG_", "")
-        friendly = clean_name.replace("_", " ").capitalize()
-
-        unit = None
-        device_class = None
-        icon = "mdi:checkbox-blank-circle-outline"
-        scale = 1
-        signed = False
-        state_class = None
-
-        if clean_name == "temperatura_powrotu":
-            unit = "°C"
-            device_class = "temperature"
-            icon = "mdi:thermometer"
-            scale = 0.1
-            signed = True
-
-        elif clean_name == "przegrzanie":
-            unit = "°C"
-            device_class = "temperature"
-            icon = "mdi:thermometer"
-            scale = 0.1
-            signed = True
-
-        elif clean_name == "zawor_eev":
-            friendly = "Zawór rozprężny"
-            icon = "mdi:valve"
-            unit = "steps"
-            scale = 1
-            signed = False
-
-        elif clean_name == "napiecie_falownika":
-            unit = "V"
-            device_class = "voltage"
-            icon = "mdi:flash"
-            scale = 1
-            signed = False
-            state_class = "measurement"
-
-        elif clean_name == "prad_falownika":
-            unit = "A"
-            device_class = "current"
-            icon = "mdi:current-ac"
-            scale = 1
-            signed = False
-
-        elif clean_name == "moc_pobierana":
-            unit = "W"
-            device_class = "power"
-            icon = "mdi:flash"
-            scale = 1
-            signed = False
-            state_class = "measurement"
-
-        elif clean_name == "status":
-            unit = None
-            device_class = None
-            icon = "mdi:information"
-            scale = 1
-            signed = False
-
-        elif clean_name == "status_2":
-            friendly = "Status 2"
-            unit = None
-            device_class = None
-            icon = "mdi:information"
-            scale = 1
-            signed = False
-
-        elif "temperatura" in clean_name:
-            unit = "°C"
-            device_class = "temperature"
-            icon = "mdi:thermometer"
-            scale = 0.1
-            signed = True
-
-        sensors.append(
-            {
-                "unique_id": clean_name,
-                "name": friendly,
-                "register": register,
-                "unit": unit,
-                "device_class": device_class,
-                "icon": icon,
-                "scale": scale,
-                "signed": signed,
-                "state_class": state_class,
-            }
-        )
-
-    return sensors
-
-
-SENSORS = _sensor_definitions()
+MODEL_SENSORS_MAP = {
+    "cgk_025v3l": SENSORS_CGK_025V3L,
+    "cgk_030v3l": SENSORS_CGK_030V3L,
+    # "cgk_040v3l": SENSORS_CGK_040V3L,
+    # "cgk_050v3l": SENSORS_CGK_050V3L,
+    # "cgk_060v3l": SENSORS_CGK_060V3L,
+}
 
 
 async def async_setup_entry(
@@ -122,29 +40,49 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ):
     data = hass.data[DOMAIN][entry.entry_id]
-    coordinator = data["coordinator"]
-    model: str = data["model"]
+    client: HeatPumpModbusClient = data["client"]
+    model: str = data["model"]  # np. "cgk_025v3l"
+
+    scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+
+    sensors_def = MODEL_SENSORS_MAP.get(model)
+    if sensors_def is None:
+        _LOGGER.error("Brak zdefiniowanych sensorów dla modelu: %s", model)
+        return
 
     entities = [
-        SprsunGenericSensor(coordinator, entry.entry_id, model, definition)
-        for definition in SENSORS
+        SprsunGenericSensor(client, entry.entry_id, model, definition)
+        for definition in sensors_def
     ]
 
     async_add_entities(entities)
 
+    async def _periodic_update(now):
+        for entity in entities:
+            await entity.async_update()
+            entity.async_write_ha_state()
 
-class SprsunGenericSensor(CoordinatorEntity, SensorEntity):
+    async_track_time_interval(
+        hass,
+        _periodic_update,
+        timedelta(seconds=scan_interval),
+    )
+
+
+class SprsunGenericSensor(SensorEntity):
     _attr_should_poll = False
 
-    def __init__(self, coordinator, entry_id, model, definition):
-        super().__init__(coordinator)
+    def __init__(self, client, entry_id, model, definition):
+        self._client = client
         self._entry_id = entry_id
         self._model = model
         self._def = definition
-
         self._attr_available = False
+
         self._attr_name = definition["name"]
         self._attr_unique_id = f"sprsun_{definition['unique_id']}_{entry_id}"
+        self.entity_id = f"sensor.sprsun_{definition['unique_id']}_{entry_id}"
+
         self._attr_icon = definition["icon"]
         self._attr_device_class = definition["device_class"]
         self._attr_native_unit_of_measurement = definition["unit"]
@@ -160,36 +98,29 @@ class SprsunGenericSensor(CoordinatorEntity, SensorEntity):
         }
 
     @property
-    def native_value(self):
-        reg = self._def["register"]
-        scale = self._def["scale"]
-        signed = self._def["signed"]
+    def icon(self):
+        value = self._attr_native_value
         uid = self._def["unique_id"]
-
-        data = self.coordinator.data or {}
-        raw = data.get(reg)
-
-        if raw is None:
-            return None
-
-        if signed and raw > 32767:
-            raw -= 65536
 
         if uid == "status":
             mapping = {
-                0: "Przygotowanie",
-                1: "Praca",
-                2: "Stop",
-                3: "Stop timer",
-                4: "Stop obsługa",
-                5: "Sterowanie",
-                6: "Stop",
-                7: "Tryb ręczny",
-                8: "Antyzamarzanie",
-                9: "Stop AC linkage",
-                10: "Zmiana trybu",
+                0: ("Przygotowanie", "mdi:information"),
+                1: ("Praca", "mdi:run"),
+                2: ("Stop", "mdi:stop"),
+                3: ("Stop timer", "mdi:timer-off"),
+                4: ("Stop obsługa", "mdi:account-wrench"),
+                5: ("Sterowanie", "mdi:remote"),
+                6: ("Stop", "mdi:stop"),
+                7: ("Tryb ręczny", "mdi:hand"),
+                8: ("Antyzamarzanie", "mdi:snowflake"),
+                9: ("Stop AC linkage", "mdi:alert-circle"),
+                10: ("Zmiana trybu", "mdi:swap-horizontal"),
             }
-            return mapping.get(raw, raw)
+
+            if value in mapping:
+                text, icon = mapping[value]
+                self._attr_native_value = text
+                return icon
 
         if uid == "status_2":
             mapping = {
@@ -197,7 +128,9 @@ class SprsunGenericSensor(CoordinatorEntity, SensorEntity):
                 1: "Sterowanie",
                 2: "Graniczny",
             }
-            return mapping.get(raw, raw)
+            if value in mapping:
+                self._attr_native_value = mapping[value]
+            return self._def["icon"]
 
         if uid == "tryb_pracy_pompy":
             mapping = {
@@ -206,13 +139,27 @@ class SprsunGenericSensor(CoordinatorEntity, SensorEntity):
                 2: "Sterowanie",
                 3: "Ręczny",
             }
-            return mapping.get(raw, raw)
+            if value in mapping:
+                self._attr_native_value = mapping[value]
+            return self._def["icon"]
+
+        return self._def["icon"]
+
+    async def async_update(self):
+        reg = self._def["register"]
+        scale = self._def["scale"]
+        signed = self._def["signed"]
+
+        regs = await self._client.read_holding_registers(reg, 1)
+        if not regs:
+            self._attr_available = False
+            return
+
+        raw = regs[0]
+
+        if signed and raw > 32767:
+            raw -= 65536
 
         value = raw * scale
-        return round(value, 2)
-
-    @property
-    def available(self) -> bool:
-        reg = self._def["register"]
-        data = self.coordinator.data or {}
-        return reg in data and data[reg] is not None
+        self._attr_native_value = round(value, 2)
+        self._attr_available = True
