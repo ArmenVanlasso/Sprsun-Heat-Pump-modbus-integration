@@ -299,7 +299,7 @@ BINARY_SENSORS = [
     {
         "key": "wy_grzalka_sprezarki",
         "name": "Wy grzałka sprężarki",
-        "register": REG_wy_ggrzalka_sprezarki,
+        "register": REG_wy_grzalka_sprezarki,
     },
     {
         "key": "wy_zawor_3d",
