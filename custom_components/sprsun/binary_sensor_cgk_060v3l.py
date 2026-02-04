@@ -1,1 +1,1 @@
-BINARY_SENSORS_CGK_060V3L = {}
+BINARY_SENSORS_CGK_060V3L: dict[str, dict] = {}
