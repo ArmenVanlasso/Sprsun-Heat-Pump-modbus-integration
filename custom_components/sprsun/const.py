@@ -243,7 +243,5 @@ REG_we_chlodzenie = 181 # modbus 10182
 REG_we_ogrzewania = 182 # modbus 10183
 REG_wy_pompa_obiegowa_2 = 183 # modbus 10184
 
-]
-
 # Platformy obsługiwane przez integrację
 PLATFORMS: list[str] = ["sensor", "binary_sensor"]
