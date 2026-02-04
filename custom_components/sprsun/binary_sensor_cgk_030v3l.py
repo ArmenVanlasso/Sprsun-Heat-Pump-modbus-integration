@@ -1,6 +1,4 @@
-# Binary sensors for model CGK-030V3L
-
-BINARY_SENSORS_CGK_030V3L = {
+BINARY_SENSORS_CGK_030V3L: dict[str, dict] = {
     "wy_pompa_obiegowa": {
         "register": 151,
         "name": "Pompa obiegowa",
