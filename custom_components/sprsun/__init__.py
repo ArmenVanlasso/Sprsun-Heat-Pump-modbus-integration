@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import logging
-from datetime import timedelta
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.typing import ConfigType
 
 from .const import (
     DOMAIN,
@@ -12,77 +14,68 @@ from .const import (
     CONF_PORT,
     CONF_UNIT_ID,
     CONF_MODEL,
-    CONF_SCAN_INTERVAL,
-    DEFAULT_SCAN_INTERVAL,
 )
 from .modbus_client import HeatPumpModbusClient
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup(hass: HomeAssistant, config: dict):
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Ogólny setup (nieużywany przy config entries)."""
     return True
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Setup integracji z jednego config entry."""
     hass.data.setdefault(DOMAIN, {})
 
-    host = entry.data[CONF_HOST]
-    port = entry.data[CONF_PORT]
-    unit_id = entry.data[CONF_UNIT_ID]
-    model = entry.data[CONF_MODEL]
-    scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+    host: str = entry.data[CONF_HOST]
+    port: int = entry.data[CONF_PORT]
+    unit_id: int = entry.data[CONF_UNIT_ID]
+    # Tu zakładamy, że w config_flow zapisujesz już wartość z MODELS,
+    # np. "cgk_025v3l", "cgk_030v3l" itd.
+    model: str = entry.data[CONF_MODEL]
 
     _LOGGER.debug(
-        "Inicjalizacja Sprsun Modbus: host=%s port=%s unit_id=%s model=%s scan_interval=%s",
+        "Inicjalizacja Sprsun Modbus: host=%s port=%s unit_id=%s model=%s",
         host,
         port,
         unit_id,
         model,
-        scan_interval,
     )
 
+    # Tworzymy klienta Modbus
     client = HeatPumpModbusClient(host, port, unit_id)
 
-    async def async_update_data():
-        """Pobieranie wszystkich rejestrów z pompy."""
-        try:
-            return await client.read_all_registers()
-        except Exception as err:
-            _LOGGER.error("Błąd podczas odczytu danych z Modbus: %s", err)
-            raise UpdateFailed(f"Modbus read failed: {err}") from err
-
-    coordinator = DataUpdateCoordinator(
-        hass,
-        _LOGGER,
-        name="sprsun_modbus",
-        update_method=async_update_data,
-        update_interval=timedelta(seconds=scan_interval),
-    )
-
-    await coordinator.async_config_entry_first_refresh()
-
+    # Zapisujemy dane integracji (dostępne potem w sensor.py)
     hass.data[DOMAIN][entry.entry_id] = {
         "client": client,
         "model": model,
-        "coordinator": coordinator,
     }
 
+    # Ładujemy platformy (np. sensor)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload integracji."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
     if unload_ok:
-        data = hass.data[DOMAIN].pop(entry.entry_id, {})
+        data: dict[str, Any] = hass.data[DOMAIN].pop(entry.entry_id, {})
         client: HeatPumpModbusClient | None = data.get("client")
-        if client:
-            await client.close()
+        if client is not None:
+            # Jeśli HeatPumpModbusClient ma asynchroniczne zamknięcie:
+            try:
+                close_method = getattr(client, "close", None)
+                if callable(close_method):
+                    result = close_method()
+                    # Jeśli close jest korutyną – await
+                    if hasattr(result, "__await__"):
+                        await result
+            except Exception as exc:  # noqa: BLE001
+                _LOGGER.warning("Błąd przy zamykaniu klienta Modbus: %s", exc)
 
     return unload_ok
