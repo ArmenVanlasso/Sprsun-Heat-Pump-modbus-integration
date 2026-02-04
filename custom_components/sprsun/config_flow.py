@@ -29,7 +29,6 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            # Tworzymy wpis konfiguracyjny
             return self.async_create_entry(
                 title=f"Sprsun @ {user_input[CONF_HOST]}",
                 data={
@@ -41,10 +40,9 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 },
             )
 
-        # Formularz konfiguracji
         data_schema = vol.Schema(
             {
-                vol.Required(CONF_HOST): str,  # użytkownik MUSI wpisać IP
+                vol.Required(CONF_HOST): str,
                 vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
                 vol.Required(CONF_UNIT_ID, default=DEFAULT_UNIT_ID): int,
                 vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): int,
