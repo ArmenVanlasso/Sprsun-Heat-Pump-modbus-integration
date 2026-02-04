@@ -76,3 +76,10 @@ class SprsunBinarySensor(CoordinatorEntity, BinarySensorEntity):
             return bit == self._cfg.get("on_value", 1)
 
         return value == self._cfg.get("on_value", 1)
+
+    @property
+    def icon(self):
+        """Return dynamic icon based on state."""
+        if self.is_on:
+            return self._cfg.get("icon_on", "mdi:check-circle")
+        return self._cfg.get("icon_off", "mdi:close-circle")
