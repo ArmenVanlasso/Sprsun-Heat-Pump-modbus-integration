@@ -1,7 +1,9 @@
 import logging
+from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import (
     DOMAIN,
@@ -28,7 +30,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     host = entry.data[CONF_HOST]
     port = entry.data[CONF_PORT]
     unit_id = entry.data[CONF_UNIT_ID]
-    model = entry.data[CONF_MODEL]  # <-- kluczowe: zapisujemy wybrany model
+    model = entry.data[CONF_MODEL]
 
     _LOGGER.debug(
         "Inicjalizacja Sprsun Modbus: host=%s port=%s unit_id=%s model=%s",
@@ -38,13 +40,35 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     # Tworzymy klienta Modbus
     client = HeatPumpModbusClient(host, port, unit_id)
 
+    # Funkcja odświeżająca dane
+    async def async_update_data():
+        """Pobieranie wszystkich rejestrów z pompy."""
+        try:
+            return await client.read_all_registers()
+        except Exception as err:
+            _LOGGER.error("Błąd podczas odczytu danych z Modbus: %s", err)
+            raise
+
+    # Coordinator odpowiedzialny za cykliczne odświeżanie
+    coordinator = DataUpdateCoordinator(
+        hass,
+        _LOGGER,
+        name="sprsun_modbus",
+        update_method=async_update_data,
+        update_interval=timedelta(seconds=30),
+    )
+
+    # Pierwsze odświeżenie
+    await coordinator.async_config_entry_first_refresh()
+
     # Zapisujemy dane integracji
     hass.data[DOMAIN][entry.entry_id] = {
         "client": client,
-        "model": model,  # <-- model dostępny dla sensorów
+        "model": model,
+        "coordinator": coordinator,
     }
 
-    # Ładujemy platformy (sensor)
+    # Ładujemy platformy (sensor, binary_sensor)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
