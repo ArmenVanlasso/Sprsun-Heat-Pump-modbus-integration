@@ -314,4 +314,4 @@ BINARY_SENSORS = [
 ]
 
 # Platformy obsługiwane przez integrację
-PLATFORMS: list[str] = ["sensor, binary_sensor"]
+PLATFORMS: list[str] = ["sensor", "binary_sensor"]
