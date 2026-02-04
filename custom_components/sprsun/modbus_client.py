@@ -22,15 +22,19 @@ class HeatPumpModbusClient:
         if self._client is not None and getattr(self._client, "connected", False):
             return
 
-        _LOGGER.info("Connecting to Modbus heat pump %s:%s (unit_id=%s)", self._host, self._port, self._unit_id)
+        _LOGGER.info(
+            "Connecting to Modbus heat pump %s:%s (unit_id=%s)",
+            self._host,
+            self._port,
+            self._unit_id,
+        )
         self._client = AsyncModbusTcpClient(
             host=self._host,
             port=self._port,
             timeout=5,
         )
 
-        # Ustaw unit/slave na kliencie, jeśli biblioteka udostępnia takie pole
-        # (różne wersje pymodbus używają różnych nazw)
+        # Ustaw unit/slave na kliencie (różne wersje pymodbus)
         if hasattr(self._client, "unit_id"):
             self._client.unit_id = self._unit_id
         elif hasattr(self._client, "unit"):
@@ -55,23 +59,38 @@ class HeatPumpModbusClient:
                 await self.connect()
 
             try:
-                # Poprawiona składnia dla pymodbus 3.x - argumenty nazwane
-                rr = await self._client.read_holding_registers(address=address, count=count)
+                rr = await self._client.read_holding_registers(
+                    address=address,
+                    count=count,
+                )
             except ModbusException as err:
                 _LOGGER.error("Modbus error reading address %s: %s", address, err)
                 return None
-            except Exception as err:  # na wypadek innych wyjątków
+            except Exception as err:
                 _LOGGER.error("Unexpected error reading address %s: %s", address, err)
                 return None
 
-            # W pymodbus 3.x odpowiedź ma metodę isError()
             if hasattr(rr, "isError") and rr.isError():
                 _LOGGER.error("Modbus error response at address %s: %s", address, rr)
                 return None
 
-            # W razie gdyby rr było None lub nie miało 'registers'
             if rr is None or not hasattr(rr, "registers"):
                 _LOGGER.error("Invalid Modbus response at address %s: %s", address, rr)
                 return None
 
             return rr.registers
+
+    async def read_all_registers(self) -> dict[int, int | None]:
+        """Czyta wszystkie rejestry wymagane przez integrację."""
+        from .const import ALL_REGISTERS  # lokalny import, żeby uniknąć cyklu
+
+        results: dict[int, int | None] = {}
+
+        for reg in ALL_REGISTERS:
+            regs = await self.read_holding_registers(reg, 1)
+            if regs is None or len(regs) == 0:
+                results[reg] = None
+            else:
+                results[reg] = regs[0]
+
+        return results
