@@ -1,5 +1,3 @@
-# numbers.py — definicje encji number dla modelu CGK040V3L
-
 ENTITIES = [
     {
         "name": "Prędkość sprężarki w trybie nocnym",
