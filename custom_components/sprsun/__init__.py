@@ -53,7 +53,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "model": model,
     }
 
-    # Ładujemy platformy (np. sensor)
+    # Ładujemy platformy (np. sensor, binary_sensor)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
