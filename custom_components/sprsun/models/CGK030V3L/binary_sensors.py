@@ -1,34 +1,127 @@
-BINARY_SENSORS_CGK_030V3L: dict[str, dict] = {
-    "wy_pompa_obiegowa": {
-        "register": 151,
+BINARY_SENSORS = [
+    {
+        "unique_id": "zasilanie",
+        "name": "Zasilanie",
+        "address": 0,
+        "index": 0,
+        "device_class": "power",
+        "icon_on": "mdi:check-circle",
+        "icon_off": "mdi:alert-circle",
+    },
+    {
+        "unique_id": "czujnik_przeplywu",
+        "name": "Czujnik przepływu",
+        "address": 1,
+        "index": 0,
+        "device_class": "door",
+        "icon_on": "mdi:check-circle",
+        "icon_off": "mdi:alert-circle",
+    },
+    {
+        "unique_id": "we_faza_zasilania",
+        "name": "Faza zasilania",
+        "address": 4,
+        "index": 0,
+        "device_class": "plug",
+        "icon_on": "mdi:power-plug",
+        "icon_off": "mdi:power-plug-off",
+    },
+    {
+        "unique_id": "wy_wysoka_pred_went",
+        "name": "WY wysoka prędkość wentylatora",
+        "address": 5,
+        "index": 0,
+    },
+    {
+        "unique_id": "wy_niska_pred_went",
+        "name": "WY niska prędkość wentylatora",
+        "address": 6,
+        "index": 0,
+    },
+    {
+        "unique_id": "wy_zawor_4d",
+        "name": "WY zawór 4 drogowy",
+        "address": 7,
+        "index": 0,
+    },
+    {
+        "unique_id": "wy_grzalka_obud",
+        "name": "Grzałka obudowy",
+        "address": 9,
+        "index": 0,
+        "device_class": "power",
+        "icon_on": "mdi:radiator",
+        "icon_off": "mdi:radiator-disabled",
+    },
+    {
+        "unique_id": "wy_grzalka_sprezarki",
+        "name": "Grzałka sprężarki",
+        "address": 10,
+        "index": 0,
+        "device_class": "power",
+        "icon_on": "mdi:radiator",
+        "icon_off": "mdi:radiator-disabled",
+    },
+    {
+        "unique_id": "wy_zawor_3d",
+        "name": "Zawór trójdrogowy",
+        "address": 11,
+        "index": 0,
+        "device_class": "moving",
+        "icon_on": "mdi:valve-open",
+        "icon_off": "mdi:valve-closed",
+    },
+    {
+        "unique_id": "wy_grzalka",
+        "name": "Grzałka",
+        "address": 12,
+        "index": 0,
+        "device_class": "power",
+        "icon_on": "mdi:radiator",
+        "icon_off": "mdi:radiator-disabled",
+    },
+
+    {
+        "unique_id": "pompa_obiegowa",
         "name": "Pompa obiegowa",
-        "on_value": 1,
-        "off_value": 0,
+        "address": 178,
+        "index": 0,
+        "device_class": "power",
         "icon_on": "mdi:pump",
         "icon_off": "mdi:pump-off",
     },
-    "wy_grzalka_obudowy": {
-        "register": 152,
-        "name": "Grzałka obudowy",
-        "on_value": 1,
-        "off_value": 0,
+
+    {
+        "unique_id": "sprezarka",
+        "name": "Sprężarka",
+        "address": 179,
+        "index": 0,
+        "device_class": "power",
+        "icon_on": "mdi:bag-personal",
+        "icon_off": "mdi:bag-personal-off",
     },
-    "wy_grzalka_sprezarki": {
-        "register": 153,
-        "name": "Grzałka sprężarki",
-        "on_value": 1,
-        "off_value": 0,
+
+    {
+        "unique_id": "wentylator",
+        "name": "Wentylator",
+        "address": 180,
+        "index": 0,
+        "device_class": "power",
+        "icon_on": "mdi:fan",
+        "icon_off": "mdi:fan-off",
     },
-    "wy_zawor_3d": {
-        "register": 154,
-        "name": "Zawór 3‑drogowy",
-        "on_value": 1,
-        "off_value": 0,
+
+    {
+        "unique_id": "we_ogrzewania",
+        "name": "WE ogrzewania",
+        "address": 182,
+        "index": 0,
     },
-    "wy_grzalka": {
-        "register": 155,
-        "name": "Grzałka",
-        "on_value": 1,
-        "off_value": 0,
+
+    {
+        "unique_id": "wy_pompa_obiegowa_2",
+        "name": "WY pompa obiegowa 2",
+        "address": 183,
+        "index": 0,
     },
-}
+]
