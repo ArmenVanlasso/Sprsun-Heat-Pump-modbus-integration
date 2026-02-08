@@ -145,7 +145,7 @@ async def async_setup_entry(
                 definition["min"],
                 definition["max"],
                 definition["step"],
-                definition["icon"],
+                definition.get("icon"),
             )
         )
 
