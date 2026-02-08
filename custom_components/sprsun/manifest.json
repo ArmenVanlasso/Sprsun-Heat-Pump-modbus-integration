@@ -1,7 +1,7 @@
 {
   "domain": "sprsun",
   "name": "Sprsun heat pump modbus integration",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "documentation": "https://github.com/ArmenVanlasso/Sprsun-Heat-Pump-modbus-integration",
   "requirements": [
     "pymodbus>=3.11.2"
