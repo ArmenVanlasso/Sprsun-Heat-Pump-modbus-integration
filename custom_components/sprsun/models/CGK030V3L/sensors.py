@@ -1,116 +1,343 @@
-# custom_components/sprsun/sensor_cgk_030v3l.py
-import logging
+SENSORS = [
 
-from .const import *  # REG_...
+    {
+        "name": "Temperatura powrotu",
+        "unique_id": "temp_powrotu",
+        "register": 188,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "name": "Temperatura zasilania",
+        "unique_id": "temp_zasilania",
+        "register": 189,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "name": "Temperatura zewnętrzna",
+        "unique_id": "temp_zewnetrzna",
+        "register": 190,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "name": "Temperatura sprężania",
+        "unique_id": "temp_sprezania",
+        "register": 191,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "name": "Temperatura ssania",
+        "unique_id": "temp_ssania",
+        "register": 192,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "name": "Ciśnienie sprężania",
+        "unique_id": "cisnienie_sprezania",
+        "register": 193,
+        "unit": "bar",
+        "device_class": "pressure",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "icon": "mdi:gauge",
+    },
+    {
+        "name": "Ciśnienie ssania",
+        "unique_id": "cisnienie_ssania",
+        "register": 194,
+        "unit": "bar",
+        "device_class": "pressure",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "icon": "mdi:gauge",
+    },
+    {
+        "name": "Temperatura CWU",
+        "unique_id": "temp_cwu",
+        "register": 195,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "name": "Temperatura parownika",
+        "unique_id": "temp_parownika",
+        "register": 196,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "name": "Wentylator 1 sterowanie",
+        "unique_id": "went_1_sterowanie",
+        "register": 199,
+        "unit": "%",
+        "scale": 1,
+        "icon": "mdi:fan",
+    },
+    {
+        "name": "Wentylator 1 pomiar",
+        "unique_id": "went_1_pomiar",
+        "register": 200,
+        "unit": "%",
+        "scale": 1,
+        "icon": "mdi:fan",
+    },
+    {
+        "name": "Wentylator 2 sterowanie",
+        "unique_id": "went_2_sterowanie",
+        "register": 201,
+        "unit": "%",
+        "scale": 1,
+        "icon": "mdi:fan",
+    },
+    {
+        "name": "Wentylator 2 pomiar",
+        "unique_id": "went_2_pomiar",
+        "register": 202,
+        "unit": "%",
+        "scale": 1,
+        "icon": "mdi:fan",
+    },
+    {
+        "name": "Wymagana wydajność",
+        "unique_id": "wymagana_wydajnosc",
+        "register": 203,
+        "unit": "%",
+        "scale": 1,
+        "icon": "mdi:information",
+    },
+    {
+        "name": "Aktualna wymagana wydajność",
+        "unique_id": "aktualna_wymagana_wydajnosc",
+        "register": 204,
+        "unit": "%",
+        "scale": 1,
+        "icon": "mdi:information",
+    },
+    {
+        "name": "Obroty sprężarki",
+        "unique_id": "obroty_sprezarki",
+        "register": 207,
+        "unit": "Hz",
+        "scale": 1,
+        "icon": "mdi:rotate-right",
+    },
+    {
+        "name": "Status 2",
+        "unique_id": "status_2",
+        "register": 209,
+        "scale": 1,
+        "icon": "mdi:information",
+        "mapping": {
+            0: "OK",
+            1: "Sterowanie",
+            2: "Graniczny",
+        },
+        "icon_map": {
+            0: "mdi:check-circle",
+            1: "mdi:remote",
+            2: "mdi:alert",
+        },
+    },
+    {
+        "name": "Zabezpieczenie",
+        "unique_id": "zabezpieczenie",
+        "register": 210,
+        "scale": 1,
+        "icon": "mdi:information",
+        "mapping": {
+            0: "OK",
+            1: "OK",
+            2: "Niskie przegrzanie",
+            3: "Niskie ciśnienie",
+            4: "Wysokie ciśnienie",
+            5: "Wysoka temp skraplacza",
+        },
+        "icon_map": {
+            0: "mdi:check-circle",
+            1: "mdi:check-circle",
+            2: "mdi:alert",
+            3: "mdi:alert",
+            4: "mdi:alert",
+            5: "mdi:alert",
+        },
+    },
+    {
+        "name": "Temperatura przegrzania",
+        "unique_id": "przegrzanie",
+        "register": 211,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:coolant-temperature",
+    },
+    {
+        "name": "Temperatura tłoczenia",
+        "unique_id": "temp_tloczenia",
+        "register": 216,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:coolant-temperature",
+    },
+    {
+        "name": "Status",
+        "unique_id": "status",
+        "register": 217,
+        "scale": 1,
+        "icon": "mdi:information",
+        "mapping": {
+            0: "Przygotowanie",
+            1: "Praca",
+            2: "Stop Alarm",
+            3: "Stop timer",
+            4: "Stop obsługa",
+            5: "Stop Sterowanie",
+            6: "Stop",
+            7: "Tryb ręczny",
+            8: "Antyzamarzanie",
+            9: "Stop AC linkage",
+            10: "Zmiana trybu",
+        },
+        "icon_map": {
+            0: "mdi:information",
+            1: "mdi:run",
+            2: "mdi:stop",
+            3: "mdi:timer-off",
+            4: "mdi:account-wrench",
+            5: "mdi:remote",
+            6: "mdi:stop",
+            7: "mdi:hand",
+            8: "mdi:snowflake",
+            9: "mdi:alert-circle",
+            10: "mdi:swap-horizontal",
+        },
+    },
+    {
+        "name": "Tryb pracy pompy",
+        "unique_id": "tryb_pracy_pompy",
+        "register": 215,
+        "scale": 1,
+        "icon": "mdi:information",
+        "mapping": {
+            0: "Stop",
+            1: "Praca",
+            2: "Sterowanie",
+            3: "Ręczny",
+        },
 
-_LOGGER = logging.getLogger(__name__)
-
-
-def _sensor_definitions_cgk_030v3l():
-    sensors = []
-
-    for name, value in globals().items():
-        if not name.startswith("REG_"):
-            continue
-
-        register = value
-        clean_name = name.replace("REG_", "")
-        clean_name = clean_name.lower()
-
-        unique_id = f"cgk_030v3l_{clean_name}"
-        friendly = clean_name.replace("_", " ").capitalize()
-
-        unit = None
-        device_class = None
-        icon = "mdi:checkbox-blank-circle-outline"
-        scale = 1
-        signed = False
-        state_class = None
-
-        # --- SPECJALNE SENSORY ---
-
-        if clean_name == "temperatura_powrotu":
-            unit = "°C"
-            device_class = "temperature"
-            icon = "mdi:thermometer"
-            scale = 0.1
-            signed = True
-
-        elif clean_name == "przegrzanie":
-            unit = "°C"
-            device_class = "temperature"
-            icon = "mdi:thermometer"
-            scale = 0.1
-            signed = True
-
-        elif clean_name == "zawor_eev":
-            friendly = "Zawór rozprężny"
-            icon = "mdi:valve"
-            unit = "steps"
-            scale = 1
-            signed = False
-
-        elif clean_name == "napiecie_falownika":
-            unit = "V"
-            device_class = "voltage"
-            icon = "mdi:flash"
-            scale = 1
-            signed = False
-            state_class = "measurement"
-
-        elif clean_name == "prad_falownika":
-            unit = "A"
-            device_class = "current"
-            icon = "mdi:current-ac"
-            scale = 0.1
-            signed = False
-
-        elif clean_name == "moc_pobierana":
-            unit = "W"
-            device_class = "power"
-            icon = "mdi:flash"
-            scale = 1
-            signed = False
-            state_class = "measurement"
-
-        elif clean_name == "status":
-            unit = None
-            device_class = None
-            icon = "mdi:information"
-            scale = 1
-            signed = False
-
-        elif clean_name == "status_2":
-            friendly = "Status 2"
-            unit = None
-            device_class = None
-            icon = "mdi:information"
-            scale = 1
-            signed = False
-
-        # --- automatyczne temperatury ---
-        elif "temperatura" in clean_name:
-            unit = "°C"
-            device_class = "temperature"
-            icon = "mdi:thermometer"
-            scale = 0.1
-            signed = True
-
-        sensors.append(
-            {
-                "unique_id": unique_id,
-                "name": friendly,
-                "register": register,
-                "unit": unit,
-                "device_class": device_class,
-                "icon": icon,
-                "scale": scale,
-                "signed": signed,
-                "state_class": state_class,
-            }
-        )
-
-    return sensors
-
-
-SENSORS_CGK_030V3L = _sensor_definitions_cgk_030v3l()
+        "icon_map": {
+            0: "mdi:stop",
+            1: "mdi:run",
+            2: "mdi:remote",
+            3: "mdi:hand",
+        },
+    },
+    {
+        "name": "Wersja programu 1",
+        "unique_id": "wersja_programu_1",
+        "register": 325,
+        "scale": 1,
+        "icon": "mdi:information",
+    },
+    {
+        "name": "Wersja programu 2",
+        "unique_id": "wersja_programu_2",
+        "register": 326,
+        "scale": 1,
+        "icon": "mdi:information",
+    },
+    {
+        "name": "Wersja programu 3",
+        "unique_id": "wersja_programu_3",
+        "register": 327,
+        "scale": 1,
+        "icon": "mdi:information",
+    },
+    {
+        "name": "Pompa model 1",
+        "unique_id": "pompa_model_1",
+        "register": 328,
+        "scale": 1,
+        "icon": "mdi:information",
+    },
+    {
+        "name": "Pompa model 2",
+        "unique_id": "pompa_model_2",
+        "register": 329,
+        "scale": 1,
+        "icon": "mdi:information",
+    },
+    {
+        "name": "Pompa model 3",
+        "unique_id": "pompa_model_3",
+        "register": 330,
+        "scale": 1,
+        "icon": "mdi:information",
+    },
+    {
+        "name": "Moc pobierana",
+        "unique_id": "moc_pobierana",
+        "register": 333,
+        "unit": "W",
+        "device_class": "power",
+        "state_class": "measurement",
+        "scale": 1,
+        "icon": "mdi:flash",
+    },
+    {
+        "name": "Napięcie falownika",
+        "unique_id": "napiecie_falownika",
+        "register": 334,
+        "unit": "V",
+        "device_class": "voltage",
+        "state_class": "measurement",
+        "scale": 1,
+        "icon": "mdi:alpha-v-circle",
+    },
+    {
+        "name": "Prąd falownika",
+        "unique_id": "prad_falownika",
+        "register": 335,
+        "unit": "A",
+        "device_class": "current",
+        "state_class": "measurement",
+        "scale": 1,
+        "icon": "mdi:alpha-a-circle",
+    },
+]
