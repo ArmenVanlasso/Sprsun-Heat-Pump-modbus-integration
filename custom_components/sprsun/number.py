@@ -51,6 +51,8 @@ class SprsunNumberEntity(NumberEntity):
         max_value,
         step,
         icon,
+        unit,
+        mode,
     ):
         self._client = client
         self._entry_id = entry_id
@@ -80,7 +82,12 @@ class SprsunNumberEntity(NumberEntity):
         self._attr_native_max_value = max_value
         self._attr_native_step = step
         self._attr_icon = icon
-        self._attr_mode = NumberMode.SLIDER
+        if mode == "box":
+            self._attr_mode = NumberMode.BOX
+        else:
+            self._attr_mode = NumberMode.SLIDER
+
+
 
         self._attr_native_value = None
         self._attr_available = True
@@ -146,6 +153,9 @@ async def async_setup_entry(
                 definition["max"],
                 definition["step"],
                 definition.get("icon"),
+                definition.get("unit"),
+                definition.get("mode", "slider"),
+
             )
         )
 
