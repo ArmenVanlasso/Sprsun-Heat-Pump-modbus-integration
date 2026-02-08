@@ -18,4 +18,4 @@ MODELS = {
     "CGK-060V3L": "cgk_060v3l",
 }
 
-PLATFORMS = ["sensor", "binary_sensor", "number"]
+PLATFORMS = ["sensor", "binary_sensor", "number", "switch"]
