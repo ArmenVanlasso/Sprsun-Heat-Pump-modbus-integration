@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfiguracja pompy ciepła Sprsun",
+        "description": "Wprowadź dane połączenia z pompą ciepła. Podaj adres IP, port, wprowadź jej adres modbus, czas odpytywania. Na końcu wybierz z listy twój model pompy Sprsun.",
+        "data": {
+          "host": "Adres IP pompy",
+          "port": "Port Modbus TCP",
+          "unit_id": "Unit ID (adres Modbus)",
+          "scan_interval": "Czas odpytywania (sekundy)",
+          "model": "Model pompy"
+        }
+      }
+    },
+    "error": {
+      "host_required": "Adres IP jest wymagany.",
+      "invalid_port": "Port musi być liczbą z zakresu 1–65535.",
+      "invalid_unit_id": "Unit ID musi być liczbą z zakresu 1–255.",
+      "min_5": "Minimalna wartość to 5 sekund.",
+      "already_configured": "Integracja z tym adresem IP już istnieje."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Opcje integracji Sprsun",
+        "description": "Ustaw dodatkowe parametry integracji.",
+        "data": {
+          "scan_interval": "Czas odpytywania (sekundy)"
+        }
+      }
+    },
+    "error": {
+      "min_5": "Minimalna wartość to 5 sekund."
+    }
+  }
+}
