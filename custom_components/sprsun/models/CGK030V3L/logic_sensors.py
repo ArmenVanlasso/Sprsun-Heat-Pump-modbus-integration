@@ -210,9 +210,21 @@ class SprsunBaseCounterSensor(RestoreEntity, SensorEntity):
         slug = _slugify(name)
         self.entity_id = f"sensor.sprsun_{self._model}_{slug}"
 
+    # --- KLUCZOWE POPRAWKI ---
+
     @property
     def native_unit_of_measurement(self):
-        return "count"
+        return "x"
+
+    @property
+    def device_class(self):
+        return None  # brak klasyfikacji
+
+    @property
+    def state_class(self):
+        return None  # brak measurement → brak count
+
+    # --- RESZTA BEZ ZMIAN ---
 
     @property
     def native_value(self):
@@ -283,7 +295,6 @@ class SprsunBaseCounterSensor(RestoreEntity, SensorEntity):
         self._count = int(self._count) + 1
         self.async_write_ha_state()
 
-
 # ============================================================
 #  LICZNIK STARTÓW SPRĘŻARKI
 # ============================================================
@@ -293,6 +304,30 @@ class SprsunCompressorStartCounter(SprsunBaseCounterSensor):
         super().__init__(name, unique_id, reset_mode, entry_id, model)
         self._unsub = None
         self._compressor_entity = f"binary_sensor.sprsun_{model}_sprezarka"
+
+    @property
+    def icon(self):
+        return "mdi:bag-personal"
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+
+        self._unsub = async_track_state_change_event(
+            self.hass, [self._compressor_entity], self._handle_change
+        )
+
+    async def async_will_remove_from_hass(self):
+        if self._unsub:
+            self._unsub()
+            self._unsub = None
+
+    @callback
+    async def _handle_change(self, event):
+        old = event.data.get("old_state")
+        new = event.data.get("new_state")
+
+        if old and new and old.state != "on" and new.state == "on":
+            self._increment_safe()
 
     @property
     def icon(self):
