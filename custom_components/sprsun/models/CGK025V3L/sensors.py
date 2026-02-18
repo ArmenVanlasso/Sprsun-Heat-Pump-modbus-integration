@@ -64,6 +64,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.1,
         "icon": "mdi:gauge",
+        "description": "Na sterowniku w zakładce Parametry, pod nazwą B6: Cis.po stronie tłocznej. Oznacza ciśnienie sprężania mierzone na króćcu tłocznym.",
     },
     {
         "name": "Ciśnienie ssania",
@@ -96,6 +97,18 @@ SENSORS = [
         "scale": 0.1,
         "signed": True,
         "icon": "mdi:thermometer",
+    },
+    {
+        "name": "Y3: Pompa obiegowa",
+        "unique_id": "y3_pompa_obieg",
+        "register": 198,
+        "unit": "%",
+        "device_class": "none",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:pump",
+        "descripion": " Na sterowniku znajduje się w parametrach pod nazwą Y3: Pompa obieg. (↩/Enginer mask/Parametry, pozycja Sn11)"
     },
     {
         "name": "Wentylator 1 sterowanie",
@@ -134,7 +147,7 @@ SENSORS = [
         "unique_id": "wymagana_wydajnosc",
         "register": 203,
         "unit": "%",
-        "scale": 1,
+        "scale": 0.1,
         "icon": "mdi:information",
     },
     {
@@ -142,7 +155,7 @@ SENSORS = [
         "unique_id": "aktualna_wymagana_wydajnosc",
         "register": 204,
         "unit": "%",
-        "scale": 1,
+        "scale": 0.1,
         "icon": "mdi:information",
     },
     {
@@ -150,7 +163,7 @@ SENSORS = [
         "unique_id": "obroty_sprezarki",
         "register": 207,
         "unit": "Hz",
-        "scale": 1,
+        "scale": 0.1,
         "icon": "mdi:rotate-right",
     },
     {
@@ -255,17 +268,15 @@ SENSORS = [
         "scale": 1,
         "icon": "mdi:information",
         "mapping": {
-            0: "Stop",
-            1: "Praca",
-            2: "Sterowanie",
-            3: "Ręczny",
+            0: "Chłodzenie",
+            1: "Ogrzewanie",
+            2: "CWU",
         },
 
         "icon_map": {
-            0: "mdi:stop",
-            1: "mdi:run",
-            2: "mdi:remote",
-            3: "mdi:hand",
+            0: "mdi:snowflake",
+            1: "mdi:radiator",
+            2: "mdi:shower",
         },
     },
     {
