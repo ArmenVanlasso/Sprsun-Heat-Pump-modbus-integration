@@ -747,12 +747,15 @@ ENTITIES = [
         "unit": "min",
         "icon": "mdi:snowflake-melt",
     },
+    # ------------------------------
+    # LICZNIKI SPRĘŻARKI
+    # ------------------------------
     {
         "name": "Ilość włączeń sprężarki daily",
         "unique_id": "ilosc_wlaczen_sprezarki_daily",
         "key": "start_sprezarki",
         "reset": "daily",
-        "condition": "sprezarka",
+        "source_sensor": "binary_sensor.sprsun_<model>_sprezarka",
         "icon": "mdi:bag-personal",
     },
     {
@@ -760,7 +763,7 @@ ENTITIES = [
         "unique_id": "ilosc_wlaczen_sprezarki_monthly",
         "key": "start_sprezarki",
         "reset": "monthly",
-        "condition": "sprezarka",
+        "source_sensor": "binary_sensor.sprsun_<model>_sprezarka",
         "icon": "mdi:bag-personal",
     },
     {
@@ -768,21 +771,26 @@ ENTITIES = [
         "unique_id": "ilosc_wlaczen_sprezarki_yearly",
         "key": "start_sprezarki",
         "reset": "yearly",
-        "condition": "sprezarka",
+        "source_sensor": "binary_sensor.sprsun_<model>_sprezarka",
         "icon": "mdi:bag-personal",
     },
     {
         "name": "Ilość włączeń sprężarki total",
         "unique_id": "ilosc_wlaczen_sprezarki_total",
         "key": "start_sprezarki",
+        "source_sensor": "binary_sensor.sprsun_<model>_sprezarka",
         "icon": "mdi:bag-personal",
     },
+
+    # ------------------------------
+    # LICZNIKI WENTYLATORA
+    # ------------------------------
     {
         "name": "Ilość włączeń wentylatora daily",
         "unique_id": "ilosc_wlaczen_wentylatora_daily",
         "key": "start_wentylatora",
         "reset": "daily",
-        "condition": "wentylator",
+        "source_sensor": "binary_sensor.sprsun_<model>_wentylator",
         "icon": "mdi:fan",
     },
     {
@@ -790,7 +798,7 @@ ENTITIES = [
         "unique_id": "ilosc_wlaczen_wentylatora_monthly",
         "key": "start_wentylatora",
         "reset": "monthly",
-        "condition": "wentylator",
+        "source_sensor": "binary_sensor.sprsun_<model>_wentylator",
         "icon": "mdi:fan",
     },
     {
@@ -798,21 +806,27 @@ ENTITIES = [
         "unique_id": "ilosc_wlaczen_wentylatora_yearly",
         "key": "start_wentylatora",
         "reset": "yearly",
-        "condition": "wentylator",
+        "source_sensor": "binary_sensor.sprsun_<model>_wentylator",
         "icon": "mdi:fan",
     },
     {
         "name": "Ilość włączeń wentylatora total",
         "unique_id": "ilosc_wlaczen_wentylatora_total",
         "key": "start_wentylatora",
+        "source_sensor": "binary_sensor.sprsun_<model>_wentylator",
         "icon": "mdi:fan",
     },
+
+    # ------------------------------
+    # LICZNIKI DEFROSTÓW
+    # ------------------------------
     {
         "name": "Ilość defrostów daily",
         "unique_id": "ilosc_defrostow_daily",
         "key": "defrost",
         "reset": "daily",
-        "condition": "sprezarka_i_wentylator",
+        "source_sensor_sprezarka": "binary_sensor.sprsun_<model>_sprezarka",
+        "source_sensor_wentylator": "binary_sensor.sprsun_<model>_wentylator",
         "icon": "mdi:snowflake-melt",
     },
     {
@@ -820,7 +834,8 @@ ENTITIES = [
         "unique_id": "ilosc_defrostow_monthly",
         "key": "defrost",
         "reset": "monthly",
-        "condition": "sprezarka_i_wentylator",
+        "source_sensor_sprezarka": "binary_sensor.sprsun_<model>_sprezarka",
+        "source_sensor_wentylator": "binary_sensor.sprsun_<model>_wentylator",
         "icon": "mdi:snowflake-melt",
     },
     {
@@ -828,19 +843,27 @@ ENTITIES = [
         "unique_id": "ilosc_defrostow_yearly",
         "key": "defrost",
         "reset": "yearly",
-        "condition": "sprezarka_i_wentylator",
+        "source_sensor_sprezarka": "binary_sensor.sprsun_<model>_sprezarka",
+        "source_sensor_wentylator": "binary_sensor.sprsun_<model>_wentylator",
         "icon": "mdi:snowflake-melt",
     },
     {
         "name": "Ilość defrostów total",
         "unique_id": "ilosc_defrostow_total",
         "key": "defrost",
+        "source_sensor_sprezarka": "binary_sensor.sprsun_<model>_sprezarka",
+        "source_sensor_wentylator": "binary_sensor.sprsun_<model>_wentylator",
         "icon": "mdi:snowflake-melt",
     },
+
+    # ------------------------------
+    # LICZNIK ZAWORU 3D
+    # ------------------------------
     {
         "name": "Ilość przełączeń zaworu 3D total",
         "unique_id": "ilosc_przelaczen_zaworu_3d_total",
         "key": "valve_count",
+        "source_sensor": "binary_sensor.sprsun_<model>_zawor_trojdrogowy",
         "icon": "mdi:valve",
     },
 ]
