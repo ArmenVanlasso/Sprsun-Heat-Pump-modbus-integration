@@ -1,19 +1,13 @@
 import logging
-from datetime import timedelta
-
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.config_entries import ConfigEntry
 
-from .const import (
-    DOMAIN,
-    CONF_SCAN_INTERVAL,
-    DEFAULT_SCAN_INTERVAL,
-)
-from .modbus_client import HeatPumpModbusClient
+from .const import DOMAIN
+from .coordinator import SprsunCoordinator
 
+# Import definicji binary sensorów per model
 from .models.CGK025V3L.binary_sensors import BINARY_SENSORS as BINARY_025
 from .models.CGK030V3L.binary_sensors import BINARY_SENSORS as BINARY_030
 from .models.CGK040V3L.binary_sensors import BINARY_SENSORS as BINARY_040
@@ -36,98 +30,116 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
+    """Rejestracja binary sensorów dla danego modelu."""
     data = hass.data[DOMAIN][entry.entry_id]
-    client: HeatPumpModbusClient = data["client"]
+    coordinator: SprsunCoordinator = data["coordinator"]
     model: str = data["model"]
 
-    scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-
-    sensors_def = MODEL_BINARY_MAP.get(model)
-    if sensors_def is None:
-        _LOGGER.error("Brak zdefiniowanych binary sensorów dla modelu: %s", model)
-        return
-
-    entities: list[BinarySensorEntity] = [
-        SprsunBinarySensor(client, entry.entry_id, model, definition)
+    sensors_def = MODEL_BINARY_MAP.get(model, [])
+    entities = [
+        SprsunBinarySensor(coordinator, entry.entry_id, model, definition)
         for definition in sensors_def
     ]
 
-    hass.data[DOMAIN][entry.entry_id]["binary_entities"] = entities
-
     async_add_entities(entities)
 
-    if model == "cgk_025v3l":
-        from .models.CGK025V3L.sensor_alarm import SprsunActiveAlarmsSensor
-    elif model == "cgk_030v3l":
-        from .models.CGK030V3L.sensor_alarm import SprsunActiveAlarmsSensor
-    elif model == "cgk_040v3l":
-        from .models.CGK040V3L.sensor_alarm import SprsunActiveAlarmsSensor
-    elif model == "cgk_050v3l":
-        from .models.CGK050V3L.sensor_alarm import SprsunActiveAlarmsSensor
-    else:
-        from .models.CGK060V3L.sensor_alarm import SprsunActiveAlarmsSensor
+    # Sensor aktywnych alarmów
+    try:
+        model_folder = model.replace("_", "").upper()
 
-    # UWAGA: zakładam, że SprsunActiveAlarmsSensor ma __init__(client, entry_id, model)
-    active_alarm_sensor = SprsunActiveAlarmsSensor(client, entry.entry_id, model)
-    async_add_entities([active_alarm_sensor])
+        module = __import__(
+        f"custom_components.sprsun.models.{model_folder}.sensor_alarm",
+        fromlist=["SprsunActiveAlarmsSensor"],
+        )
 
-    async def _periodic_update(now):
-        for entity in entities:
-            try:
-                await entity.async_update()
-                entity.async_write_ha_state()
-            except Exception as err:
-                _LOGGER.error("Błąd aktualizacji binary sensora %s: %s", entity.name, err)
-
-        try:
-            await active_alarm_sensor.async_update()
-            active_alarm_sensor.async_write_ha_state()
-        except Exception as err:
-            _LOGGER.error("Błąd aktualizacji sensora aktywnych alarmów: %s", err)
-
-    async_track_time_interval(
-        hass,
-        _periodic_update,
-        timedelta(seconds=scan_interval),
-    )
+        alarm_class = getattr(module, "SprsunActiveAlarmsSensor")
+        alarm_sensor = alarm_class(coordinator, entry.entry_id, model)
+        async_add_entities([alarm_sensor])
+    except Exception as err:
+        _LOGGER.error("Nie udało się załadować sensora alarmów: %s", err)
 
 
 class SprsunBinarySensor(BinarySensorEntity):
+    """Binary sensor oparty o koordynator i discrete inputs."""
+
     _attr_should_poll = False
 
-    def __init__(self, client, entry_id, model, definition):
-        self._client = client
+    def __init__(self, coordinator: SprsunCoordinator, entry_id, model, definition):
+        self.coordinator = coordinator
         self._entry_id = entry_id
         self._model = model
         self._def = definition
-        self._attr_available = False
-        self._attr_is_on = False
+
+        self._address = definition["address"]
+        self._index = definition.get("index", 0)
 
         self._attr_name = definition["name"]
-        self._attr_unique_id = f"{DOMAIN}_{self._model}_di_{self._def['address']}"
+        self._attr_unique_id = f"{DOMAIN}_{model}_binary_{self._address}"
 
         slug = (
-            f"sprsun_{self._model}_{definition['name']}"
+            f"sprsun_{model}_{definition['name']}"
             .lower()
             .replace(" ", "_")
-            .replace("ą", "a")
-            .replace("ć", "c")
-            .replace("ę", "e")
-            .replace("ł", "l")
-            .replace("ń", "n")
-            .replace("ó", "o")
-            .replace("ś", "s")
-            .replace("ź", "z")
-            .replace("ż", "z")
+            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
+            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
+            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
         self.entity_id = f"binary_sensor.{slug}"
 
         self._attr_device_class = definition.get("device_class")
 
-        self._icon_on = definition.get("icon_on", "mdi:alert-circle")
-        self._icon_off = definition.get("icon_off", "mdi:check-circle")
+        self._icon_on = definition.get("icon_on", "mdi:check-circle")
+        self._icon_off = definition.get("icon_off", "mdi:alert-circle")
 
         self._mapping = definition.get("mapping", {})
+
+        self._attr_available = True
+
+    async def async_added_to_hass(self):
+        """Aktualizacja przy każdej zmianie koordynatora."""
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
+    # ---------------------------------------------------------
+    # IKONA
+    # ---------------------------------------------------------
+
+    @property
+    def icon(self):
+        return self._icon_on if self.is_on else self._icon_off
+
+    # ---------------------------------------------------------
+    # ODCZYT STANU
+    # ---------------------------------------------------------
+
+    @property
+    def is_on(self):
+        """Stan z discrete inputs."""
+        bits = self.coordinator.data_discrete
+        if bits is None:
+            return False
+
+        try:
+            return bool(bits[self._address][self._index])
+        except Exception:
+            return False
+
+    # ---------------------------------------------------------
+    # DODATKOWE ATRYBUTY
+    # ---------------------------------------------------------
+
+    @property
+    def extra_state_attributes(self):
+        if not self._mapping:
+            return None
+
+        value = 1 if self.is_on else 0
+        return {"description": self._mapping.get(value, "Nieznany")}
+
+    # ---------------------------------------------------------
+    # DEVICE INFO
+    # ---------------------------------------------------------
 
     @property
     def device_info(self):
@@ -137,35 +149,3 @@ class SprsunBinarySensor(BinarySensorEntity):
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
         }
-
-    @property
-    def icon(self):
-        return self._icon_on if self.is_on else self._icon_off
-
-    @property
-    def extra_state_attributes(self):
-        if not self._mapping:
-            return None
-
-        value = 1 if self.is_on else 0
-        return {
-            "description": self._mapping.get(value, "Nieznany")
-        }
-
-    async def async_update(self):
-        address = self._def["address"]
-        index = self._def.get("index", 0)
-
-        bits = await self._client.read_discrete_inputs(address, 1)
-        if not bits:
-            self._attr_available = False
-            return
-
-        try:
-            state = bool(bits[index])
-        except Exception:
-            self._attr_available = False
-            return
-
-        self._attr_is_on = state
-        self._attr_available = True
