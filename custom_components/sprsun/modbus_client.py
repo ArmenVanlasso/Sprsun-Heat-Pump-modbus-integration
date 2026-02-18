@@ -39,10 +39,30 @@ class HeatPumpModbusClient:
             raise ConnectionError("Cannot connect to Modbus heat pump")
 
     async def close(self):
+        """Pewne zamknięcie połączenia Modbus TCP."""
+        if self._client is None:
+            return
 
-        if self._client is not None:
-            await self._client.close()
+        try:
+            # 1. Zamknij transport TCP (najważniejsze)
+            if hasattr(self._client, "protocol") and hasattr(self._client.protocol, "transport"):
+                transport = self._client.protocol.transport
+                if transport is not None:
+                    transport.close()
+
+            # 2. Zamknij klienta (jeśli coś jeszcze robi)
+            close_method = getattr(self._client, "close", None)
+            if callable(close_method):
+                result = close_method()
+                if hasattr(result, "__await__"):
+                    await result
+
+        except Exception as err:
+            _LOGGER.warning("Błąd przy zamykaniu Modbus TCP: %s", err)
+
+        finally:
             self._client = None
+
 
     async def read_holding_registers(self, address: int, count: int = 1) -> list[int] | None:
 
@@ -95,3 +115,58 @@ class HeatPumpModbusClient:
 
             return rr.bits
 
+    async def write_register(self, address: int, value: int):
+        """FC6 – zapis jednego rejestru holding."""
+        async with self._lock:
+            if self._client is None or not getattr(self._client, "connected", False):
+                await self.connect()
+
+            try:
+                rr = await self._client.write_register(address=address, value=value )
+            except Exception as err:
+                _LOGGER.error("Modbus error writing register %s: %s", address, err)
+                return False
+
+            if hasattr(rr, "isError") and rr.isError():
+                _LOGGER.error("Modbus error response writing register %s: %s", address, rr)
+                return False
+
+            return True
+
+
+    async def write_registers(self, address: int, values: list[int]):
+        """FC16 – zapis wielu rejestrów holding."""
+        async with self._lock:
+            if self._client is None or not getattr(self._client, "connected", False):
+                await self.connect()
+
+            try:
+                rr = await self._client.write_registers(address=address, values=values )
+            except Exception as err:
+                _LOGGER.error("Modbus error writing registers %s: %s", address, err)
+                return False
+
+            if hasattr(rr, "isError") and rr.isError():
+                _LOGGER.error("Modbus error response writing registers %s: %s", address, rr)
+                return False
+
+            return True
+
+
+    async def write_coil(self, address: int, value: bool):
+        """FC5 – zapis pojedynczego bitu."""
+        async with self._lock:
+            if self._client is None or not getattr(self._client, "connected", False):
+                await self.connect()
+
+            try:
+                rr = await self._client.write_coil(address=address, value=value )
+            except Exception as err:
+                _LOGGER.error("Modbus error writing coil %s: %s", address, err)
+                return False
+
+            if hasattr(rr, "isError") and rr.isError():
+                _LOGGER.error("Modbus error response writing coil %s: %s", address, rr)
+                return False
+
+            return True
