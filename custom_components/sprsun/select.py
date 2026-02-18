@@ -1,16 +1,13 @@
 import logging
-from datetime import timedelta
-
 from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.config_entries import ConfigEntry
 
-from .const import DOMAIN, CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-from .modbus_client import HeatPumpModbusClient
+from .const import DOMAIN
+from .coordinator import SprsunCoordinator
 
-# Import definicji selectów per model
+# Importy selectów modelowych
 from .models.CGK025V3L.selects import ENTITIES as SELECTS_025
 from .models.CGK030V3L.selects import ENTITIES as SELECTS_030
 from .models.CGK040V3L.selects import ENTITIES as SELECTS_040
@@ -28,64 +25,58 @@ MODEL_SELECTS_MAP = {
 }
 
 
-# ============================================================
-#   KLASA ENCJI SELECT (centralna)
-# ============================================================
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+):
+    """Rejestracja selectów dla danego modelu."""
+    data = hass.data[DOMAIN][entry.entry_id]
+    coordinator: SprsunCoordinator = data["coordinator"]
+    model: str = data["model"]
 
-class SprsunSelectEntity(SelectEntity):
+    selects_def = MODEL_SELECTS_MAP.get(model, [])
+    entities = [
+        SprsunGenericSelect(coordinator, entry.entry_id, model, definition)
+        for definition in selects_def
+    ]
+
+    async_add_entities(entities)
+
+
+class SprsunGenericSelect(SelectEntity):
+    """Select oparty o koordynator i rejestry Modbus."""
+
     _attr_should_poll = False
 
-    def __init__(
-        self,
-        client,
-        entry_id,
-        model,
-        name,
-        register,
-        options_map,
-        icon,
-        icons_map,
-    ):
-        self._client = client
+    def __init__(self, coordinator: SprsunCoordinator, entry_id, model, definition):
+        self.coordinator = coordinator
         self._entry_id = entry_id
         self._model = model
-        self._register = register
+        self._def = definition
 
-        self._options_map = options_map
-        self._reverse_map = {v: k for k, v in options_map.items()}
+        self._register = definition["register"]
+        self._options_map = definition["options"]
+        self._reverse_map = {v: k for k, v in self._options_map.items()}
 
-        self._icon_default = icon
-        self._icons_map = icons_map or {}
+        self._icon = definition.get("icon")
+        self._icons = definition.get("icons")
+
+        self._attr_name = definition["name"]
+        self._attr_unique_id = f"{DOMAIN}_{model}_select_{self._register}"
 
         slug = (
-            f"sprsun_{model}_{name}"
+            f"sprsun_{model}_{definition['name']}"
             .lower()
             .replace(" ", "_")
-            .replace("ą", "a")
-            .replace("ć", "c")
-            .replace("ę", "e")
-            .replace("ł", "l")
-            .replace("ń", "n")
-            .replace("ó", "o")
-            .replace("ś", "s")
-            .replace("ź", "z")
-            .replace("ż", "z")
+            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
+            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
+            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
-
-        self._attr_name = name
-        self._attr_unique_id = f"{DOMAIN}_{model}_{slug}"
         self.entity_id = f"select.{slug}"
 
-        self._attr_options = list(options_map.values())
+        self._attr_options = list(self._options_map.values())
         self._attr_current_option = None
-        self._attr_available = True
-
-    @property
-    def icon(self):
-        if self._attr_current_option is None:
-            return self._icon_default
-        value = self._reverse_map.get(self._attr_current_option)
-        return self._icons_map.get(value, self._icon_default)
 
     @property
     def device_info(self):
@@ -96,76 +87,48 @@ class SprsunSelectEntity(SelectEntity):
             "model": self._model.upper().replace('_', '-'),
         }
 
-    async def async_update(self):
-        try:
-            value = await self._client.read_holding_registers(self._register, 1)
-            if value:
-                mapped = self._options_map.get(value[0])
-                if mapped:
-                    self._attr_current_option = mapped
-                self._attr_available = True
-        except Exception:
-            self._attr_available = False
-
-    async def async_select_option(self, option: str):
-        try:
-            value = self._reverse_map.get(option)
-            if value is not None:
-                await self._client.write_register(self._register, value)
-                self._attr_current_option = option
-                self.async_write_ha_state()
-        except Exception:
-            self._attr_available = False
-
-
-# ============================================================
-#   ŁADOWANIE ENCJI SELECT (centralny tryb)
-# ============================================================
-
-async def async_setup_entry(
-    hass: HomeAssistant,
-    entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
-):
-    data = hass.data[DOMAIN][entry.entry_id]
-    client: HeatPumpModbusClient = data["client"]
-    model: str = data["model"]
-
-    scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-
-    selects_def = MODEL_SELECTS_MAP.get(model)
-    if selects_def is None:
-        _LOGGER.error("Brak zdefiniowanych select entities dla modelu: %s", model)
-        return
-
-    entities = []
-
-    for definition in selects_def:
-        entities.append(
-            SprsunSelectEntity(
-                client,
-                entry.entry_id,
-                model,
-                definition["name"],
-                definition["register"],
-                definition["options"],
-                definition.get("icon"),
-                definition.get("icons"),
-            )
+    async def async_added_to_hass(self):
+        """Aktualizacja przy każdej zmianie koordynatora."""
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
         )
 
-    async_add_entities(entities)
+    # ---------------------------------------------------------
+    # IKONY
+    # ---------------------------------------------------------
 
-    async def _periodic_update(now):
-        for entity in entities:
-            try:
-                await entity.async_update()
-                entity.async_write_ha_state()
-            except Exception as err:
-                _LOGGER.error("Błąd aktualizacji encji select %s: %s", entity.name, err)
+    @property
+    def icon(self):
+        """Ikona zależna od opcji lub stała."""
+        if self._icons and self._attr_current_option:
+            raw = self._reverse_map.get(self._attr_current_option)
+            return self._icons.get(raw, self._icon)
+        return self._icon
 
-    async_track_time_interval(
-        hass,
-        _periodic_update,
-        timedelta(seconds=scan_interval),
-    )
+    # ---------------------------------------------------------
+    # ODCZYT WARTOŚCI
+    # ---------------------------------------------------------
+
+    @property
+    def current_option(self):
+        """Aktualna opcja selecta."""
+        raw = self.coordinator.data.get(self._register)
+        if raw is None:
+            return None
+        return self._options_map.get(raw)
+
+    # ---------------------------------------------------------
+    # ZAPIS WARTOŚCI
+    # ---------------------------------------------------------
+
+    async def async_select_option(self, option: str) -> None:
+        """Zapis wybranej opcji do rejestru Modbus."""
+        raw_value = self._reverse_map.get(option)
+        if raw_value is None:
+            return
+
+        try:
+            await self.coordinator.client.write_register(self._register, raw_value)
+            await self.coordinator.async_request_refresh()
+        except Exception as err:
+            _LOGGER.error("Błąd zapisu select %s: %s", self._attr_name, err)
