@@ -126,11 +126,15 @@ class SprsunOptionsFlowHandler(config_entries.OptionsFlow):
         )
 
         if user_input is not None:
-            if user_input[CONF_SCAN_INTERVAL] < 5:
-                errors[CONF_SCAN_INTERVAL] = "min_5"
+            new_interval = user_input.get(CONF_SCAN_INTERVAL, scan_interval)
 
-            if not errors:
-                return self.async_create_entry(title="", data=user_input)
+            if new_interval < 5:
+                errors[CONF_SCAN_INTERVAL] = "min_5"
+            else:
+                return self.async_create_entry(
+                    title="",
+                    data={CONF_SCAN_INTERVAL: new_interval},
+                )
 
         schema = vol.Schema(
             {
@@ -148,3 +152,4 @@ class SprsunOptionsFlowHandler(config_entries.OptionsFlow):
             data_schema=schema,
             errors=errors,
         )
+
