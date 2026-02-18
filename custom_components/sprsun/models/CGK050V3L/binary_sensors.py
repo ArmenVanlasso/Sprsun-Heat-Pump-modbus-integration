@@ -18,6 +18,24 @@ BINARY_SENSORS = [
         "icon_off": "mdi:alert-circle",
     },
     {
+        "unique_id": "we_sterowania_zew",
+        "name": "WE sterowania zewn",
+        "address": 2,
+        "index": 0,
+        "device_class": "door",
+        "icon_on": "mdi:check-circle",
+        "icon_off": "mdi:alert-circle",
+    },
+    {
+        "unique_id": "we_sterowania_ac",
+        "name": "WE sterowania AC",
+        "address": 3,
+        "index": 0,
+        "device_class": "door",
+        "icon_on": "mdi:check-circle",
+        "icon_off": "mdi:alert-circle",
+    },
+    {
         "unique_id": "we_faza_zasilania",
         "name": "Faza zasilania",
         "address": 4,
@@ -43,6 +61,15 @@ BINARY_SENSORS = [
         "name": "WY zawór 4 drogowy",
         "address": 7,
         "index": 0,
+    },
+    {
+        "unique_id": "wy_pompa_obiegowa",
+        "name": "WY pompa obiegowa",
+        "address": 8,
+        "index": 0,
+        "device_class": "power",
+        "icon_on": "mdi:pump",
+        "icon_off": "mdi:pump-off",
     },
     {
         "unique_id": "wy_grzalka_obud",
@@ -110,7 +137,15 @@ BINARY_SENSORS = [
         "icon_on": "mdi:fan",
         "icon_off": "mdi:fan-off",
     },
-
+    {
+        "unique_id": "we_chlodzenie",
+        "name": "WE chłodzenie",
+        "address": 181,
+        "index": 0,
+        "device_class": "power",
+        "icon_on": "mdi:fan",
+        "icon_off": "snowflake-melt",
+    },
     {
         "unique_id": "we_ogrzewania",
         "name": "WE ogrzewania",
@@ -124,4 +159,5 @@ BINARY_SENSORS = [
         "address": 183,
         "index": 0,
     },
+
 ]
