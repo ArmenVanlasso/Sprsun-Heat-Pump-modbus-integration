@@ -12,6 +12,16 @@ ENTITIES = [
         "icon": "mdi:heat-pump",
     },
     {
+        "name": "Tryb pompy obiegowej",
+        "register": 11,
+        "options": {
+            0: "Ciągła",
+            1: "Zewnętrzne sterowanie",
+            2: "Interwał",
+        },
+        "icon": "mdi:pump",
+    },
+    {
         "name": "Tryb pracy wentylatora",
         "register": 12,
         "options": {
@@ -21,16 +31,6 @@ ENTITIES = [
             3: "Serwisowy",
         },
         "icon": "mdi:fan",
-    },
-    {
-        "name": "Tryb pompy obiegowej",
-        "register": 11,
-        "options": {
-            0: "Ciągła",
-            1: "Zewnętrzne sterowanie",
-            2: "Interwał",
-        },
-        "icon": "mdi:pump",
     },
     {
         "name": "Grzałka",
