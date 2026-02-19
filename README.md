@@ -108,10 +108,7 @@ W HA:
 <b>Logowanie i debugowanie:</b>
 <br>
 - Integracja korzysta z loggera homeassistant.components.sprsun (nazwa domeny)
-- W przypadku problemów z zapisami/odczytami zobaczysz logi typu:
-- Błędy zapisu rejestrów (switch, number, select, button)
-- Błędy ładowania sensora alarmów
-- Brak zdefiniowanych sensorów dla danego modelu
+
 - Można zwiększyć poziom logowania w configuration.yaml:
 
 ```yaml
@@ -123,8 +120,6 @@ logger:
     custom_components.sprsun: debug
 ```
 <br>
-<b>Uwagi:</b>b>
+<b>Uwagi:</b>
 <br>
-- Integracja jest w pełni lokalna – żadnych połączeń z chmurą.
-- Logika pracy jest mocno konfigurowalna przez pliki modelowe (models/CGKxxxV3L/*), co ułatwia dodawanie nowych modeli lub dostosowywanie rejestrów.
 - W miarę możliwości będę dodawał kolejne modele pomp Sprsun, które mają możliwość łączenia po modbus.
