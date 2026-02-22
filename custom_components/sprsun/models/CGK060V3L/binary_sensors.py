@@ -90,15 +90,6 @@ BINARY_SENSORS = [
         "icon_off": "mdi:radiator-disabled",
     },
     {
-        "unique_id": "wy_zawor_3d",
-        "name": "Zawór trójdrogowy",
-        "address": 11,
-        "index": 0,
-        "device_class": "moving",
-        "icon_on": "mdi:valve-open",
-        "icon_off": "mdi:valve-closed",
-    },
-    {
         "unique_id": "wy_grzalka",
         "name": "Grzałka",
         "address": 12,
