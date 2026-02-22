@@ -158,7 +158,6 @@ class SprsunGenericSensor(SensorEntity):
             .replace("ł", "l").replace("ń", "n").replace("ó", "o")
             .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
-        self.entity_id = f"sensor.{slug}"
 
         self._attr_native_unit_of_measurement = definition.get("unit")
         self._attr_device_class = definition.get("device_class")
