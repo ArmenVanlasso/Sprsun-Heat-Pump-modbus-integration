@@ -17,7 +17,7 @@
       "host_required": "Adres IP jest wymagany.",
       "invalid_port": "Port musi być liczbą z zakresu 1–65535.",
       "invalid_unit_id": "Unit ID musi być liczbą z zakresu 1–255.",
-      "min_5": "Minimalna wartość to 5 sekund.",
+      "min_10": "Minimalna wartość to 10 sekund.",
       "already_configured": "Integracja z tym adresem IP już istnieje."
     }
   },
@@ -32,7 +32,7 @@
       }
     },
     "error": {
-      "min_5": "Minimalna wartość to 5 sekund."
+      "min_10": "Minimalna wartość to 10 sekund."
     }
   }
 }
