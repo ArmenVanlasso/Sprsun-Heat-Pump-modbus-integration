@@ -73,7 +73,6 @@ class SprsunGenericSelect(SelectEntity):
             .replace("ł", "l").replace("ń", "n").replace("ó", "o")
             .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
-        self.entity_id = f"select.{slug}"
 
         self._attr_options = list(self._options_map.values())
         self._attr_current_option = None
