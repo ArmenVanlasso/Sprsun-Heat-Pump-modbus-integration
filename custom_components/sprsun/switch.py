@@ -55,7 +55,12 @@ class SprsunSwitchEntity(SwitchEntity):
         self._model = model
         self._def = definition
 
+        # Adres Modbus
         self._register = definition["register"]
+
+        # Logiczny typ: "coil" lub "register" (technicznie i tak piszemy w rejestr)
+        self._write_type = definition.get("write_type", "register").lower()
+
         self._icon_on = definition.get("icon_on")
         self._icon_off = definition.get("icon_off")
 
@@ -70,7 +75,6 @@ class SprsunSwitchEntity(SwitchEntity):
             .replace("ł", "l").replace("ń", "n").replace("ó", "o")
             .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
-        self.entity_id = f"switch.{slug}"
 
         self._attr_available = True
 
@@ -86,36 +90,53 @@ class SprsunSwitchEntity(SwitchEntity):
 
     @property
     def icon(self):
-        return self._icon_on if self.is_on else self._icon_off
+        if self.is_on:
+            return self._icon_on or self._icon_off
+        return self._icon_off or self._icon_on
 
     # ---------------------------------------------------------
     # ODCZYT STANU
     # ---------------------------------------------------------
 
     @property
-    def is_on(self):
+    def is_on(self) -> bool:
+        """
+        Zwraca True tylko wtedy, gdy odczytana wartość to dokładnie 1.
+        0   -> OFF
+        1   -> ON
+        inne wartości -> OFF.
+        """
         raw = self.coordinator.data.get(self._register)
+
         if raw is None:
             return False
-        return bool(raw)
+
+        try:
+            return int(raw) == 1
+        except (TypeError, ValueError):
+            return False
 
     # ---------------------------------------------------------
     # ZAPIS STANU
     # ---------------------------------------------------------
 
-    async def async_turn_on(self, **kwargs):
+    async def _write_value(self, value: int):
+        """
+        Zapis wartości 0/1 do rejestru.
+        Pole write_type jest tu tylko informacyjne (coil/register),
+        bo klient nie ma write_coil.
+        """
         try:
-            await self.coordinator.client.write_register(self._register, 1)
+            await self.coordinator.client.write_register(self._register, value)
             await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Błąd zapisu switch %s: %s", self._attr_name, err)
 
+    async def async_turn_on(self, **kwargs):
+        await self._write_value(1)
+
     async def async_turn_off(self, **kwargs):
-        try:
-            await self.coordinator.client.write_register(self._register, 0)
-            await self.coordinator.async_request_refresh()
-        except Exception as err:
-            _LOGGER.error("Błąd zapisu switch %s: %s", self._attr_name, err)
+        await self._write_value(0)
 
     # ---------------------------------------------------------
     # DEVICE INFO
