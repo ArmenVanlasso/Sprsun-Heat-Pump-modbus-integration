@@ -1,5 +1,16 @@
+# climate.py
+
+from __future__ import annotations
+
 import logging
-from homeassistant.components.sensor import SensorEntity
+import os
+
+from homeassistant.components.climate import (
+    ClimateEntity,
+    ClimateEntityFeature,
+    HVACMode,
+)
+from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.config_entries import ConfigEntry
@@ -7,201 +18,347 @@ from homeassistant.config_entries import ConfigEntry
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
-# Importy sensorów rejestrowych
-from .models.CGK025V3L.sensors import SENSORS as SENSORS_025
-from .models.CGK030V3L.sensors import SENSORS as SENSORS_030
-from .models.CGK040V3L.sensors import SENSORS as SENSORS_040
-from .models.CGK050V3L.sensors import SENSORS as SENSORS_050
-from .models.CGK060V3L.sensors import SENSORS as SENSORS_060
-
-# Importy logic sensors
-from .models.CGK025V3L.logic_sensors import *
-from .models.CGK030V3L.logic_sensors import *
-from .models.CGK040V3L.logic_sensors import *
-from .models.CGK050V3L.logic_sensors import *
-from .models.CGK060V3L.logic_sensors import *
+# Import definicji climate z modeli
+from .models.CGK025V3L.climates import ENTITIES as CLIMATES_025
+from .models.CGK030V3L.climates import ENTITIES as CLIMATES_030
+from .models.CGK040V3L.climates import ENTITIES as CLIMATES_040
+from .models.CGK050V3L.climates import ENTITIES as CLIMATES_050
+from .models.CGK060V3L.climates import ENTITIES as CLIMATES_060
 
 _LOGGER = logging.getLogger(__name__)
 
-MODEL_SENSORS_MAP = {
-    "cgk_025v3l": SENSORS_025,
-    "cgk_030v3l": SENSORS_030,
-    "cgk_040v3l": SENSORS_040,
-    "cgk_050v3l": SENSORS_050,
-    "cgk_060v3l": SENSORS_060,
-}
-
-# Usunięto CompressorStarts i DefrostCounter
-MODEL_LOGIC_MAP = {
-    "cgk_025v3l": {
-        "CompressorRuntime": SprsunCompressorRuntimeSensor,
-        "FanRuntime": SprsunFanRuntimeSensor,
-        "OwnershipDays": SprsunOwnershipDaysSensor,
-    },
-    "cgk_030v3l": {
-        "CompressorRuntime": SprsunCompressorRuntimeSensor,
-        "FanRuntime": SprsunFanRuntimeSensor,
-        "OwnershipDays": SprsunOwnershipDaysSensor,
-    },
-    "cgk_040v3l": {
-        "CompressorRuntime": SprsunCompressorRuntimeSensor,
-        "FanRuntime": SprsunFanRuntimeSensor,
-        "OwnershipDays": SprsunOwnershipDaysSensor,
-    },
-    "cgk_050v3l": {
-        "CompressorRuntime": SprsunCompressorRuntimeSensor,
-        "FanRuntime": SprsunFanRuntimeSensor,
-        "OwnershipDays": SprsunOwnershipDaysSensor,
-    },
-    "cgk_060v3l": {
-        "CompressorRuntime": SprsunCompressorRuntimeSensor,
-        "FanRuntime": SprsunFanRuntimeSensor,
-        "OwnershipDays": SprsunOwnershipDaysSensor,
-    },
+MODEL_CLIMATE_MAP = {
+    "cgk_025v3l": CLIMATES_025,
+    "cgk_030v3l": CLIMATES_030,
+    "cgk_040v3l": CLIMATES_040,
+    "cgk_050v3l": CLIMATES_050,
+    "cgk_060v3l": CLIMATES_060,
 }
 
 
-# ---------------------------------------------------------
-# SETUP ENTRY
-# ---------------------------------------------------------
-
+# ============================================================
+#  SETUP PLATFORM
+# ============================================================
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    data = hass.data[DOMAIN][entry.entry_id]
-    coordinator: SprsunCoordinator = data["coordinator"]
-    model: str = data["model"]
+    """Tworzy encje climate na podstawie modelu i definicji."""
+    coordinator: SprsunCoordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
+    client = hass.data[DOMAIN][entry.entry_id]["client"]
+    model = hass.data[DOMAIN][entry.entry_id]["model"]
 
-    sensors_def = MODEL_SENSORS_MAP.get(model)
-    if sensors_def is None:
-        _LOGGER.error("Brak sensorów dla modelu %s", model)
-        return
+    definitions = MODEL_CLIMATE_MAP.get(model.lower(), [])
 
-    entities: list[SensorEntity] = []
-
-    # Sensory rejestrowe (z Modbus)
-    for definition in sensors_def:
-        entities.append(
-            SprsunGenericSensor(
-                coordinator,
-                entry.entry_id,
-                model,
-                definition
-            )
-        )
-
-    # LOGIC SENSORS
-    logic = MODEL_LOGIC_MAP[model]
-
-    entities.extend([
-        logic["CompressorRuntime"]("Czas pracy sprężarki daily",
-                                   f"{DOMAIN}_{model}_czas_pracy_sprezarki_daily",
-                                   "daily", entry.entry_id, model),
-        logic["CompressorRuntime"]("Czas pracy sprężarki monthly",
-                                   f"{DOMAIN}_{model}_czas_pracy_sprezarki_monthly",
-                                   "monthly", entry.entry_id, model),
-        logic["CompressorRuntime"]("Czas pracy sprężarki yearly",
-                                   f"{DOMAIN}_{model}_czas_pracy_sprezarki_yearly",
-                                   "yearly", entry.entry_id, model),
-        logic["CompressorRuntime"]("Czas pracy sprężarki total",
-                                   f"{DOMAIN}_{model}_czas_pracy_sprezarki_total",
-                                   "total", entry.entry_id, model),
-
-        logic["FanRuntime"]("Czas pracy wentylatora daily",
-                            f"{DOMAIN}_{model}_czas_pracy_wentylatora_daily",
-                            "daily", entry.entry_id, model),
-        logic["FanRuntime"]("Czas pracy wentylatora monthly",
-                            f"{DOMAIN}_{model}_czas_pracy_wentylatora_monthly",
-                            "monthly", entry.entry_id, model),
-        logic["FanRuntime"]("Czas pracy wentylatora yearly",
-                            f"{DOMAIN}_{model}_czas_pracy_wentylatora_yearly",
-                            "yearly", entry.entry_id, model),
-        logic["FanRuntime"]("Czas pracy wentylatora total",
-                            f"{DOMAIN}_{model}_czas_pracy_wentylatora_total",
-                            "total", entry.entry_id, model),
-
-        logic["OwnershipDays"]("Czas posiadania pompy",
-                               f"{DOMAIN}_{model}_czas_posiadania_pompy",
-                               entry.entry_id, model),
-    ])
+    entities = [
+        HeatPumpClimate(coordinator, definition, client, model)
+        for definition in definitions
+    ]
 
     async_add_entities(entities)
 
 
-# ---------------------------------------------------------
-# SENSOR REJESTROWY (Modbus → koordynator)
-# ---------------------------------------------------------
+# ============================================================
+#  UNIWERSALNY SILNIK CLIMATE – odczyt HVAC + presety
+# ============================================================
+class HeatPumpClimate(ClimateEntity):
+    """Uniwersalny silnik Climate — logika zdefiniowana w climates.py."""
 
-class SprsunGenericSensor(SensorEntity):
-    _attr_should_poll = False
-
-    def __init__(self, coordinator: SprsunCoordinator, entry_id, model, definition):
+    def __init__(self, coordinator, definition: dict, client, model: str):
         self.coordinator = coordinator
-        self._entry_id = entry_id
+        self._definition = definition
+        self._client = client
         self._model = model
-        self._def = definition
 
-        self._register = definition["register"]
-        self._scale = definition.get("scale", 1)
-        self._signed = definition.get("signed", False)
+        # --- Logika HVAC (tylko odczyt) ---
+        self._hvac_mode_register = definition.get("hvac_mode_register")
+        self._hvac_mode_values = definition.get("hvac_mode_values", {})
 
-        self._attr_name = definition["name"]
-        self._attr_unique_id = f"{DOMAIN}_{model}_sensor_{self._register}"
+        # Opcjonalny drugi rejestr i wartości blokujące (jeśli kiedyś użyjesz)
+        self._hvac_mode_register_2 = definition.get("hvac_mode_register_2")
+        self._hvac_mode_block_values = definition.get("hvac_mode_block_values", [])
 
+        # --- Logika temperatury ---
+        self._current_temp_reg = definition.get("current_temp_register")
+        self._target_temp_register = definition.get("target_temp_register")
+
+        # Parametry temperatury
+        self._scale = definition.get("scale", 0.1)
+        self._min_temp = definition.get("min_temp", 20)
+        self._max_temp = definition.get("max_temp", 60)
+        self._step = definition.get("temp_step", 1)
+
+        # --- Sterowanie ukrywaniem w OFF na podstawie climates.py ---
+        self._hide_temp_when_off = definition.get("hide_temp_when_off", False)
+        self._disable_slider_when_off = definition.get(
+            "disable_slider_when_off", False
+        )
+
+        # --- PRESETY (tryby pracy z jednego wspólnego rejestru) ---
+        self._preset_register = definition.get("preset_register")
+        self._preset_values = definition.get("preset_values", {})
+        self._preset_reverse = {
+            value: name for name, value in self._preset_values.items()
+        }
+
+        # Atrybuty HA
+        self._attr_temperature_unit = UnitOfTemperature.CELSIUS
+        self._attr_name = definition.get("name")
+        self._attr_unique_id = definition.get("unique_id")
+
+        # Tworzenie "ładnego" entity_id (bez polskich znaków)
         slug = (
-            f"sprsun_{model}_{definition['name']}"
+            f"sprsun_{self._model}_{self._attr_name}"
             .lower()
             .replace(" ", "_")
-            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
-            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
-            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
+            .replace("ą", "a")
+            .replace("ć", "c")
+            .replace("ę", "e")
+            .replace("ł", "l")
+            .replace("ń", "n")
+            .replace("ó", "o")
+            .replace("ś", "s")
+            .replace("ź", "z")
+            .replace("ż", "z")
         )
+        self.entity_id = f"climate.{slug}"
 
-        self.entity_id = f"sensor.{slug}"
+        # Zakres i krok temperatury zadanej – używane przez HA
+        self._attr_min_temp = self._min_temp
+        self._attr_max_temp = self._max_temp
+        self._attr_target_temperature_step = self._step
 
-        self._attr_native_unit_of_measurement = definition.get("unit")
-        self._attr_device_class = definition.get("device_class")
-        self._attr_state_class = definition.get("state_class")
-        self._attr_icon = definition.get("icon")
-        self._icon_map = definition.get("icon_map")
+    # ============================================================
+    #  HVAC MODE – tylko odczyt z rejestru wg climates.py
+    # ============================================================
+    @property
+    def hvac_mode(self) -> HVACMode:
+        """Aktualny tryb HVAC na podstawie wartości rejestrów."""
 
-    async def async_added_to_hass(self):
-        self.async_on_remove(
-            self.coordinator.async_add_listener(self.async_write_ha_state)
-        )
+        if self._hvac_mode_register is None:
+            # Jeśli nie zdefiniowano rejestru – traktujemy jako OFF
+            return HVACMode.OFF
+
+        reg1 = self.coordinator.data.get(self._hvac_mode_register)
+
+        # Opcjonalny drugi rejestr do blokowania trybów (jeśli użyty w definicji)
+        reg2 = None
+        if self._hvac_mode_register_2 is not None:
+            reg2 = self.coordinator.data.get(self._hvac_mode_register_2)
+
+        # Brak danych z głównego rejestru → OFF
+        if reg1 is None:
+            return HVACMode.OFF
+
+        # Jeśli drugi rejestr jest ustawiony na wartość blokującą → ZAWSZE OFF
+        if reg2 is not None and reg2 in self._hvac_mode_block_values:
+            return HVACMode.OFF
+
+        # Standardowa logika z climates.py
+        for mode, values in self._hvac_mode_values.items():
+            # values mogą być listą lub pojedynczą liczbą
+            if isinstance(values, (list, tuple, set)):
+                if reg1 in values:
+                    return HVACMode(mode)
+            else:
+                if reg1 == values:
+                    return HVACMode(mode)
+
+        # Brak dopasowania → OFF
+        return HVACMode.OFF
 
     @property
-    def native_value(self):
-        raw = self.coordinator.data.get(self._register)
+    def hvac_modes(self) -> list[HVACMode]:
+        """
+        Lista dostępnych trybów HVAC.
 
+        Jeśli w definicji jest 'hvac_modes', używamy jej.
+        W przeciwnym razie bierzemy klucze z 'hvac_mode_values'.
+        """
+        defined_modes = self._definition.get("hvac_modes")
+        if defined_modes:
+            return [HVACMode(m) for m in defined_modes]
+
+        return [HVACMode(mode) for mode in self._hvac_mode_values.keys()]
+
+    # ============================================================
+    #  PRESETY – wspólny rejestr dla wszystkich encji
+    # ============================================================
+    @property
+    def preset_modes(self) -> list[str] | None:
+        """Lista dostępnych presetów (jeśli zdefiniowane w climates.py)."""
+        if not self._preset_values:
+            return None
+        return list(self._preset_values.keys())
+
+    @property
+    def preset_mode(self) -> str | None:
+        """Aktualny preset na podstawie wspólnego rejestru."""
+        if self._preset_register is None or not self._preset_values:
+            return None
+
+        raw = self.coordinator.data.get(self._preset_register)
         if raw is None:
             return None
 
-        if self._signed and raw > 32767:
+        return self._preset_reverse.get(raw)
+
+    async def async_set_preset_mode(self, preset_mode: str):
+        """Ustawia preset – tylko ta encja zapisuje do rejestru."""
+        if self._preset_register is None or not self._preset_values:
+            return
+
+        if preset_mode not in self._preset_values:
+            _LOGGER.warning(
+                "Nieznany preset_mode '%s' dla encji %s",
+                preset_mode,
+                self.entity_id,
+            )
+            return
+
+        value = self._preset_values[preset_mode]
+
+        _LOGGER.debug(
+            "Ustawiam preset_mode '%s' (wartość %s) w rejestrze %s dla %s",
+            preset_mode,
+            value,
+            self._preset_register,
+            self.entity_id,
+        )
+
+        await self._client.write_register(self._preset_register, value)
+        await self.coordinator.async_request_refresh()
+
+    # ============================================================
+    #  IKONA – na podstawie aktualnego trybu
+    # ============================================================
+    @property
+    def icon(self) -> str:
+        mode = self.hvac_mode
+
+        if mode == HVACMode.HEAT:
+            return self._definition.get("icon_heat", "mdi:radiator")
+
+        if mode == HVACMode.COOL:
+            return self._definition.get("icon_cool", "mdi:snowflake")
+
+        return self._definition.get("icon_off", "mdi:radiator-off")
+
+    # ============================================================
+    #  TEMPERATURA BIEŻĄCA
+    # ============================================================
+    @property
+    def current_temperature(self) -> float | None:
+        """Bieżąca temperatura zdefiniowana w climates.py."""
+
+        # Jeśli mamy ukrywać temperaturę w OFF i tryb jest OFF → nie pokazuj
+        if self._hide_temp_when_off and self.hvac_mode == HVACMode.OFF:
+            return None
+
+        if self._current_temp_reg is None:
+            return None
+
+        raw = self.coordinator.data.get(self._current_temp_reg)
+        if raw is None:
+            return None
+
+        # obsługa signed int16
+        if self._definition.get("data_type") == "int16" and raw > 32767:
             raw -= 65536
 
-        raw = raw * self._scale
+        return raw * self._scale
 
-        mapping = self._def.get("mapping")
-        if mapping:
-            return mapping.get(raw, raw)
-
-        return raw
-
+    # ============================================================
+    #  TEMPERATURA ZADANA
+    # ============================================================
     @property
-    def icon(self):
-        if self._icon_map:
-            raw = self.coordinator.data.get(self._register)
-            return self._icon_map.get(raw, self._attr_icon)
-        return self._attr_icon
+    def target_temperature(self) -> float | None:
+        if self._target_temp_register is None:
+            return None
 
+        raw = self.coordinator.data.get(self._target_temp_register)
+        if raw is None:
+            return None
+
+        # obsługa signed int16
+        if self._definition.get("data_type") == "int16" and raw > 32767:
+            raw -= 65536
+
+        return raw * self._scale
+
+    # ============================================================
+    #  WSPARCIE FUNKCJI – slider + presety
+    # ============================================================
+    @property
+    def supported_features(self) -> ClimateEntityFeature:
+        features = ClimateEntityFeature(0)
+
+        # Presety – jeśli są zdefiniowane
+        if self._preset_values:
+            features |= ClimateEntityFeature.PRESET_MODE
+
+        # Slider temperatury – tylko gdy nie ma blokady w OFF
+        if not (self._disable_slider_when_off and self.hvac_mode == HVACMode.OFF):
+            features |= ClimateEntityFeature.TARGET_TEMPERATURE
+
+        return features
+
+    # ============================================================
+    #  ZMIANA TEMPERATURY – zapis do Modbus
+    # ============================================================
+    async def async_set_temperature(self, **kwargs):
+        temp = kwargs.get("temperature")
+        if temp is None or self._target_temp_register is None:
+            return
+
+        # Jeśli slider ma być wyłączony w OFF – ignorujemy zapis
+        if self._disable_slider_when_off and self.hvac_mode == HVACMode.OFF:
+            return
+
+        value = int(temp / self._scale)
+        await self._client.write_register(self._target_temp_register, value)
+        await self.coordinator.async_request_refresh()
+
+    # ============================================================
+    #  ZMIANA TRYBU HVAC – NIE STERUJEMY URZĄDZENIEM
+    # ============================================================
+    async def async_set_hvac_mode(self, hvac_mode: HVACMode):
+        """
+        Nie zapisujemy nic do Modbus przy zmianie trybu.
+        Tryb HVAC jest tylko odczytem z rejestru wg climates.py.
+        """
+        _LOGGER.debug(
+            "Ignoruję próbę zmiany hvac_mode na %s dla %s – tylko odczyt.",
+            hvac_mode,
+            self.entity_id,
+        )
+        await self.coordinator.async_request_refresh()
+
+    # ============================================================
+    #  ODŚWIEŻANIE
+    # ============================================================
+    @property
+    def should_poll(self) -> bool:
+        return False
+
+    async def async_update(self):
+        await self.coordinator.async_request_refresh()
+
+    # ============================================================
+    #  DEVICE INFO — przypisanie encji do jednego urządzenia
+    # ============================================================
     @property
     def device_info(self):
+        model_path = self._definition.get("model_path", "")
+        model_folder = (
+            os.path.basename(os.path.dirname(model_path)) if model_path else ""
+        )
+        model_name = model_folder.upper() if model_folder else self._model.upper()
+
         return {
-            "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
+            "identifiers": {(DOMAIN, self.coordinator.entry_id)},
+            "name": f"Pompa ciepła Sprsun {model_name}",
             "manufacturer": "Sprsun",
-            "model": self._model.upper().replace('_', '-'),
+            "model": model_name,
         }
