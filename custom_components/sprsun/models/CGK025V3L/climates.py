@@ -155,7 +155,7 @@ ENTITIES = [
         "input_type": "holding",
         "current_temp_register": 7,
         "target_temp_register": 7,
-        "hvac_modes": ["heat", "cool," "off"],
+        "hvac_modes": ["heat", "cool", "off"],
         "hvac_mode_register": 215,
         "hvac_mode_values": {
             "heat": 1,
