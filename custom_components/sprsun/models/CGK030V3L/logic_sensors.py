@@ -75,7 +75,13 @@ class SprsunBaseTimerSensor(RestoreEntity, SensorEntity):
 
     @property
     def native_value(self):
-        return round(self._seconds / 3600.0, 1)
+        value = round(self._seconds / 3600.0, 1)
+
+        # OFFSET +2000 h tylko dla modelu CGK040V3L i tylko dla total
+        if self._model == "cgk_040v3l" and self._reset_mode == "total":
+            value += 2000
+
+        return value
 
     @property
     def extra_state_attributes(self):
@@ -109,9 +115,16 @@ class SprsunBaseTimerSensor(RestoreEntity, SensorEntity):
         if self._last_reset is None:
             self._last_reset = date.today()
 
+        # OFFSET +2000 h tylko dla CGK040V3L i tylko dla total
+        if self._model == "cgk_040v3l" and self._reset_mode == "total":
+            offset_seconds = 2000 * 3600
+            if self._seconds < offset_seconds:
+                self._seconds += offset_seconds
+
         self._unsub_interval = async_track_time_interval(
             self.hass, self._handle_interval, timedelta(seconds=60)
         )
+
 
     async def async_will_remove_from_hass(self):
         if self._unsub_interval:
