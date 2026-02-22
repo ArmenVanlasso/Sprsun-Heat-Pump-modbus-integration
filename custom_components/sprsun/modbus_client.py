@@ -1,356 +1,172 @@
+import asyncio
 import logging
-from datetime import datetime
 
-from homeassistant.components.number import NumberEntity, NumberMode
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.restore_state import RestoreEntity
-from homeassistant.helpers.event import (
-    async_track_state_change_event,
-    async_track_time_change,
-)
-
-from .const import DOMAIN
-from .coordinator import SprsunCoordinator
-
-# Import definicji numberów per model
-from .models.CGK025V3L.numbers import ENTITIES as NUMBERS_025
-from .models.CGK030V3L.numbers import ENTITIES as NUMBERS_030
-from .models.CGK040V3L.numbers import ENTITIES as NUMBERS_040
-from .models.CGK050V3L.numbers import ENTITIES as NUMBERS_050
-from .models.CGK060V3L.numbers import ENTITIES as NUMBERS_060
+from pymodbus.client import AsyncModbusTcpClient
+from pymodbus.exceptions import ModbusException
 
 _LOGGER = logging.getLogger(__name__)
 
-MODEL_NUMBERS_MAP = {
-    "cgk_025v3l": NUMBERS_025,
-    "cgk_030v3l": NUMBERS_030,
-    "cgk_040v3l": NUMBERS_040,
-    "cgk_050v3l": NUMBERS_050,
-    "cgk_060v3l": NUMBERS_060,
-}
 
+class HeatPumpModbusClient:
 
-# ---------------------------------------------------------
-# SETUP ENTRY
-# ---------------------------------------------------------
+    def __init__(self, host: str, port: int, unit_id: int):
+        self._host = host
+        self._port = port
+        self._unit_id = unit_id
+        self._client: AsyncModbusTcpClient | None = None
+        self._lock = asyncio.Lock()
 
+    async def connect(self):
+        if self._client is not None and getattr(self._client, "connected", False):
+            return
 
-async def async_setup_entry(
-    hass: HomeAssistant,
-    entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
-):
-    """Rejestracja encji number dla danego modelu."""
-    data = hass.data[DOMAIN][entry.entry_id]
-    coordinator: SprsunCoordinator = data["coordinator"]
-    model: str = data["model"]
-
-    numbers_def = MODEL_NUMBERS_MAP.get(model, [])
-    entities: list[NumberEntity] = []
-
-    for definition in numbers_def:
-        # Encje oparte o Modbus (mają "register")
-        if "register" in definition:
-            entities.append(
-                SprsunNumberEntity(coordinator, entry.entry_id, model, definition)
-            )
-        # Liczniki logiczne (nie mają "register")
-        else:
-            entities.append(
-                SprsunCounterNumberEntity(hass, entry.entry_id, model, definition)
-            )
-
-    async_add_entities(entities)
-
-
-# ---------------------------------------------------------
-# NUMBER MODBUS
-# ---------------------------------------------------------
-
-
-class SprsunNumberEntity(NumberEntity):
-    """Encja number oparta o koordynator i rejestry Modbus."""
-
-    _attr_should_poll = False
-
-    def __init__(
-        self,
-        coordinator: SprsunCoordinator,
-        entry_id: str,
-        model: str,
-        definition: dict,
-    ) -> None:
-        self.coordinator = coordinator
-        self._entry_id = entry_id
-        self._model = model
-        self._def = definition
-
-        self._register = definition["register"]
-
-        self._attr_name = definition["name"]
-        self._attr_unique_id = f"{DOMAIN}_{model}_number_{self._register}"
-
-        self._attr_native_min_value = definition["min"]
-        self._attr_native_max_value = definition["max"]
-        self._attr_native_step = definition["step"]
-        self._attr_icon = definition.get("icon")
-        self._attr_native_unit_of_measurement = definition.get("unit")
-
-        mode = definition.get("mode", "slider")
-        self._attr_mode = NumberMode.BOX if mode == "box" else NumberMode.SLIDER
-
-        self._attr_available = True
-
-    async def async_added_to_hass(self) -> None:
-        self.async_on_remove(
-            self.coordinator.async_add_listener(self.async_write_ha_state)
+        _LOGGER.info("Connecting to Modbus heat pump %s:%s (unit_id=%s)", self._host, self._port, self._unit_id)
+        self._client = AsyncModbusTcpClient(
+            host=self._host,
+            port=self._port,
+            timeout=5,
         )
 
-    @property
-    def native_value(self):
-        return self.coordinator.data.get(self._register)
+        if hasattr(self._client, "unit_id"):
+            self._client.unit_id = self._unit_id
+        elif hasattr(self._client, "unit"):
+            self._client.unit = self._unit_id
+        elif hasattr(self._client, "slave"):
+            self._client.slave = self._unit_id
 
-    async def async_set_native_value(self, value: float) -> None:
+        await self._client.connect()
+        if not getattr(self._client, "connected", False):
+            raise ConnectionError("Cannot connect to Modbus heat pump")
+
+    async def close(self):
+        """Pewne zamknięcie połączenia Modbus TCP."""
+        if self._client is None:
+            return
+
         try:
-            await self.coordinator.client.write_register(self._register, int(value))
-            await self.coordinator.async_request_refresh()
-        except Exception as err:  # pylint: disable=broad-except
-            _LOGGER.error("Błąd zapisu number %s: %s", self._attr_name, err)
+            # 1. Zamknij transport TCP (najważniejsze)
+            if hasattr(self._client, "protocol") and hasattr(self._client.protocol, "transport"):
+                transport = self._client.protocol.transport
+                if transport is not None:
+                    transport.close()
 
-    @property
-    def device_info(self):
-        return {
-            "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
-            "manufacturer": "Sprsun",
-            "model": self._model.upper().replace("_", "-"),
-        }
+            # 2. Zamknij klienta (jeśli coś jeszcze robi)
+            close_method = getattr(self._client, "close", None)
+            if callable(close_method):
+                result = close_method()
+                if hasattr(result, "__await__"):
+                    await result
+
+        except Exception as err:
+            _LOGGER.warning("Błąd przy zamykaniu Modbus TCP: %s", err)
+
+        finally:
+            self._client = None
 
 
-# ---------------------------------------------------------
-# NUMBER COUNTER (LOGICZNY OPARTY O SENSORY HA)
-# ---------------------------------------------------------
+    async def read_holding_registers(self, address: int, count: int = 1) -> list[int] | None:
 
+        async with self._lock:
+            if self._client is None or not getattr(self._client, "connected", False):
+                await self.connect()
 
-class SprsunCounterNumberEntity(NumberEntity, RestoreEntity):
-    """Licznik logiczny oparty o istniejące sensory HA."""
-
-    _attr_should_poll = False
-    _attr_native_min_value = 0
-    _attr_native_max_value = 999999
-    _attr_native_step = 1
-    _attr_mode = NumberMode.BOX
-
-    def __init__(self, hass: HomeAssistant, entry_id: str, model: str, definition: dict):
-        self.hass = hass
-        self._entry_id = entry_id
-        self._model = model
-        self._def = definition
-
-        self._key = definition["key"]
-        self._reset = definition.get("reset")  # None / daily / monthly / yearly
-
-        # Źródła danych – zamiana <model> na faktyczny model
-        raw_src = definition.get("source_sensor")
-        self._source_sensor = (
-            raw_src.replace("<model>", self._model)
-            if raw_src and "<model>" in raw_src
-            else raw_src
-        )
-
-        raw_sp = definition.get("source_sensor_sprezarka")
-        self._source_sensor_sprezarka = (
-            raw_sp.replace("<model>", self._model)
-            if raw_sp and "<model>" in raw_sp
-            else raw_sp
-        )
-
-        raw_we = definition.get("source_sensor_wentylator")
-        self._source_sensor_wentylator = (
-            raw_we.replace("<model>", self._model)
-            if raw_we and "<model>" in raw_we
-            else raw_we
-        )
-
-        self._value: int = 0
-
-        # Atrybuty defrostu (detekcja sekwencji)
-        self._defrost_active: bool = False
-        self._defrost_start: datetime | None = None
-
-        # Unsubscribery
-        self._unsub_state = None
-        self._unsub_defrost = None
-
-        self._attr_name = definition["name"]
-        self._attr_unique_id = f"{DOMAIN}_{model}_counter_{definition['unique_id']}"
-        self._attr_icon = definition.get("icon")
-
-        # state_class – tylko total jest total_increasing
-        if self._reset is None:
-            # total – nie resetuje się, może być total_increasing
-            self._attr_state_class = "total_increasing"
-        else:
-            # daily/monthly/yearly – resetuje się do 0, więc NIE total_increasing
-            self._attr_state_class = None
-
-    async def async_added_to_hass(self) -> None:
-        """Przywróć stan i podłącz subskrypcje."""
-        await super().async_added_to_hass()
-
-        # Przywrócenie ostatniego stanu
-        last_state = await self.async_get_last_state()
-        if last_state is not None:
             try:
-                self._value = int(float(last_state.state))
-            except Exception:  # pylint: disable=broad-except
-                self._value = 0
 
-        self._attr_native_value = self._value
-        self.async_write_ha_state()
+                rr = await self._client.read_holding_registers(address=address, count=count)
+            except ModbusException as err:
+                _LOGGER.error("Modbus error reading address %s: %s", address, err)
+                return None
+            except Exception as err:  # na wypadek innych wyjątków
+                _LOGGER.error("Unexpected error reading address %s: %s", address, err)
+                return None
 
-        # Subskrypcja zmian stanu dla prostych liczników (sprężarka, wentylator, zawór)
-        if self._source_sensor:
-            self._unsub_state = async_track_state_change_event(
-                self.hass,
-                [self._source_sensor],
-                self._handle_state_change,
-            )
+            if hasattr(rr, "isError") and rr.isError():
+                _LOGGER.error("Modbus error response at address %s: %s", address, rr)
+                return None
 
-        # Subskrypcja zmian stanu dla defrostu (sprężarka + wentylator)
-        if self._source_sensor_sprezarka and self._source_sensor_wentylator:
-            self._unsub_defrost = async_track_state_change_event(
-                self.hass,
-                [
-                    self._source_sensor_sprezarka,
-                    self._source_sensor_wentylator,
-                ],
-                self._handle_defrost_state_change,
-            )
+            if rr is None or not hasattr(rr, "registers"):
+                _LOGGER.error("Invalid Modbus response at address %s: %s", address, rr)
+                return None
 
-        # Harmonogram resetu liczników (daily / monthly / yearly)
-        if self._reset in ("daily", "monthly", "yearly"):
-            async_track_time_change(
-                self.hass,
-                self._handle_reset_time_event,
-                hour=0,
-                minute=0,
-                second=0,
-            )
+            return rr.registers
 
-    async def async_will_remove_from_hass(self) -> None:
-        """Czyszczenie subskrypcji przy usuwaniu encji."""
-        if self._unsub_state:
-            self._unsub_state()
-            self._unsub_state = None
-        if self._unsub_defrost:
-            self._unsub_defrost()
-            self._unsub_defrost = None
+    async def read_discrete_inputs(self, address: int, count: int = 1) -> list[int] | None:
 
-    @property
-    def native_value(self):
-        return self._value
+        async with self._lock:
+            if self._client is None or not getattr(self._client, "connected", False):
+                await self.connect()
 
-    async def async_set_native_value(self, value: float) -> None:
-        """Ręczne ustawienie licznika (np. korekta przez użytkownika)."""
-        self._value = int(value)
-        self._attr_native_value = self._value
-        self.async_write_ha_state()
+            try:
+                rr = await self._client.read_discrete_inputs(address=address, count=count)
+            except ModbusException as err:
+                _LOGGER.error("Modbus error reading DI %s: %s", address, err)
+                return None
+            except Exception as err:
+                _LOGGER.error("Unexpected error reading DI %s: %s", address, err)
+                return None
 
-    # -----------------------------------------------------
-    # RESET LICZNIKÓW: daily / monthly / yearly
-    # -----------------------------------------------------
+            if hasattr(rr, "isError") and rr.isError():
+                _LOGGER.error("Modbus error response DI %s: %s", address, rr)
+                return None
 
-    async def _handle_reset_time_event(self, now: datetime) -> None:
-        """Wywoływane codziennie o północy – na tej podstawie robimy reset."""
-        if self._reset == "daily":
-            # reset codziennie o północy
-            self._value = 0
-        elif self._reset == "monthly":
-            # reset pierwszego dnia miesiąca
-            if now.day != 1:
-                return
-            self._value = 0
-        elif self._reset == "yearly":
-            # reset pierwszego dnia roku
-            if not (now.month == 1 and now.day == 1):
-                return
-            self._value = 0
-        else:
-            # brak resetu
-            return
+            if rr is None or not hasattr(rr, "bits"):
+                _LOGGER.error("Invalid Modbus DI response at %s: %s", address, rr)
+                return None
 
-        self._attr_native_value = self._value
-        self.async_write_ha_state()
+            return rr.bits
 
-    # -----------------------------------------------------
-    # PROSTE LICZNIKI: SPRĘŻARKA / WENTYLATOR / ZAWÓR 3D
-    # -----------------------------------------------------
+    async def write_register(self, address: int, value: int):
+        """FC6 – zapis jednego rejestru holding."""
+        async with self._lock:
+            if self._client is None or not getattr(self._client, "connected", False):
+                await self.connect()
 
-    async def _handle_state_change(self, event) -> None:
-        """Zliczanie przejść OFF → ON dla pojedynczego sensora."""
-        new = event.data.get("new_state")
-        old = event.data.get("old_state")
+            try:
+                rr = await self._client.write_register(address=address, value=value )
+            except Exception as err:
+                _LOGGER.error("Modbus error writing register %s: %s", address, err)
+                return False
 
-        if not new or not old:
-            return
+            if hasattr(rr, "isError") and rr.isError():
+                _LOGGER.error("Modbus error response writing register %s: %s", address, rr)
+                return False
 
-        if old.state == "off" and new.state == "on":
-            self._value += 1
-            self._attr_native_value = self._value
-            self.async_write_ha_state()
+            return True
 
-    # -----------------------------------------------------
-    # LICZNIK DEFROSTÓW
-    # -----------------------------------------------------
 
-    async def _handle_defrost_state_change(self, event) -> None:
-        """
-        Detekcja defrostu:
-        - Defrost trwa, gdy sprężarka == on i wentylator == off
-        - Jeden pełny cykl: wejście w stan (on/off) i późniejszy powrót
-          do jakiegokolwiek innego stanu.
-        """
-        now = datetime.now()
+    async def write_registers(self, address: int, values: list[int]):
+        """FC16 – zapis wielu rejestrów holding."""
+        async with self._lock:
+            if self._client is None or not getattr(self._client, "connected", False):
+                await self.connect()
 
-        sp = self.hass.states.get(self._source_sensor_sprezarka)
-        we = self.hass.states.get(self._source_sensor_wentylator)
+            try:
+                rr = await self._client.write_registers(address=address, values=values )
+            except Exception as err:
+                _LOGGER.error("Modbus error writing registers %s: %s", address, err)
+                return False
 
-        if not sp or not we:
-            return
+            if hasattr(rr, "isError") and rr.isError():
+                _LOGGER.error("Modbus error response writing registers %s: %s", address, rr)
+                return False
 
-        sp_on = sp.state == "on"
-        we_off = we.state == "off"
+            return True
 
-        # Jesteśmy w potencjalnym defroście: sprężarka ON, wentylator OFF
-        if sp_on and we_off:
-            if not self._defrost_active:
-                # Start defrostu
-                self._defrost_active = True
-                self._defrost_start = now
-            # Jeśli już aktywny, nie robimy nic – czekamy na koniec
-            return
 
-        # Wychodzimy z warunku defrostu
-        if self._defrost_active:
-            # Możesz tu opcjonalnie dodać warunek minimalnego czasu trwania,
-            # np. jeśli defrost trwał > 60 s:
-            if self._defrost_start and (now - self._defrost_start).total_seconds() >= 60:
-                self._value += 1
-                self._attr_native_value = self._value
-                self.async_write_ha_state()
+    async def write_coil(self, address: int, value: bool):
+        """FC5 – zapis pojedynczego bitu."""
+        async with self._lock:
+            if self._client is None or not getattr(self._client, "connected", False):
+                await self.connect()
 
-        # Zawsze resetujemy stan pomocniczy przy wyjściu
-        self._defrost_active = False
-        self._defrost_start = None
+            try:
+                rr = await self._client.write_coil(address=address, value=value )
+            except Exception as err:
+                _LOGGER.error("Modbus error writing coil %s: %s", address, err)
+                return False
 
-    @property
-    def device_info(self):
-        return {
-            "identifiers": {(DOMAIN, self._entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
-            "manufacturer": "Sprsun",
-            "model": self._model.upper().replace("_", "-"),
-        }
+            if hasattr(rr, "isError") and rr.isError():
+                _LOGGER.error("Modbus error response writing coil %s: %s", address, rr)
+                return False
+
+            return True
