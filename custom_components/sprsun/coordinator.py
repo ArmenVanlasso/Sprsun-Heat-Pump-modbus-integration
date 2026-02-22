@@ -29,10 +29,10 @@ class SprsunCoordinator(DataUpdateCoordinator):
         self.entry_id = entry_id
         self.model = model  # model zawiera definicje encji i ich data_type
 
-        # Dane z rejestrów
+        # Dane z rejestrów (klucz: adres, wartość: int)
         self.data: dict[int, int] = {}
 
-        # Dane z discrete inputs
+        # Dane z discrete inputs (jeśli chcesz ich używać oddzielnie)
         self.data_discrete: list[list[bool]] | None = None
 
         update_interval = timedelta(
@@ -50,13 +50,13 @@ class SprsunCoordinator(DataUpdateCoordinator):
         """Główny cykl odczytu danych z Modbus."""
 
         try:
+            new_data: dict[int, int] = {}
+
             # -------------------------------
             # ODCZYT HOLDING REGISTERS W BLOKACH
             # -------------------------------
-            BLOCK_SIZE = 120  # bezpiecznie poniżej limitu 125
-            MAX_REGISTER = 400  # dostosuj jeśli masz więcej
-
-            new_data: dict[int, int] = {}
+            BLOCK_SIZE = 120
+            MAX_REGISTER = 400
 
             for start in range(0, MAX_REGISTER, BLOCK_SIZE):
                 count = min(BLOCK_SIZE, MAX_REGISTER - start)
@@ -71,20 +71,16 @@ class SprsunCoordinator(DataUpdateCoordinator):
 
                 for offset, raw_value in enumerate(regs):
                     reg = start + offset
-                    value = raw_value
-
-                    new_data[reg] = value
-
-            self.data = new_data
+                    new_data[reg] = raw_value
 
             # -------------------------------
-            # ODCZYT DISCRETE INPUTS
+            # ODCZYT DISCRETE INPUTS (opcjonalny)
             # -------------------------------
             try:
                 DISCRETE_BLOCK = 120
                 DISCRETE_MAX = 200
 
-                bits = []
+                bits: list[bool] = []
 
                 for start in range(0, DISCRETE_MAX, DISCRETE_BLOCK):
                     count = min(DISCRETE_BLOCK, DISCRETE_MAX - start)
@@ -99,6 +95,13 @@ class SprsunCoordinator(DataUpdateCoordinator):
             except Exception as err:
                 _LOGGER.warning("Błąd odczytu discrete inputs: %s", err)
                 self.data_discrete = None
+
+            # -------------------------------
+            # AKTUALIZACJA DANYCH I LISTENERÓW
+            # -------------------------------
+            self.data = new_data
+
+            self.async_set_updated_data(self.data)
 
             return self.data
 
