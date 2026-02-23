@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import asyncio
 import os
 
 from homeassistant.components.climate import (
@@ -310,15 +311,56 @@ class HeatPumpClimate(ClimateEntity):
     async def async_set_temperature(self, **kwargs):
         temp = kwargs.get("temperature")
         if temp is None or self._target_temp_register is None:
+            _LOGGER.debug("%s: Brak temperatury lub rejestru docelowego", self.entity_id)
             return
 
-        # Jeśli slider ma być wyłączony w OFF – ignorujemy zapis
         if self._disable_slider_when_off and self.hvac_mode == HVACMode.OFF:
+            _LOGGER.debug("%s: Ignoruję zapis temperatury – HVAC OFF", self.entity_id)
             return
 
         value = int(temp / self._scale)
+
+        _LOGGER.debug(
+            "%s: Próba zapisu temperatury %.1f°C (wartość raw=%s) do rejestru %s",
+            self.entity_id,
+            temp,
+            value,
+            self._target_temp_register,
+        )
+
+        # --- ZAPIS ---
         await self._client.write_register(self._target_temp_register, value)
+
+        # Daj pompie czas na zapis
+        await asyncio.sleep(0.5)
+
+        # Odśwież dane
         await self.coordinator.async_request_refresh()
+
+        # Sprawdź, co pompa zwróciła po zapisie
+        new_raw = self.coordinator.data.get(self._target_temp_register)
+        new_temp = None
+        if new_raw is not None:
+            if self._definition.get("data_type") == "int16" and new_raw > 32767:
+                new_raw -= 65536
+            new_temp = new_raw * self._scale
+
+        _LOGGER.debug(
+            "%s: Po zapisie rejestr %s zwraca raw=%s (%.1f°C)",
+            self.entity_id,
+            self._target_temp_register,
+            new_raw,
+            new_temp if new_temp is not None else -999,
+        )
+
+        # Ostrzeżenie, jeśli pompa nie przyjęła wartości
+        if new_temp is not None and abs(new_temp - temp) > 0.1:
+            _LOGGER.warning(
+                "%s: Pompa NIE przyjęła nowej temperatury! Ustawiono %.1f°C, ale odczytano %.1f°C",
+                self.entity_id,
+                temp,
+                new_temp,
+            )
 
     # ============================================================
     #  ZMIANA TRYBU HVAC – NIE STERUJEMY URZĄDZENIEM
@@ -344,6 +386,13 @@ class HeatPumpClimate(ClimateEntity):
 
     async def async_update(self):
         await self.coordinator.async_request_refresh()
+
+    async def async_added_to_hass(self):
+        """Subskrybuj aktualizacje z coordinatora."""
+        self.async_on_remove(
+            self.coordinator.async_add_listener(self.async_write_ha_state)
+        )
+
 
     # ============================================================
     #  DEVICE INFO — przypisanie encji do jednego urządzenia
