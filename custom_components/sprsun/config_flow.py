@@ -109,8 +109,11 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class SprsunOptionsFlowHandler(config_entries.OptionsFlow):
-    def __init__(self, config_entry):
-        self.config_entry = config_entry
+    """Obsługa opcji (Options Flow) dla integracji."""
+
+    def __init__(self, config_entry: ConfigEntry) -> None:
+        super().__init__()                # ← musi być pierwsze!
+
 
     async def async_step_init(self, user_input=None):
         return await self.async_step_user(user_input)
