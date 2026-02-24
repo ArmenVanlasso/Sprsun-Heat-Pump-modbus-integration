@@ -40,12 +40,14 @@ ENTITIES = [
             1: "Tylko CWU",
             2: "Tylko ogrzewanie",
             3: "CWU + ogrzewanie",
+            4: "Independent",
         },
         "icons": {
             0: "mdi:radiator-off",
             1: "mdi:water-boiler",
             2: "mdi:radiator",
             3: "mdi:heat-wave",
+            4: "mdi:radiator",
         },
     },
     {
