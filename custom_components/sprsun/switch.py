@@ -7,7 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
-# Import definicji switchy per model
+# modele
 from .models.CGK025V3L.switches import ENTITIES as SWITCHES_025
 from .models.CGK030V3L.switches import ENTITIES as SWITCHES_030
 from .models.CGK040V3L.switches import ENTITIES as SWITCHES_040
@@ -30,14 +30,14 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Rejestracja switchy dla danego modelu."""
     data = hass.data[DOMAIN][entry.entry_id]
     coordinator: SprsunCoordinator = data["coordinator"]
+    client = data["client"]
     model: str = data["model"]
 
-    switches_def = MODEL_SWITCHES_MAP.get(model, [])
+    switches_def = MODEL_SWITCHES_MAP.get(model.lower(), [])
     entities = [
-        SprsunSwitchEntity(coordinator, entry.entry_id, model, definition)
+        SprsunSwitchEntity(coordinator, client, entry.entry_id, model, definition)
         for definition in switches_def
     ]
 
@@ -49,20 +49,21 @@ class SprsunSwitchEntity(SwitchEntity):
 
     _attr_should_poll = False
 
-    def __init__(self, coordinator: SprsunCoordinator, entry_id, model, definition):
+    def __init__(self, coordinator, client, entry_id, model, definition):
         self.coordinator = coordinator
+        self._client = client
         self._entry_id = entry_id
         self._model = model
         self._def = definition
 
-        # Adres Modbus
-        self._register = definition["register"]
-
-        # Logiczny typ: "coil" lub "register" (technicznie i tak piszemy w rejestr)
-        self._write_type = definition.get("write_type", "register").lower()
+        self._register = definition["address"]
+        self._cmd_on = definition.get("command_on", 1)
+        self._cmd_off = definition.get("command_off", 0)
 
         self._icon_on = definition.get("icon_on")
         self._icon_off = definition.get("icon_off")
+
+        self._verify = definition.get("verify")
 
         self._attr_name = definition["name"]
         self._attr_unique_id = f"{DOMAIN}_{model}_switch_{self._register}"
@@ -75,72 +76,57 @@ class SprsunSwitchEntity(SwitchEntity):
             .replace("ł", "l").replace("ń", "n").replace("ó", "o")
             .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
-
-        self._attr_available = True
+        self.entity_id = f"switch.{slug}"
 
     async def async_added_to_hass(self):
-        """Aktualizacja przy każdej zmianie koordynatora."""
         self.async_on_remove(
             self.coordinator.async_add_listener(self.async_write_ha_state)
         )
 
-    # ---------------------------------------------------------
-    # IKONA
-    # ---------------------------------------------------------
-
     @property
     def icon(self):
-        if self.is_on:
-            return self._icon_on or self._icon_off
-        return self._icon_off or self._icon_on
-
-    # ---------------------------------------------------------
-    # ODCZYT STANU
-    # ---------------------------------------------------------
+        return self._icon_on if self.is_on else self._icon_off
 
     @property
     def is_on(self) -> bool:
-        """
-        Zwraca True tylko wtedy, gdy odczytana wartość to dokładnie 1.
-        0   -> OFF
-        1   -> ON
-        inne wartości -> OFF.
-        """
-        raw = self.coordinator.data.get(self._register)
+        """Stan włącznika z verify lub fallback."""
+        if not self._verify:
+            v = self.coordinator.data.get(1000 + self._register)
+            return bool(v) == bool(self._cmd_on)          # ← NEW  (dla 1/0 lub True/False)
 
-        if raw is None:
-            return False
+        v_dict      = self._verify
+        addr        = v_dict["address"]
+        itype       = v_dict.get("input_type", "coil").lower()
+        state_on    = v_dict.get("state_on", 1)
+        state_off   = v_dict.get("state_off", 0)
 
-        try:
-            return int(raw) == 1
-        except (TypeError, ValueError):
-            return False
+        if itype == "discrete":
+            raw = self.coordinator.data_coils.get(addr, False)
+            return bool(raw) == bool(state_on)          # ← NEW
 
-    # ---------------------------------------------------------
-    # ZAPIS STANU
-    # ---------------------------------------------------------
+        if itype == "coil":
+            raw = self.coordinator.data.get(1000 + addr)
+            return bool(raw) == bool(state_on)          # ← NEW
+
+        if itype == "holding":
+            raw = self.coordinator.data.get(addr)
+            return bool(raw) == bool(state_on)          # ← NEW
+
+        return False
 
     async def _write_value(self, value: int):
-        """
-        Zapis wartości 0/1 do rejestru.
-        Pole write_type jest tu tylko informacyjne (coil/register),
-        bo klient nie ma write_coil.
-        """
+        """Zapis przez FC5 (coil), nie FC6 (holding)."""
         try:
-            await self.coordinator.client.write_register(self._register, value)
+            await self._client.write_coil(self._register, bool(value))
             await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Błąd zapisu switch %s: %s", self._attr_name, err)
 
     async def async_turn_on(self, **kwargs):
-        await self._write_value(1)
+        await self._write_value(self._cmd_on)
 
     async def async_turn_off(self, **kwargs):
-        await self._write_value(0)
-
-    # ---------------------------------------------------------
-    # DEVICE INFO
-    # ---------------------------------------------------------
+        await self._write_value(self._cmd_off)
 
     @property
     def device_info(self):
