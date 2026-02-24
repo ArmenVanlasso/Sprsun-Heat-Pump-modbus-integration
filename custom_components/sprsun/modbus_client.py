@@ -170,3 +170,26 @@ class HeatPumpModbusClient:
                 return False
 
             return True
+
+    async def read_coils(self, address: int, count: int = 1) -> list[bool] | None:
+        """FC1 – odczyt cewek (coils)."""
+        async with self._lock:
+            if self._client is None or not getattr(self._client, "connected", False):
+                await self.connect()
+
+            try:
+                rr = await self._client.read_coils(address=address, count=count)
+            except Exception as err:
+                _LOGGER.error("Modbus error reading coils %s: %s", address, err)
+                return None
+
+            if hasattr(rr, "isError") and rr.isError():
+                _LOGGER.error("Modbus error response reading coils %s: %s", address, rr)
+                return None
+
+            if rr is None or not hasattr(rr, "bits"):
+                _LOGGER.error("Invalid Modbus coils response at %s: %s", address, rr)
+                return None
+
+            return rr.bits[:count]   # zwróć listę bool
+
