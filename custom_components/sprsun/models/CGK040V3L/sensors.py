@@ -1,6 +1,20 @@
 SENSORS = [
 
     {
+        "unique_id": "d07_zaw_3_drog",
+        "name": "Zawór trójdrogowy pozycja",
+        "register": 11,
+        "icon": "mdi:valve-open",
+        "mapping": {
+            1: "C.W.U.",
+            2: "C.O.",
+        },
+        "icon_map": {
+            1: "mdi:valve-open",
+            2: "mdi:valve-closed",
+        },
+    },
+    {
         "name": "Temperatura powrotu",
         "unique_id": "temp_powrotu",
         "register": 188,
@@ -99,16 +113,15 @@ SENSORS = [
         "icon": "mdi:thermometer",
     },
     {
-        "name": "Zawór EEV",
-        "unique_id": "zawor_eev",
+        "name": "Y1 Wentylator",
+        "unique_id": "y1_wentylator",
         "register": 197,
         "unit": "%",
-        "scale": 0.1,
-        "signed": True,
-        "icon": "mdi:valve"
+        "scale": 1,
+        "icon": "mdi:fan",
     },
     {
-        "name": "Y3: Pompa obiegowa",
+        "name": "Y3 Pompa obiegowa",
         "unique_id": "y3_pompa_obieg",
         "register": 198,
         "unit": "%",
@@ -126,14 +139,16 @@ SENSORS = [
         "unit": "rpm",
         "scale": 1,
         "icon": "mdi:fan",
+        "description": "Fan 1 output",
     },
     {
         "name": "Wentylator 1 pomiar",
         "unique_id": "dc_fan_1_feedback",
-        "register": 200,
+        "register": 202,
         "unit": "rpm",
         "scale": 1,
         "icon": "mdi:fan",
+        "description": "DC Fan 1 feedback",
     },
     {
         "name": "Wentylator 2 sterowanie",
@@ -146,7 +161,7 @@ SENSORS = [
     {
         "name": "Wentylator 2 pomiar",
         "unique_id": "dc_fan_2_feedback",
-        "register": 202,
+        "register": 200,
         "unit": "rpm",
         "scale": 1,
         "icon": "mdi:fan",
@@ -176,18 +191,13 @@ SENSORS = [
         "icon": "mdi:rotate-right",
     },
     {
-        "unique_id": "d07_zaw_3_drog",
-        "name": "Zawór trójdrogowy pozycja",
-        "register": 11,
-        "icon": "mdi:valve-open",
-        "mapping": {
-            1: "C.W.U.",
-            2: "C.O.",
-        },
-        "icon_map": {
-            1: "mdi:valve-open",
-            2: "mdi:valve-closed",
-        },
+        "name": "Zawór EEV",
+        "unique_id": "zawor_eev",
+        "register": 207,
+        "unit": "%",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:valve"
     },
     {
         "name": "Status 2",
@@ -241,6 +251,24 @@ SENSORS = [
         "icon": "mdi:coolant-temperature",
     },
     {
+        "name": "Tryb pracy pompy",
+        "unique_id": "tryb_pracy_pompy",
+        "register": 215,
+        "scale": 1,
+        "icon": "mdi:information",
+        "mapping": {
+            0: "Chłodzenie",
+            1: "Ogrzewanie",
+            2: "CWU",
+        },
+
+        "icon_map": {
+            0: "mdi:snowflake",
+            1: "mdi:radiator",
+            2: "mdi:shower",
+        },
+    },
+    {
         "name": "Temperatura tłoczenia",
         "unique_id": "temp_tloczenia",
         "register": 216,
@@ -282,24 +310,6 @@ SENSORS = [
             8: "mdi:snowflake",
             9: "mdi:alert-circle",
             10: "mdi:swap-horizontal",
-        },
-    },
-    {
-        "name": "Tryb pracy pompy",
-        "unique_id": "tryb_pracy_pompy",
-        "register": 215,
-        "scale": 1,
-        "icon": "mdi:information",
-        "mapping": {
-            0: "Chłodzenie",
-            1: "Ogrzewanie",
-            2: "CWU",
-        },
-
-        "icon_map": {
-            0: "mdi:snowflake",
-            1: "mdi:radiator",
-            2: "mdi:shower",
         },
     },
     {
@@ -351,7 +361,7 @@ SENSORS = [
         "unit": "W",
         "device_class": "power",
         "state_class": "measurement",
-        "scale": 1,
+        "scale": 100,
         "icon": "mdi:flash",
     },
     {
@@ -371,7 +381,7 @@ SENSORS = [
         "unit": "A",
         "device_class": "current",
         "state_class": "measurement",
-        "scale": 1,
+        "scale": 0.1,
         "icon": "mdi:alpha-a-circle",
     },
 ]
