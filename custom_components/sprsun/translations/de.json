@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfiguration der Sprsun-Wärmepumpe",
+        "description": "Geben Sie die Verbindungsdaten für die Wärmepumpe ein: IP-Adresse, Modbus-TCP-Port, Unit-ID, Abfrageintervall und wählen Sie das Pumpenmodell aus der Liste.",
+        "data": {
+          "host": "IP-Adresse der Wärmepumpe",
+          "port": "Modbus-TCP-Port",
+          "unit_id": "Unit-ID (Modbus-Adresse)",
+          "scan_interval": "Abfrageintervall (Sekunden)",
+          "model": "Pumpenmodell"
+        }
+      }
+    },
+    "error": {
+      "host_required": "IP-Adresse ist erforderlich.",
+      "invalid_port": "Port muss eine Zahl zwischen 1 und 65535 sein.",
+      "invalid_unit_id": "Unit-ID muss zwischen 1 und 255 liegen.",
+      "min_5": "Mindestwert ist 5 Sekunden.",
+      "already_configured": "Diese IP-Adresse ist bereits konfiguriert."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Optionen der Sprsun-Integration",
+        "description": "Zusätzliche Parameter der Integration einstellen.",
+        "data": {
+          "scan_interval": "Abfrageintervall (Sekunden)"
+        }
+      }
+    },
+    "error": {
+      "min_5": "Mindestwert ist 5 Sekunden."
+    }
+  }
+}
