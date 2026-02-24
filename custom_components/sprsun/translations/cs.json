@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfigurace tepelného čerpadla Sprsun",
+        "description": "Zadejte údaje pro připojení k čerpadlu: IP adresu, Modbus port, unit ID, interval dotazování a vyberte model čerpadla ze seznamu.",
+        "data": {
+          "host": "IP adresa čerpadla",
+          "port": "Modbus TCP port",
+          "unit_id": "Unit ID (Modbus adresa)",
+          "scan_interval": "Interval dotazování (sekundy)",
+          "model": "Model čerpadla"
+        }
+      }
+    },
+    "error": {
+      "host_required": "IP adresa je povinná.",
+      "invalid_port": "Port musí být číslo v rozsahu 1–65535.",
+      "invalid_unit_id": "Unit ID musí být v rozmezí 1–255.",
+      "min_5": "Minimální hodnota je 5 sekund.",
+      "already_configured": "Tato IP adresa je již nakonfigurovaná."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Možnosti integrace Sprsun",
+        "description": "Upravte další parametry integrace.",
+        "data": {
+          "scan_interval": "Interval dotazování (sekundy)"
+        }
+      }
+    },
+    "error": {
+      "min_5": "Minimální hodnota je 5 sekund."
+    }
+  }
+}
