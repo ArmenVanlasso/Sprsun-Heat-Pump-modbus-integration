@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Type verbinding met de Sprsun-warmtepomp",
+        "description": "Kies hoe je verbinding wilt maken met de pomp: via Ethernet (TCP) of via een seriële poort (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Verbindingsdetails",
+        "description": "Vul de gegevens in die horen bij het gekozen verbindingstype.",
+        "data": {
+          "host": "IP-adres van de pomp",
+          "port": "Modbus TCP-poort",
+          "serialport": "Seriële poort (bijv. /dev/ttyUSB0)",
+          "baudrate": "Transmissiesnelheid [bps]",
+          "unitid": "Adres van de pomp (Unit ID / Slave ID)",
+          "scaninterval": "Poll-interval [s]",
+          "model": "Pomptype"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP-adres is verplicht.",
+      "invalidport": "De TCP-poort moet een getal tussen 1 en 65535 zijn.",
+      "invalidunitid": "Unit ID moet een getal tussen 1 en 255 zijn.",
+      "min10": "De minimumwaarde is 10 seconden.",
+      "alreadyconfigured": "Een dergelijke verbinding bestaat al."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun-integratieopties",
+        "description": "Wijzig de uitleesfrequentie.",
+        "data": {
+          "scaninterval": "Poll-interval [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "De minimumwaarde is 10 seconden."
+    }
+  }
+}
