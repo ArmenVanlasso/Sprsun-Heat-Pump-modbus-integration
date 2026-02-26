@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sprsun 히트펌프 연결 방식",
+        "description": "펌프에 연결할 방식을 선택하세요: Ethernet(TCP) 또는 시리얼 포트(RS485 / RTU)."
+      },
+      "details": {
+        "title": "연결 세부 정보",
+        "description": "선택한 연결 방식에 맞는 정보를 입력하세요.",
+        "data": {
+          "host": "펌프 IP 주소",
+          "port": "Modbus TCP 포트",
+          "serialport": "시리얼 포트 (예: /dev/ttyUSB0)",
+          "baudrate": "전송 속도 [bps]",
+          "unitid": "펌프 주소 (Unit ID / Slave ID)",
+          "scaninterval": "폴링 간격 [초]",
+          "model": "펌프 모델"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP 주소는 필수입니다.",
+      "invalidport": "TCP 포트는 1~65535 범위의 숫자여야 합니다.",
+      "invalidunitid": "Unit ID는 1~255 범위의 숫자여야 합니다.",
+      "min10": "최소 값은 10초입니다.",
+      "alreadyconfigured": "이미 동일한 연결 설정이 존재합니다."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun 통합 옵션",
+        "description": "읽기 주기를 변경하세요.",
+        "data": {
+          "scaninterval": "폴링 간격 [초]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "최소 값은 10초입니다."
+    }
+  }
+}
