@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Kapcsolattípus a Sprsun hőszivattyúhoz",
+        "description": "Válassza ki, hogyan szeretne csatlakozni a hőszivattyúhoz: Etherneten (TCP) vagy soros porton (RS485 / RTU) keresztül."
+      },
+      "details": {
+        "title": "Kapcsolati adatok",
+        "description": "Töltse ki a kiválasztott kapcsolattípusnak megfelelő adatokat.",
+        "data": {
+          "host": "A hőszivattyú IP‑címe",
+          "port": "Modbus TCP port",
+          "serialport": "Soros port (pl. /dev/ttyUSB0)",
+          "baudrate": "Átviteli sebesség [bps]",
+          "unitid": "A hőszivattyú címe (Unit ID / Slave ID)",
+          "scaninterval": "Lekérdezési intervallum [s]",
+          "model": "Hőszivattyú modell"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Az IP‑cím megadása kötelező.",
+      "invalidport": "A TCP portnak 1 és 65535 közötti számnak kell lennie.",
+      "invalidunitid": "A Unit ID‑nek 1 és 255 közötti számnak kell lennie.",
+      "min10": "A minimális érték 10 másodperc.",
+      "alreadyconfigured": "Ilyen kapcsolat már létezik."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun integrációs beállítások",
+        "description": "Módosítsa a leolvasások gyakoriságát.",
+        "data": {
+          "scaninterval": "Lekérdezési intervallum [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "A minimális érték 10 másodperc."
+    }
+  }
+}
