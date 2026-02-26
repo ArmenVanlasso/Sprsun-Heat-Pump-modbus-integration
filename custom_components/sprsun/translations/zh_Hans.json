@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sprsun 热泵连接方式",
+        "description": "请选择连接方式：以太网 (TCP) 或 串口 / USB (RTU)。"
+      },
+      "details": {
+        "title": "连接详情",
+        "description": "请根据所选的连接类型补充相应信息。",
+        "data": {
+          "host": "热泵 IP 地址",
+          "port": "Modbus TCP 端口",
+          "serial_port": "串口端口 (如 /dev/ttyUSB0)",
+          "baudrate": "波特率 (bps)",
+          "unit_id": "从站地址 (Unit ID / Slave ID)",
+          "scan_interval": "轮询间隔 [秒]",
+          "model": "热泵型号"
+        }
+      }
+    },
+    "error": {
+      "host_required": "必须填写 IP 地址",
+      "invalid_port": "TCP 端口应为 1~65535",
+      "invalid_unit_id": "设备地址应在 1~255 之间",
+      "min_10": "最小值为 10 秒",
+      "already_configured": "该连接已存在"
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun 集成选项",
+        "description": "调整额外参数，如轮询间隔。",
+        "data": {
+          "scan_interval": "轮询间隔 (秒)"
+        }
+      }
+    },
+    "error": {
+      "min_10": "最小值为 10 秒"
+    }
+  }
+}
