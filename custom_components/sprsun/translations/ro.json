@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tip de conexiune la pompa de căldură Sprsun",
+        "description": "Alege modul în care dorești să te conectezi la pompă: prin Ethernet (TCP) sau prin port serial (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Detalii de conexiune",
+        "description": "Completează informațiile corespunzătoare tipului de conexiune selectat.",
+        "data": {
+          "host": "Adresa IP a pompei",
+          "port": "Port Modbus TCP",
+          "serialport": "Port serial (ex.: /dev/ttyUSB0)",
+          "baudrate": "Viteza de transmisie [bps]",
+          "unitid": "Adresa pompei (Unit ID / Slave ID)",
+          "scaninterval": "Interval de interogare [s]",
+          "model": "Modelul pompei"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Adresa IP este obligatorie.",
+      "invalidport": "Portul TCP trebuie să fie un număr între 1 și 65535.",
+      "invalidunitid": "Unit ID trebuie să fie un număr între 1 și 255.",
+      "min10": "Valoarea minimă este 10 secunde.",
+      "alreadyconfigured": "O astfel de conexiune există deja."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Opțiuni de integrare Sprsun",
+        "description": "Modifică frecvența de citire.",
+        "data": {
+          "scaninterval": "Interval de interogare [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Valoarea minimă este 10 secunde."
+    }
+  }
+}
