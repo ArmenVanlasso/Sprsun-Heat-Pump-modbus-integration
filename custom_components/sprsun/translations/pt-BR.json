@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tipo de conexão com a bomba Sprsun",
+        "description": "Escolha como deseja se conectar à bomba: via Ethernet (TCP) ou porta serial (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Detalhes da conexão",
+        "description": "Preencha os dados apropriados para o tipo de conexão selecionado.",
+        "data": {
+          "host": "Endereço IP da bomba",
+          "port": "Porta Modbus TCP",
+          "serialport": "Porta serial (ex.: /dev/ttyUSB0)",
+          "baudrate": "Velocidade de transmissão [bps]",
+          "unitid": "Endereço da bomba (Unit ID / Slave ID)",
+          "scaninterval": "Intervalo de consulta [s]",
+          "model": "Modelo da bomba"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "O endereço IP é obrigatório.",
+      "invalidport": "A porta TCP deve ser um número entre 1 e 65535.",
+      "invalidunitid": "O Unit ID deve ser um número entre 1 e 255.",
+      "min10": "O valor mínimo é 10 segundos.",
+      "alreadyconfigured": "Essa conexão já existe."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Opções de integração Sprsun",
+        "description": "Altere a frequência das leituras.",
+        "data": {
+          "scaninterval": "Intervalo de consulta [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "O valor mínimo é 10 segundos."
+    }
+  }
+}
