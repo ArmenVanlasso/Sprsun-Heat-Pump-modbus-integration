@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Genus connexionis cum machina Sprsun",
+        "description": "Elige quomodo cum machina conecti velis: per Ethernet (TCP) aut per portum serialem (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Singula connexionis",
+        "description": "Comple notitias quae generi connexionis delecto conveniunt.",
+        "data": {
+          "host": "Inscriptio IP machinae",
+          "port": "Modbus TCP portus",
+          "serialport": "Portus serialis (exempli gratia /dev/ttyUSB0)",
+          "baudrate": "Celeritas transmissionis [bps]",
+          "unitid": "Inscriptio machinae (Unit ID / Slave ID)",
+          "scaninterval": "Intervallum interrogationis [s]",
+          "model": "Modellum machinae"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Inscriptio IP necessaria est.",
+      "invalidport": "Portus TCP numerus inter 1 et 65535 esse debet.",
+      "invalidunitid": "Unit ID numerus inter 1 et 255 esse debet.",
+      "min10": "Valor minimus est 10 secunda.",
+      "alreadyconfigured": "Haec connexio iam exstat."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Optiones integrationis Sprsun",
+        "description": "Frequentionem lectionum muta.",
+        "data": {
+          "scaninterval": "Intervallum interrogationis [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Valor minimus est 10 secunda."
+    }
+  }
+}
