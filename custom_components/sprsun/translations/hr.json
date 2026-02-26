@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vrsta povezivanja s toplinskom pumpom Sprsun",
+        "description": "Odaberite kako se želite povezati s pumpom: putem Ethernet (TCP) ili serijskog porta (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Detalji povezivanja",
+        "description": "Unesite podatke odgovarajuće za odabranu vrstu povezivanja.",
+        "data": {
+          "host": "IP adresa pumpe",
+          "port": "Modbus TCP port",
+          "serialport": "Serijski port (npr. /dev/ttyUSB0)",
+          "baudrate": "Brzina prijenosa [bps]",
+          "unitid": "Adresa pumpe (Unit ID / Slave ID)",
+          "scaninterval": "Interval upita [s]",
+          "model": "Model pumpe"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP adresa je obavezna.",
+      "invalidport": "TCP port mora biti broj u rasponu 1–65535.",
+      "invalidunitid": "Unit ID mora biti broj u rasponu 1–255.",
+      "min10": "Minimalna vrijednost je 10 sekundi.",
+      "alreadyconfigured": "Takvo povezivanje već postoji."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Opcije integracije Sprsun",
+        "description": "Promijenite učestalost očitanja.",
+        "data": {
+          "scaninterval": "Interval upita [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Minimalna vrijednost je 10 sekundi."
+    }
+  }
+}
