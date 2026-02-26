@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sprsun हीट पंप के लिए कनेक्शन प्रकार",
+        "description": "चुनें कि आप पंप से कैसे कनेक्ट करना चाहते हैं: Ethernet (TCP) या सीरियल पोर्ट (RS485 / RTU) के माध्यम से।"
+      },
+      "details": {
+        "title": "कनेक्शन विवरण",
+        "description": "चयनित कनेक्शन प्रकार के अनुसार आवश्यक जानकारी भरें।",
+        "data": {
+          "host": "पंप का IP पता",
+          "port": "Modbus TCP पोर्ट",
+          "serialport": "सीरियल पोर्ट (उदा. /dev/ttyUSB0)",
+          "baudrate": "डेटा ट्रांसमिशन गति [bps]",
+          "unitid": "पंप का पता (Unit ID / Slave ID)",
+          "scaninterval": "पोलिंग अंतराल [सेकंड]",
+          "model": "पंप मॉडल"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP पता आवश्यक है।",
+      "invalidport": "TCP पोर्ट 1 से 65535 के बीच एक संख्या होना चाहिए।",
+      "invalidunitid": "Unit ID 1 से 255 के बीच एक संख्या होना चाहिए।",
+      "min10": "न्यूनतम मान 10 सेकंड है।",
+      "alreadyconfigured": "ऐसा कनेक्शन पहले से मौजूद है।"
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun इंटीग्रेशन विकल्प",
+        "description": "रीडिंग की आवृत्ति बदलें।",
+        "data": {
+          "scaninterval": "पोलिंग अंतराल [सेकंड]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "न्यूनतम मान 10 सेकंड है।"
+    }
+  }
+}
