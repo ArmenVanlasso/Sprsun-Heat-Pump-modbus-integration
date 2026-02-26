@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Loại kết nối với máy bơm nhiệt Sprsun",
+        "description": "Chọn cách bạn muốn kết nối với máy bơm: qua Ethernet (TCP) hoặc qua cổng nối tiếp (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Chi tiết kết nối",
+        "description": "Điền thông tin phù hợp với loại kết nối đã chọn.",
+        "data": {
+          "host": "Địa chỉ IP của máy bơm",
+          "port": "Cổng Modbus TCP",
+          "serialport": "Cổng nối tiếp (ví dụ: /dev/ttyUSB0)",
+          "baudrate": "Tốc độ truyền [bps]",
+          "unitid": "Địa chỉ máy bơm (Unit ID / Slave ID)",
+          "scaninterval": "Khoảng thời gian truy vấn [giây]",
+          "model": "Mẫu máy bơm"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Địa chỉ IP là bắt buộc.",
+      "invalidport": "Cổng TCP phải là số từ 1 đến 65535.",
+      "invalidunitid": "Unit ID phải là số từ 1 đến 255.",
+      "min10": "Giá trị tối thiểu là 10 giây.",
+      "alreadyconfigured": "Kết nối này đã tồn tại."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Tùy chọn tích hợp Sprsun",
+        "description": "Thay đổi tần suất đọc dữ liệu.",
+        "data": {
+          "scaninterval": "Khoảng thời gian truy vấn [giây]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Giá trị tối thiểu là 10 giây."
+    }
+  }
+}
