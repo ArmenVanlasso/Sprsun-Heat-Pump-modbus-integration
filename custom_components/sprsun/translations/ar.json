@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "نوع الاتصال بمضخة Sprsun",
+        "description": "اختر طريقة الاتصال بالمضخة: عبر Ethernet (TCP) أو عبر المنفذ التسلسلي (RS485 / RTU)."
+      },
+      "details": {
+        "title": "تفاصيل الاتصال",
+        "description": "أدخل البيانات المناسبة لنوع الاتصال الذي اخترته.",
+        "data": {
+          "host": "عنوان IP للمضخة",
+          "port": "منفذ Modbus TCP",
+          "serialport": "المنفذ التسلسلي (مثال: /dev/ttyUSB0)",
+          "baudrate": "سرعة النقل [bps]",
+          "unitid": "عنوان المضخة (Unit ID / Slave ID)",
+          "scaninterval": "فترة الاستعلام [ثانية]",
+          "model": "طراز المضخة"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "عنوان IP مطلوب.",
+      "invalidport": "يجب أن يكون منفذ TCP رقماً بين 1 و 65535.",
+      "invalidunitid": "يجب أن يكون Unit ID رقماً بين 1 و 255.",
+      "min10": "القيمة الدنيا هي 10 ثوانٍ.",
+      "alreadyconfigured": "هذا الاتصال موجود بالفعل."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "خيارات تكامل Sprsun",
+        "description": "غيّر تكرار القراءات.",
+        "data": {
+          "scaninterval": "فترة الاستعلام [ثانية]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "القيمة الدنيا هي 10 ثوانٍ."
+    }
+  }
+}
