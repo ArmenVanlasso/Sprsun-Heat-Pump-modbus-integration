@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Uhlobo lokuxhumeka ku-Sprsun heat pump",
+        "description": "Khetha indlela ofuna ukuxhuma ngayo ku-heat pump: nge-Ethernet (TCP) noma nge-serial port (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Imininingwane yokuxhumeka",
+        "description": "Gcwalisa imininingwane ehambisana nohlobo lokuxhumeka olukhethiwe.",
+        "data": {
+          "host": "Ikheli le-IP le-heat pump",
+          "port": "I-Modbus TCP port",
+          "serialport": "I-serial port (isb. /dev/ttyUSB0)",
+          "baudrate": "Isivinini sokudlulisa [bps]",
+          "unitid": "Ikheli le-pump (Unit ID / Slave ID)",
+          "scaninterval": "Isikhawu sokubuza [s]",
+          "model": "Imodeli ye-heat pump"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Ikheli le-IP liyadingeka.",
+      "invalidport": "I-TCP port kumele ibe inombolo phakathi kuka-1 no-65535.",
+      "invalidunitid": "I-Unit ID kumele ibe inombolo phakathi kuka-1 no-255.",
+      "min10": "Inani elincane ngu-10 amasekhondi.",
+      "alreadyconfigured": "Lolu hlobo lokuxhumeka selukhona kakade."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Izinketho zokuhlanganisa i-Sprsun",
+        "description": "Shintsha imvamisa yokufunda.",
+        "data": {
+          "scaninterval": "Isikhawu sokubuza [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Inani elincane ngu-10 amasekhondi."
+    }
+  }
+}
