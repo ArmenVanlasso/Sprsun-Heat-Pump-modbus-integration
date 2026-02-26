@@ -2,37 +2,43 @@
   "config": {
     "step": {
       "user": {
-        "title": "Sunsun heat pump configuration",
-        "description": "Enter connection data for the heat pump. Provide IP address, Modbus port, unit ID, polling interval and choose your pump model from the list.",
+        "title": "Sunsun heat-pump connection type",
+        "description": "Choose whether to connect via Ethernet (TCP) or through a serial/USB port (RTU)."
+      },
+      "details": {
+        "title": "Connection details",
+        "description": "Fill in the data appropriate for the selected connection type.",
         "data": {
           "host": "Heat-pump IP address",
           "port": "Modbus TCP port",
-          "unit_id": "Unit ID (Modbus address)",
-          "scan_interval": "Polling interval (seconds)",
+          "serial_port": "Serial port (e.g. /dev/ttyUSB0)",
+          "baudrate": "Baud rate (bps)",
+          "unit_id": "Unit ID / Slave ID",
+          "scan_interval": "Polling interval (s)",
           "model": "Pump model"
         }
       }
     },
     "error": {
       "host_required": "IP address is required.",
-      "invalid_port": "Port must be a number between 1 and 65535.",
+      "invalid_port": "Port must be a number between 1 and 65555.",
       "invalid_unit_id": "Unit ID must be between 1 and 255.",
-      "min_5": "Minimum value is 5 seconds.",
-      "already_configured": "This IP address is already configured."
+      "min_10": "Minimum value is 5 seconds.",
+      "already_configured": "This connection already exists."
     }
   },
   "options": {
     "step": {
       "user": {
         "title": "Sunsun integration options",
-        "description": "Adjust additional parameters.",
+        "description": "Adjust polling interval.",
         "data": {
           "scan_interval": "Polling interval (seconds)"
         }
       }
     },
     "error": {
-      "min_5": "Minimum value is 5 seconds."
+      "min_10": "Minimum value is 10 seconds."
     }
   }
 }
