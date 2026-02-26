@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "סוג חיבור למשאבת החום Sprsun",
+        "description": "בחר כיצד ברצונך להתחבר למשאבה: דרך Ethernet (TCP) או דרך יציאה טורית (RS485 / RTU)."
+      },
+      "details": {
+        "title": "פרטי החיבור",
+        "description": "מלא את המידע המתאים לסוג החיבור שבחרת.",
+        "data": {
+          "host": "כתובת ה‑IP של המשאבה",
+          "port": "פורט Modbus TCP",
+          "serialport": "יציאה טורית (לדוגמה: /dev/ttyUSB0)",
+          "baudrate": "מהירות העברה [bps]",
+          "unitid": "כתובת המשאבה (Unit ID / Slave ID)",
+          "scaninterval": "מרווח סריקה [שניות]",
+          "model": "דגם המשאבה"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "נדרשת כתובת IP.",
+      "invalidport": "פורט TCP חייב להיות מספר בין 1 ל‑65535.",
+      "invalidunitid": "Unit ID חייב להיות מספר בין 1 ל‑255.",
+      "min10": "הערך המינימלי הוא 10 שניות.",
+      "alreadyconfigured": "חיבור כזה כבר קיים."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "אפשרויות אינטגרציה של Sprsun",
+        "description": "שנה את תדירות הקריאה.",
+        "data": {
+          "scaninterval": "מרווח סריקה [שניות]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "הערך המינימלי הוא 10 שניות."
+    }
+  }
+}
