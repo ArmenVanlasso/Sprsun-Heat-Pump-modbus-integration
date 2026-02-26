@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Uri ng koneksyon para sa Sprsun heat pump",
+        "description": "Piliin kung paano mo gustong kumonekta sa heat pump: sa pamamagitan ng Ethernet (TCP) o serial port (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Mga detalye ng koneksyon",
+        "description": "Punan ang impormasyon ayon sa napiling uri ng koneksyon.",
+        "data": {
+          "host": "IP address ng heat pump",
+          "port": "Modbus TCP port",
+          "serialport": "Serial port (hal. /dev/ttyUSB0)",
+          "baudrate": "Bilis ng transmisyon [bps]",
+          "unitid": "Address ng heat pump (Unit ID / Slave ID)",
+          "scaninterval": "Interval ng pag‑query [segundo]",
+          "model": "Modelo ng heat pump"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Kinakailangan ang IP address.",
+      "invalidport": "Ang TCP port ay dapat na numero mula 1 hanggang 65535.",
+      "invalidunitid": "Ang Unit ID ay dapat na numero mula 1 hanggang 255.",
+      "min10": "Ang minimum na halaga ay 10 segundo.",
+      "alreadyconfigured": "Umiiral na ang ganitong koneksyon."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Mga opsyon sa integrasyon ng Sprsun",
+        "description": "Baguhin ang dalas ng pagbabasa.",
+        "data": {
+          "scaninterval": "Interval ng pag‑query [segundo]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Ang minimum na halaga ay 10 segundo."
+    }
+  }
+}
