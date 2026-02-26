@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Type de connexion à la pompe Sprsun",
+        "description": "Choisissez comment vous souhaitez vous connecter à la pompe : via Ethernet (TCP) ou via un port série (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Détails de la connexion",
+        "description": "Renseignez les informations correspondant au type de connexion sélectionné.",
+        "data": {
+          "host": "Adresse IP de la pompe",
+          "port": "Port Modbus TCP",
+          "serialport": "Port série (ex. /dev/ttyUSB0)",
+          "baudrate": "Vitesse de transmission [bps]",
+          "unitid": "Adresse de la pompe (Unit ID / Slave ID)",
+          "scaninterval": "Intervalle d’interrogation [s]",
+          "model": "Modèle de la pompe"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "L’adresse IP est obligatoire.",
+      "invalidport": "Le port TCP doit être un nombre compris entre 1 et 65535.",
+      "invalidunitid": "Le Unit ID doit être un nombre compris entre 1 et 255.",
+      "min10": "La valeur minimale est de 10 secondes.",
+      "alreadyconfigured": "Une telle connexion existe déjà."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Options d’intégration Sprsun",
+        "description": "Modifiez la fréquence des lectures.",
+        "data": {
+          "scaninterval": "Intervalle d’interrogation [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "La valeur minimale est de 10 secondes."
+    }
+  }
+}
