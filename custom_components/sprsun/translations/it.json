@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tipo di connessione alla pompa di calore Sprsun",
+        "description": "Scegli come desideri collegarti alla pompa: tramite Ethernet (TCP) oppure tramite porta seriale (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Dettagli della connessione",
+        "description": "Compila i dati appropriati per il tipo di connessione selezionato.",
+        "data": {
+          "host": "Indirizzo IP della pompa",
+          "port": "Porta Modbus TCP",
+          "serialport": "Porta seriale (es. /dev/ttyUSB0)",
+          "baudrate": "Velocità di trasmissione [bps]",
+          "unitid": "Indirizzo della pompa (Unit ID / Slave ID)",
+          "scaninterval": "Intervallo di interrogazione [s]",
+          "model": "Modello della pompa"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "L'indirizzo IP è obbligatorio.",
+      "invalidport": "La porta TCP deve essere un numero compreso tra 1 e 65535.",
+      "invalidunitid": "L'Unit ID deve essere un numero compreso tra 1 e 255.",
+      "min10": "Il valore minimo è 10 secondi.",
+      "alreadyconfigured": "Questa connessione esiste già."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Opzioni di integrazione Sprsun",
+        "description": "Modifica la frequenza delle letture.",
+        "data": {
+          "scaninterval": "Intervallo di interrogazione [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Il valore minimo è 10 secondi."
+    }
+  }
+}
