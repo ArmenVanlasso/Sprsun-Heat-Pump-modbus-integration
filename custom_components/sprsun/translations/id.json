@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Jenis koneksi ke pompa panas Sprsun",
+        "description": "Pilih bagaimana Anda ingin terhubung ke pompa: melalui Ethernet (TCP) atau melalui port serial (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Detail koneksi",
+        "description": "Isi data yang sesuai dengan jenis koneksi yang dipilih.",
+        "data": {
+          "host": "Alamat IP pompa",
+          "port": "Port Modbus TCP",
+          "serialport": "Port serial (misalnya: /dev/ttyUSB0)",
+          "baudrate": "Kecepatan transmisi [bps]",
+          "unitid": "Alamat pompa (Unit ID / Slave ID)",
+          "scaninterval": "Interval polling [detik]",
+          "model": "Model pompa"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Alamat IP wajib diisi.",
+      "invalidport": "Port TCP harus berupa angka antara 1 dan 65535.",
+      "invalidunitid": "Unit ID harus berupa angka antara 1 dan 255.",
+      "min10": "Nilai minimum adalah 10 detik.",
+      "alreadyconfigured": "Koneksi seperti ini sudah ada."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Opsi integrasi Sprsun",
+        "description": "Ubah frekuensi pembacaan.",
+        "data": {
+          "scaninterval": "Interval polling [detik]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Nilai minimum adalah 10 detik."
+    }
+  }
+}
