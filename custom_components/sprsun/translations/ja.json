@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sprsun ヒートポンプへの接続方式",
+        "description": "ポンプへの接続方法を選択してください：Ethernet（TCP）またはシリアルポート（RS485 / RTU）。"
+      },
+      "details": {
+        "title": "接続の詳細",
+        "description": "選択した接続タイプに応じて必要な情報を入力してください。",
+        "data": {
+          "host": "ポンプのIPアドレス",
+          "port": "Modbus TCP ポート",
+          "serialport": "シリアルポート（例: /dev/ttyUSB0）",
+          "baudrate": "通信速度 [bps]",
+          "unitid": "ポンプアドレス（Unit ID / Slave ID）",
+          "scaninterval": "ポーリング間隔 [秒]",
+          "model": "ポンプモデル"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IPアドレスは必須です。",
+      "invalidport": "TCPポートは1〜65535の範囲で指定してください。",
+      "invalidunitid": "Unit ID は1〜255の範囲で指定してください。",
+      "min10": "最小値は10秒です。",
+      "alreadyconfigured": "同じ接続設定がすでに存在します。"
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun 統合オプション",
+        "description": "読み取り頻度を変更します。",
+        "data": {
+          "scaninterval": "ポーリング間隔 [秒]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "最小値は10秒です。"
+    }
+  }
+}
