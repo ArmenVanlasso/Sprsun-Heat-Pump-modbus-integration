@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sprsun ısı pompası bağlantı türü",
+        "description": "Isı pompasına nasıl bağlanmak istediğinizi seçin: Ethernet (TCP) üzerinden veya seri port (RS485 / RTU) üzerinden."
+      },
+      "details": {
+        "title": "Bağlantı detayları",
+        "description": "Seçtiğiniz bağlantı türüne uygun bilgileri doldurun.",
+        "data": {
+          "host": "Isı pompasının IP adresi",
+          "port": "Modbus TCP portu",
+          "serialport": "Seri port (ör. /dev/ttyUSB0)",
+          "baudrate": "İletim hızı [bps]",
+          "unitid": "Isı pompası adresi (Unit ID / Slave ID)",
+          "scaninterval": "Sorgulama aralığı [s]",
+          "model": "Isı pompası modeli"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP adresi zorunludur.",
+      "invalidport": "TCP portu 1 ile 65535 arasında bir sayı olmalıdır.",
+      "invalidunitid": "Unit ID 1 ile 255 arasında bir sayı olmalıdır.",
+      "min10": "Minimum değer 10 saniyedir.",
+      "alreadyconfigured": "Bu bağlantı zaten mevcut."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun entegrasyon seçenekleri",
+        "description": "Okuma sıklığını değiştirin.",
+        "data": {
+          "scaninterval": "Sorgulama aralığı [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Minimum değer 10 saniyedir."
+    }
+  }
+}
