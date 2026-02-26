@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sprsun-lämpöpumpun yhteystapa",
+        "description": "Valitse, miten haluat muodostaa yhteyden pumppuun: Ethernet (TCP) tai sarjaportti (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Yhteyden tiedot",
+        "description": "Täytä valitulle yhteystyypille sopivat tiedot.",
+        "data": {
+          "host": "Pumpun IP-osoite",
+          "port": "Modbus TCP -portti",
+          "serialport": "Sarjaportti (esim. /dev/ttyUSB0)",
+          "baudrate": "Siirtonopeus [bps]",
+          "unitid": "Pumpun osoite (Unit ID / Slave ID)",
+          "scaninterval": "Kyselyväli [s]",
+          "model": "Pumppumalli"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP-osoite on pakollinen.",
+      "invalidport": "TCP-portin on oltava numero väliltä 1–65535.",
+      "invalidunitid": "Unit ID:n on oltava numero väliltä 1–255.",
+      "min10": "Vähimmäisarvo on 10 sekuntia.",
+      "alreadyconfigured": "Tällainen yhteys on jo olemassa."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun-integraation asetukset",
+        "description": "Muuta lukutiheyttä.",
+        "data": {
+          "scaninterval": "Kyselyväli [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Vähimmäisarvo on 10 sekuntia."
+    }
+  }
+}
