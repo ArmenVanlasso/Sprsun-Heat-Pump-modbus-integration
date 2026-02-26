@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tipo de conexión a la bomba de calor Sprsun",
+        "description": "Elige cómo deseas conectarte a la bomba: mediante Ethernet (TCP) o mediante un puerto serie (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Detalles de la conexión",
+        "description": "Rellena los datos correspondientes al tipo de conexión seleccionado.",
+        "data": {
+          "host": "Dirección IP de la bomba",
+          "port": "Puerto Modbus TCP",
+          "serialport": "Puerto serie (p. ej., /dev/ttyUSB0)",
+          "baudrate": "Velocidad de transmisión [bps]",
+          "unitid": "Dirección de la bomba (Unit ID / Slave ID)",
+          "scaninterval": "Intervalo de consulta [s]",
+          "model": "Modelo de la bomba"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "La dirección IP es obligatoria.",
+      "invalidport": "El puerto TCP debe ser un número entre 1 y 65535.",
+      "invalidunitid": "El Unit ID debe ser un número entre 1 y 255.",
+      "min10": "El valor mínimo es 10 segundos.",
+      "alreadyconfigured": "Esta conexión ya existe."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Opciones de integración Sprsun",
+        "description": "Modifica la frecuencia de lectura.",
+        "data": {
+          "scaninterval": "Intervalo de consulta [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "El valor mínimo es 10 segundos."
+    }
+  }
+}
