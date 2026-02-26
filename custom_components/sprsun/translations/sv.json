@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Anslutningstyp för Sprsun värmepump",
+        "description": "Välj hur du vill ansluta till värmepumpen: via Ethernet (TCP) eller via seriell port (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Anslutningsdetaljer",
+        "description": "Fyll i informationen som motsvarar den valda anslutningstypen.",
+        "data": {
+          "host": "Värmepumpens IP‑adress",
+          "port": "Modbus TCP‑port",
+          "serialport": "Seriell port (t.ex. /dev/ttyUSB0)",
+          "baudrate": "Överföringshastighet [bps]",
+          "unitid": "Värmepumpens adress (Unit ID / Slave ID)",
+          "scaninterval": "Avläsningsintervall [s]",
+          "model": "Värmepumpsmodell"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP‑adress krävs.",
+      "invalidport": "TCP‑porten måste vara ett nummer mellan 1 och 65535.",
+      "invalidunitid": "Unit ID måste vara ett nummer mellan 1 och 255.",
+      "min5": "Minimivärdet är 10 sekunder.",
+      "alreadyconfigured": "En sådan anslutning finns redan."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun integrationsalternativ",
+        "description": "Ändra avläsningsfrekvensen.",
+        "data": {
+          "scaninterval": "Avläsningsintervall [s]"
+        }
+      }
+    },
+    "error": {
+      "min_5": "Minimivärdet är 10 sekunder."
+    }
+  }
+}
