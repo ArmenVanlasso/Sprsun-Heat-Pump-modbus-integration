@@ -2,37 +2,43 @@
   "config": {
     "step": {
       "user": {
-        "title": "Konfiguracja pompy ciepła Sprsun",
-        "description": "Wprowadź dane połączenia z pompą ciepła. Podaj adres IP, port, wprowadź jej adres modbus, czas odpytywania. Na końcu wybierz z listy Twój model pompy Sprsun.",
+        "title": "Rodzaj połączenia z pompową Sprsun",
+        "description": "Wybierz, jak chcesz się połączyć z pompą: przez Ethernet (TCP) lub przez port szeregowy (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Szczegóły połączenia",
+        "description": "Uzupełnij dane odpowiednie dla wybranego typu połączenia.",
         "data": {
           "host": "Adres IP pompy",
           "port": "Port Modbus TCP",
-          "unit_id": "Unit ID (adres Modbus)",
-          "scan_interval": "Czas odpytywania (sekundy)",
+          "serialport": "Port szeregowy (np. /dev/ttyUSB0)",
+          "baudrate": "Prędkość transmisji [bps]",
+          "unitid": "Adres pompy (Unit ID / Slave ID)",
+          "scaninterval": "Czas odpytywania [s]",
           "model": "Model pompy"
         }
       }
     },
     "error": {
-      "host_required": "Adres IP jest wymagany.",
-      "invalid_port": "Port musi być liczbą z zakresu 1–65535.",
-      "invalid_unit_id": "Unit ID musi być liczbą z zakresu 1–255.",
-      "min_5": "Minimalna wartość to 5 sekund.",
-      "already_configured": "Integracja z tym adresem IP już istnieje."
+      "hostrequired": "Adres IP jest wymagany.",
+      "invalidport": "Port TCP musi być liczbą z zakresu 1-65535.",
+      "invalidunitid": "Unit ID musi być liczbą z zakresu 1-255.",
+      "min10": "Minimalna wartość to 10 sekund.",
+      "alreadyconfigured": "Takie połączenie już istnieje."
     }
   },
   "options": {
     "step": {
       "user": {
         "title": "Opcje integracji Sprsun",
-        "description": "Ustaw dodatkowe parametry integracji.",
+        "description": "Zmień częstotliwość odczytów.",
         "data": {
-          "scan_interval": "Czas odpytywania (sekundy)"
+          "scaninterval": "Czas odpytywania [s]"
         }
       }
     },
     "error": {
-      "min_5": "Minimalna wartość to 5 sekund."
+      "min_10": "Minimalna wartość to 10 sekund."
     }
   }
 }
