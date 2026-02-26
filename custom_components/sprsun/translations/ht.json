@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Kalite koneksyon ak ponp chalè Sprsun",
+        "description": "Chwazi kijan ou vle konekte ak ponp lan: atravè Ethernet (TCP) oswa atravè pò seri (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Detay koneksyon an",
+        "description": "Ranpli enfòmasyon ki koresponn ak kalite koneksyon ou te chwazi a.",
+        "data": {
+          "host": "Adrès IP ponp lan",
+          "port": "Pò Modbus TCP",
+          "serialport": "Pò seri (egz.: /dev/ttyUSB0)",
+          "baudrate": "Vitès transmisyon [bps]",
+          "unitid": "Adrès ponp lan (Unit ID / Slave ID)",
+          "scaninterval": "Entèval sondaj [s]",
+          "model": "Modèl ponp lan"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Adrès IP obligatwa.",
+      "invalidport": "Pò TCP a dwe yon nimewo ant 1 ak 65535.",
+      "invalidunitid": "Unit ID dwe yon nimewo ant 1 ak 255.",
+      "min10": "Valè minimòm lan se 10 segonn.",
+      "alreadyconfigured": "Koneksyon sa a deja egziste."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Opsyon entegrasyon Sprsun",
+        "description": "Chanje frekans lekti yo.",
+        "data": {
+          "scaninterval": "Entèval sondaj [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Valè minimòm lan se 10 segonn."
+    }
+  }
+}
