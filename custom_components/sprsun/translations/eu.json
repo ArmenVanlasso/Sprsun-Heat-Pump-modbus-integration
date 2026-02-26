@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sprsun ponparen konexio mota",
+        "description": "Aukeratu ponpara nola konektatu nahi duzun: Ethernet (TCP) bidez edo serie atakaren bidez (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Konexioaren xehetasunak",
+        "description": "Bete aukeratutako konexio motarako dagokion informazioa.",
+        "data": {
+          "host": "Ponparen IP helbidea",
+          "port": "Modbus TCP ataka",
+          "serialport": "Serie ataka (adib. /dev/ttyUSB0)",
+          "baudrate": "Transmisio abiadura [bps]",
+          "unitid": "Ponparen helbidea (Unit ID / Slave ID)",
+          "scaninterval": "Kontsulta tartea [s]",
+          "model": "Ponpa eredua"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP helbidea beharrezkoa da.",
+      "invalidport": "TCP atakak 1 eta 65535 arteko zenbakia izan behar du.",
+      "invalidunitid": "Unit ID-k 1 eta 255 arteko zenbakia izan behar du.",
+      "min10": "Gutxieneko balioa 10 segundo da.",
+      "alreadyconfigured": "Halako konexio bat dagoeneko existitzen da."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun integrazio aukerak",
+        "description": "Aldatu irakurketen maiztasuna.",
+        "data": {
+          "scaninterval": "Kontsulta tartea [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Gutxieneko balioa 10 segundo da."
+    }
+  }
+}
