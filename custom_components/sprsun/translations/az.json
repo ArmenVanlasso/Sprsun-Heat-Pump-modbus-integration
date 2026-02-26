@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sprsun nasosuna qoşulma növü",
+        "description": "Nasosa necə qoşulmaq istədiyinizi seçin: Ethernet (TCP) və ya serial port (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Qoşulma detalları",
+        "description": "Seçilmiş qoşulma növünə uyğun məlumatları doldurun.",
+        "data": {
+          "host": "Nasosun IP ünvanı",
+          "port": "Modbus TCP portu",
+          "serialport": "Serial port (məsələn: /dev/ttyUSB0)",
+          "baudrate": "Ötürmə sürəti [bps]",
+          "unitid": "Nasos ünvanı (Unit ID / Slave ID)",
+          "scaninterval": "Sorğu intervalı [s]",
+          "model": "Nasos modeli"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP ünvanı tələb olunur.",
+      "invalidport": "TCP portu 1–65535 aralığında bir rəqəm olmalıdır.",
+      "invalidunitid": "Unit ID 1–255 aralığında bir rəqəm olmalıdır.",
+      "min10": "Minimum dəyər 10 saniyədir.",
+      "alreadyconfigured": "Belə bir qoşulma artıq mövcuddur."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun inteqrasiya seçimləri",
+        "description": "Oxuma tezliyini dəyişin.",
+        "data": {
+          "scaninterval": "Sorğu intervalı [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Minimum dəyər 10 saniyədir."
+    }
+  }
+}
