@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Cineál ceangail leis an bpumpa teasa Sprsun",
+        "description": "Roghnaigh conas is mian leat ceangal leis an bpumpa: trí Ethernet (TCP) nó trí chalafort sraitheach (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Sonraí an cheangail",
+        "description": "Líon isteach na sonraí a bhaineann leis an gcineál ceangail a roghnaigh tú.",
+        "data": {
+          "host": "Seoladh IP an phumpa",
+          "port": "Port Modbus TCP",
+          "serialport": "Calafort sraitheach (m.sh. /dev/ttyUSB0)",
+          "baudrate": "Luas tarchuir [bps]",
+          "unitid": "Seoladh an phumpa (Unit ID / Slave ID)",
+          "scaninterval": "Eatramh fiosrúcháin [s]",
+          "model": "Múnla an phumpa"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Tá seoladh IP riachtanach.",
+      "invalidport": "Ní mór don phort TCP a bheith idir 1 agus 65535.",
+      "invalidunitid": "Ní mór don Unit ID a bheith idir 1 agus 255.",
+      "min10": "Is é 10 soicind an luach íosta.",
+      "alreadyconfigured": "Tá an ceangal seo ann cheana."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Roghanna comhtháthaithe Sprsun",
+        "description": "Athraigh minicíocht na léamha.",
+        "data": {
+          "scaninterval": "Eatramh fiosrúcháin [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Is é 10 soicind an luach íosta."
+    }
+  }
+}
