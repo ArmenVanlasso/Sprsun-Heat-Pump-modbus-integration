@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Sprsun ہیٹ پمپ کے لیے کنکشن کی قسم",
+        "description": "منتخب کریں کہ آپ پمپ سے کیسے جڑنا چاہتے ہیں: Ethernet (TCP) کے ذریعے یا سیریل پورٹ (RS485 / RTU) کے ذریعے۔"
+      },
+      "details": {
+        "title": "کنکشن کی تفصیلات",
+        "description": "منتخب کردہ کنکشن کی قسم کے مطابق معلومات درج کریں۔",
+        "data": {
+          "host": "پمپ کا IP ایڈریس",
+          "port": "Modbus TCP پورٹ",
+          "serialport": "سیریل پورٹ (مثلاً /dev/ttyUSB0)",
+          "baudrate": "ٹرانسمیشن کی رفتار [bps]",
+          "unitid": "پمپ کا ایڈریس (Unit ID / Slave ID)",
+          "scaninterval": "پولنگ وقفہ [سیکنڈ]",
+          "model": "پمپ کا ماڈل"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP ایڈریس ضروری ہے۔",
+      "invalidport": "TCP پورٹ 1 سے 65535 کے درمیان ایک عدد ہونا چاہیے۔",
+      "invalidunitid": "Unit ID 1 سے 255 کے درمیان ایک عدد ہونا چاہیے۔",
+      "min10": "کم از کم قدر 10 سیکنڈ ہے۔",
+      "alreadyconfigured": "ایسا کنکشن پہلے سے موجود ہے۔"
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun انٹیگریشن کے اختیارات",
+        "description": "ریڈنگ کی فریکوئنسی تبدیل کریں۔",
+        "data": {
+          "scaninterval": "پولنگ وقفہ [سیکنڈ]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "کم از کم قدر 10 سیکنڈ ہے۔"
+    }
+  }
+}
