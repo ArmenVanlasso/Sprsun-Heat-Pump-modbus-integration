@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Lloji i lidhjes me pompën Sprsun",
+        "description": "Zgjidh mënyrën e lidhjes me pompën: përmes Ethernet (TCP) ose portës seriale (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Detajet e lidhjes",
+        "description": "Plotëso të dhënat përkatëse për llojin e zgjedhur të lidhjes.",
+        "data": {
+          "host": "Adresa IP e pompës",
+          "port": "Porti Modbus TCP",
+          "serialport": "Porta seriale (p.sh. /dev/ttyUSB0)",
+          "baudrate": "Shpejtësia e transmetimit [bps]",
+          "unitid": "Adresa e pompës (Unit ID / Slave ID)",
+          "scaninterval": "Intervali i pyetësimit [s]",
+          "model": "Modeli i pompës"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Adresa IP është e detyrueshme.",
+      "invalidport": "Porti TCP duhet të jetë një numër nga 1 deri në 65535.",
+      "invalidunitid": "Unit ID duhet të jetë një numër nga 1 deri në 255.",
+      "min10": "Vlera minimale është 10 sekonda.",
+      "alreadyconfigured": "Një lidhje e tillë tashmë ekziston."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Opsionet e integrimit Sprsun",
+        "description": "Ndrysho frekuencën e leximeve.",
+        "data": {
+          "scaninterval": "Intervali i pyetësimit [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Vlera minimale është 10 sekonda."
+    }
+  }
+}
