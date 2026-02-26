@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Aina ya muunganisho kwa pampu ya joto ya Sprsun",
+        "description": "Chagua jinsi unavyotaka kuunganisha pampu: kupitia Ethernet (TCP) au kupitia bandari ya seriali (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Maelezo ya muunganisho",
+        "description": "Jaza taarifa zinazolingana na aina ya muunganisho uliouchagua.",
+        "data": {
+          "host": "Anwani ya IP ya pampu",
+          "port": "Bandari ya Modbus TCP",
+          "serialport": "Bandari ya seriali (mfano: /dev/ttyUSB0)",
+          "baudrate": "Kasi ya uhamishaji [bps]",
+          "unitid": "Anwani ya pampu (Unit ID / Slave ID)",
+          "scaninterval": "Muda kati ya maswali [s]",
+          "model": "Aina ya pampu"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "Anwani ya IP inahitajika.",
+      "invalidport": "Bandari ya TCP lazima iwe nambari kati ya 1 na 65535.",
+      "invalidunitid": "Unit ID lazima iwe nambari kati ya 1 na 255.",
+      "min10": "Thamani ya chini ni sekunde 10.",
+      "alreadyconfigured": "Muunganisho kama huu tayari upo."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Chaguo za ujumuishaji wa Sprsun",
+        "description": "Badilisha marudio ya usomaji.",
+        "data": {
+          "scaninterval": "Muda kati ya maswali [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Thamani ya chini ni sekunde 10."
+    }
+  }
+}
