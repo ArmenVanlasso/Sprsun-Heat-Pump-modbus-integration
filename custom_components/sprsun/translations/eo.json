@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tipo de konekto al la Sprsun-varmopumpilo",
+        "description": "Elektu kiel vi volas konekti al la pumpilo: per Ethernet (TCP) aŭ per seria haveno (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Konekto-detaloj",
+        "description": "Plenigu la datumojn konformajn al la elektita konektotipo.",
+        "data": {
+          "host": "IP-adreso de la pumpilo",
+          "port": "Modbus TCP-haveno",
+          "serialport": "Seria haveno (ekz. /dev/ttyUSB0)",
+          "baudrate": "Transmisia rapido [bps]",
+          "unitid": "Adreso de la pumpilo (Unit ID / Slave ID)",
+          "scaninterval": "Enketo-intervalo [s]",
+          "model": "Modelo de la pumpilo"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP-adreso estas deviga.",
+      "invalidport": "TCP-haveno devas esti nombro inter 1 kaj 65535.",
+      "invalidunitid": "Unit ID devas esti nombro inter 1 kaj 255.",
+      "min10": "La minimuma valoro estas 10 sekundoj.",
+      "alreadyconfigured": "Tia konekto jam ekzistas."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun-integriĝaj opcioj",
+        "description": "Ŝanĝu la legfrekvencon.",
+        "data": {
+          "scaninterval": "Enketo-intervalo [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "La minimuma valoro estas 10 sekundoj."
+    }
+  }
+}
