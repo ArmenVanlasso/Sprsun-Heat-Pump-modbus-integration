@@ -23,7 +23,7 @@
       "hostrequired": "IP‑adress krävs.",
       "invalidport": "TCP‑porten måste vara ett nummer mellan 1 och 65535.",
       "invalidunitid": "Unit ID måste vara ett nummer mellan 1 och 255.",
-      "min5": "Minimivärdet är 10 sekunder.",
+      "min10": "Minimivärdet är 10 sekunder.",
       "alreadyconfigured": "En sådan anslutning finns redan."
     }
   },
@@ -38,7 +38,7 @@
       }
     },
     "error": {
-      "min_5": "Minimivärdet är 10 sekunder."
+      "min_10": "Minimivärdet är 10 sekunder."
     }
   }
 }
