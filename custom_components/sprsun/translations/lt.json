@@ -1,0 +1,44 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Ryšio tipas su Sprsun šilumos siurbliu",
+        "description": "Pasirinkite, kaip norite prisijungti prie siurblio: per Ethernet (TCP) arba per nuosekliąją jungtį (RS485 / RTU)."
+      },
+      "details": {
+        "title": "Ryšio detalės",
+        "description": "Užpildykite duomenis pagal pasirinktą ryšio tipą.",
+        "data": {
+          "host": "Siurblio IP adresas",
+          "port": "Modbus TCP prievadas",
+          "serialport": "Nuoseklusis prievadas (pvz., /dev/ttyUSB0)",
+          "baudrate": "Perdavimo greitis [bps]",
+          "unitid": "Siurblio adresas (Unit ID / Slave ID)",
+          "scaninterval": "Užklausų intervalas [s]",
+          "model": "Siurblio modelis"
+        }
+      }
+    },
+    "error": {
+      "hostrequired": "IP adresas yra privalomas.",
+      "invalidport": "TCP prievadas turi būti skaičius nuo 1 iki 65535.",
+      "invalidunitid": "Unit ID turi būti skaičius nuo 1 iki 255.",
+      "min10": "Mažiausia reikšmė yra 10 sekundžių.",
+      "alreadyconfigured": "Toks ryšys jau egzistuoja."
+    }
+  },
+  "options": {
+    "step": {
+      "user": {
+        "title": "Sprsun integracijos parinktys",
+        "description": "Pakeiskite nuskaitymo dažnį.",
+        "data": {
+          "scaninterval": "Užklausų intervalas [s]"
+        }
+      }
+    },
+    "error": {
+      "min_10": "Mažiausia reikšmė yra 10 sekundžių."
+    }
+  }
+}
