@@ -1,5 +1,6 @@
-ENTITIES = [
+NUMBERS = [
     {
+        "unique_id": "predkosc_sprezarki_w_trybie_nocnym",
         "name": "Prędkość sprężarki w trybie nocnym",
         "register": 263,
         "min": 0,
@@ -8,6 +9,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_wentylatora_w_trybie_nocnym",
         "name": "Prędkość wentylatora w trybie nocnym",
         "register": 264,
         "min": 0,
@@ -16,6 +18,7 @@ ENTITIES = [
         "icon": "mdi:fan",
     },
     {
+        "unique_id": "funkcja_czasowa_rok",
         "name": "Funkcja czasowa rok",
         "register": 182,
         "min": 0,
@@ -25,6 +28,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_miesiac",
         "name": "Funkcja czasowa miesiąc",
         "register": 183,
         "min": 0,
@@ -34,6 +38,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_dzien",
         "name": "Funkcja czasowa dzień",
         "register": 184,
         "min": 0,
@@ -43,6 +48,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_godzina",
         "name": "Funkcja czasowa godzina",
         "register": 185,
         "min": 0,
@@ -52,6 +58,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_minuta",
         "name": "Funkcja czasowa minuta",
         "register": 186,
         "min": 0,
@@ -61,6 +68,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_dzien_tygodnia",
         "name": "Funkcja czasowa dzień tygodnia",
         "register": 187,
         "min": 0,
@@ -70,6 +78,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_poniedzialek_godzina_wlaczenia",
         "name": "Funkcja czasowa poniedziałek godzina włączenia",
         "register": 218,
         "min": 0,
@@ -79,6 +88,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_poniedzialek_minuta_wlaczenia",
         "name": "Funkcja czasowa poniedziałek minuta włączenia",
         "register": 219,
         "min": 0,
@@ -88,6 +98,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_poniedzialek_godzina_wylaczenia",
         "name": "Funkcja czasowa poniedziałek godzina wyłączenia",
         "register": 232,
         "min": 0,
@@ -97,6 +108,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_poniedzialek_minuta_wylaczenia",
         "name": "Funkcja czasowa poniedziałek minuta wyłączenia",
         "register": 233,
         "min": 0,
@@ -106,6 +118,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_wtorek_godzina_wlaczenia",
         "name": "Funkcja czasowa wtorek godzina włączenia",
         "register": 220,
         "min": 0,
@@ -115,6 +128,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_wtorek_minuta_wlaczenia",
         "name": "Funkcja czasowa wtorek minuta włączenia",
         "register": 221,
         "min": 0,
@@ -124,6 +138,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_wtorek_godzina_wylaczenia",
         "name": "Funkcja czasowa wtorek godzina wyłączenia",
         "register": 234,
         "min": 0,
@@ -133,6 +148,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_wtorek_minuta_wylaczenia",
         "name": "Funkcja czasowa wtorek minuta wyłączenia",
         "register": 235,
         "min": 0,
@@ -142,6 +158,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_sroda_godzina_wlaczenia",
         "name": "Funkcja czasowa środa godzina włączenia",
         "register": 222,
         "min": 0,
@@ -151,6 +168,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_sroda_minuta_wlaczenia",
         "name": "Funkcja czasowa środa minuta włączenia",
         "register": 223,
         "min": 0,
@@ -160,6 +178,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_sroda_godzina_wylaczenia",
         "name": "Funkcja czasowa środa godzina wyłączenia",
         "register": 236,
         "min": 0,
@@ -169,6 +188,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_sroda_minuta_wylaczenia",
         "name": "Funkcja czasowa środa minuta wyłączenia",
         "register": 237,
         "min": 0,
@@ -178,6 +198,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_czwartek_godzina_wlaczenia",
         "name": "Funkcja czasowa czwartek godzina wlączenia",
         "register": 224,
         "min": 0,
@@ -187,6 +208,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_czwartek_minuta_wlaczenia",
         "name": "Funkcja czasowa czwartek minuta wlączenia",
         "register": 225,
         "min": 0,
@@ -196,6 +218,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_czwartek_godzina_wylaczenia",
         "name": "Funkcja czasowa czwartek godzina wyłączenia",
         "register": 238,
         "min": 0,
@@ -205,6 +228,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_czwartek_minuta_wylaczenia",
         "name": "Funkcja czasowa czwartek minuta wyłączenia",
         "register": 239,
         "min": 0,
@@ -214,6 +238,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_piatek_godzina_wlaczenia",
         "name": "Funkcja czasowa piątek godzina włączenia",
         "register": 226,
         "min": 0,
@@ -223,6 +248,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_piatek_minuta_wlaczenia",
         "name": "Funkcja czasowa piątek minuta włączenia",
         "register": 227,
         "min": 0,
@@ -232,6 +258,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_piatek_godzina_wylaczenia",
         "name": "Funkcja czasowa piątek godzina wyłączenia",
         "register": 240,
         "min": 0,
@@ -241,6 +268,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_piatek_minuta_wylaczenia",
         "name": "Funkcja czasowa piątek minuta wyłączenia",
         "register": 241,
         "min": 0,
@@ -250,6 +278,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_sobota_godzina_wlaczenia",
         "name": "Funkcja czasowa sobota godzina włączenia",
         "register": 228,
         "min": 0,
@@ -259,6 +288,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_sobota_minuta_wlaczenia",
         "name": "Funkcja czasowa sobota minuta włączenia",
         "register": 229,
         "min": 0,
@@ -268,6 +298,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_sobota_godzina_wylaczenia",
         "name": "Funkcja czasowa sobota godzina wyłączenia",
         "register": 242,
         "min": 0,
@@ -277,6 +308,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_sobota_minuta_wylaczenia",
         "name": "Funkcja czasowa sobota minuta wyłączenia",
         "register": 243,
         "min": 0,
@@ -286,6 +318,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_niedziela_godzina_wlaczenia",
         "name": "Funkcja czasowa niedziela godzina włączenia",
         "register": 230,
         "min": 0,
@@ -295,6 +328,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_niedziela_minuta_wlaczenia",
         "name": "Funkcja czasowa niedziela minuta włączenia",
         "register": 231,
         "min": 0,
@@ -304,6 +338,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_niedziela_godzina_wylaczenia",
         "name": "Funkcja czasowa niedziela godzina wyłączenia",
         "register": 244,
         "min": 0,
@@ -313,6 +348,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_niedziela_minuta_wylaczenia",
         "name": "Funkcja czasowa niedziela minuta wyłączenia",
         "register": 245,
         "min": 0,
@@ -322,6 +358,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_godz_x1",
         "name": "Funkcja czasowa godź X1",
         "register": 246,
         "min": 0,
@@ -331,6 +368,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_min_x1",
         "name": "Funkcja czasowa min X1",
         "register": 247,
         "min": 0,
@@ -340,6 +378,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_godz_x2",
         "name": "Funkcja czasowa godź X2",
         "register": 250,
         "min": 0,
@@ -349,6 +388,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_min_x2",
         "name": "Funkcja czasowa min X2",
         "register": 251,
         "min": 0,
@@ -358,6 +398,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_godz_x3",
         "name": "Funkcja czasowa godź X3",
         "register": 254,
         "min": 0,
@@ -367,6 +408,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_min_x3",
         "name": "Funkcja czasowa min X3",
         "register": 255,
         "min": 0,
@@ -376,6 +418,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_godz_x4",
         "name": "Funkcja czasowa godź X4",
         "register": 258,
         "min": 0,
@@ -385,6 +428,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "funkcja_czasowa_min_x4",
         "name": "Funkcja czasowa min X4",
         "register": 259,
         "min": 0,
@@ -394,6 +438,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "minimalna_nastawa_chlodzenia",
         "name": "Minimalna nastawa chłodzenia",
         "register": 72,
         "min": -99,
@@ -403,6 +448,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "maksymalna_nastawa_chlodzenia",
         "name": "Maksymalna nastawa chłodzenia",
         "register": 73,
         "min": -99,
@@ -412,6 +458,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "adres",
         "name": "Adres",
         "register": 74,
         "min": 1,
@@ -419,6 +466,7 @@ ENTITIES = [
         "step": 1,
     },
     {
+        "unique_id": "opoznienie_zalaczenia_sprezarki",
         "name": "Opóźnienie załączenia sprężarki",
         "register": 13,
         "min": 0,
@@ -428,6 +476,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "ambient_temperature_switch",
         "name": "Ambient switch setpoint",
         "register": 297,
         "min": 10,
@@ -437,6 +486,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "minimalny_czas_postoju_sprezarki",
         "name": "Minimalny czas postoju sprężarki",
         "register": 299,
         "min": 1,
@@ -445,6 +495,7 @@ ENTITIES = [
         "icon": "mdi:timer-edit",
     },
     {
+        "unique_id": "temperatura_wyswietlacza_offset",
         "name": "Temperatura wyświetlacza offset",
         "register": 300,
         "min": 0,
@@ -453,6 +504,7 @@ ENTITIES = [
         "icon": "mdi:thermometer",
     },
     {
+        "unique_id": "temperatura_zasilania_offset",
         "name": "Temperatura zasilania offset",
         "register": 301,
         "min": 0,
@@ -461,6 +513,7 @@ ENTITIES = [
         "icon": "mdi:thermometer",
     },
     {
+        "unique_id": "temperatura_zewnetrzna_offset",
         "name": "Temperatura zewnętrzna offset",
         "register": 302,
         "min": 0,
@@ -469,6 +522,7 @@ ENTITIES = [
         "icon": "mdi:thermometer",
     },
     {
+        "unique_id": "temperatura_tloczenia_offset",
         "name": "Temperatura tłoczenia offset",
         "register": 303,
         "min": 0,
@@ -477,6 +531,7 @@ ENTITIES = [
         "icon": "mdi:thermometer",
     },
     {
+        "unique_id": "temperatura_ssania_offset",
         "name": "Temperatura ssania offset",
         "register": 304,
         "min": 0,
@@ -485,6 +540,7 @@ ENTITIES = [
         "icon": "mdi:thermometer",
     },
     {
+        "unique_id": "czujnik_wysokiego_cisnienia",
         "name": "Czujnik wysokiego ciśnienia",
         "register": 305,
         "min": 0,
@@ -493,6 +549,7 @@ ENTITIES = [
         "icon": "mdi:gauge",
     },
     {
+        "unique_id": "czujnik_niskiego_cisnienia",
         "name": "Czujnik niskiego ciśnienia",
         "register": 306,
         "min": 0,
@@ -501,6 +558,7 @@ ENTITIES = [
         "icon": "mdi:gauge",
     },
     {
+        "unique_id": "temperatura_cwu_offset",
         "name": "Temperatura CWU offset",
         "register": 307,
         "min": 0,
@@ -509,6 +567,7 @@ ENTITIES = [
         "icon": "mdi:thermometer",
     },
     {
+        "unique_id": "temperatura_parownika_offset",
         "name": "Temperatura parownika offset",
         "register": 308,
         "min": 0,
@@ -517,6 +576,7 @@ ENTITIES = [
         "icon": "mdi:thermometer",
     },
     {
+        "unique_id": "ustaw_nowe_haslo_serwisowe",
         "name": "Ustaw nowe hasło serwisowe",
         "register": 76,
         "min": 0,
@@ -526,6 +586,7 @@ ENTITIES = [
         "icon": "mdi:lock-reset",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_4_do_9",
         "name": "Prędkość sprężarki 4<Temperatura zewnętrzna<=9",
         "register": 265,
         "min": 0,
@@ -534,6 +595,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_3_do_4",
         "name": "Prędkość sprężarki -3<Temperatura zewnętrzna<=4",
         "register": 266,
         "min": 0,
@@ -542,6 +604,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_9_do_minus_3",
         "name": "Prędkość sprężarki -9<Temperatura zewnętrzna<=-3",
         "register": 267,
         "min": 0,
@@ -550,6 +613,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_15_do_minus_9",
         "name": "Prędkość sprężarki -15<Temperatura zewnętrzna<=-9",
         "register": 268,
         "min": 0,
@@ -558,6 +622,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_minus_15",
         "name": "Prędkość sprężarki Temperatura zewnętrzna <=-15",
         "register": 269,
         "min": 0,
@@ -566,6 +631,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_9",
         "name": "Prędkość sprężarki 9<Temperatura zewnętrzna",
         "register": 270,
         "min": 0,
@@ -574,6 +640,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_38",
         "name": "Prędkość sprężarki 38<Temperatura zewnętrzna",
         "register": 271,
         "min": 0,
@@ -582,6 +649,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_33_ponizej_38",
         "name": "Prędkość sprężarki 33<Temperatura zewnętrzna<=38",
         "register": 272,
         "min": 0,
@@ -590,6 +658,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_30_ponizej_33",
         "name": "Prędkość sprężarki 30<Temperatura zewnętrzna<=33",
         "register": 273,
         "min": 0,
@@ -598,6 +667,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_26_do_30",
         "name": "Prędkość sprężarki 26<Temperatura zewnętrzna<=30",
         "register": 274,
         "min": 0,
@@ -606,6 +676,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_26",
         "name": "Prędkość sprężarki temperatura zewnętrzna<=26",
         "register": 275,
         "min": 0,
@@ -614,6 +685,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "defrost_minimalna_predkosc_sprezarki_%",
         "name": "Defrost minimalna prędkość sprężarki %",
         "register": 77,
         "min": 0,
@@ -622,6 +694,7 @@ ENTITIES = [
         "icon": "mdi:bag-personal",
     },
     {
+        "unique_id": "defrost_docelowe_otwarcie_zaworu_eev",
         "name": "Defrost docelowe otwarcie zaworu EEV",
         "register": 78,
         "min": 0,
@@ -631,6 +704,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_otwarcie_zaworu_eev_po_zakonczeniu",
         "name": "Defrost otwarcie zaworu EEV po zakończeniu",
         "register": 79,
         "min": 0,
@@ -640,6 +714,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_czas_otwarcia_zaworu_eev",
         "name": "Defrost czas otwarcia zaworu EEV",
         "register": 80,
         "min": 0,
@@ -649,6 +724,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_docelowa_predkosc_sprezarki_podczas_odszraniania",
         "name": "Defrost docelowa prędkość sprężarki podczas odszraniania",
         "register": 81,
         "min": 30,
@@ -658,6 +734,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_predkosc_pompy_obiegowej",
         "name": "Defrost prędkość pompy obiegowej",
         "register": 82,
         "min": 30,
@@ -667,6 +744,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_temperatura_parownika_przy_ktorej_rozpoczyna_sie_odszranianie",
         "name": "Defrost temperatura parownika, przy której rozpoczyna się odszranianie",
         "register": 83,
         "min": -20,
@@ -676,6 +754,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_temperatura_parownika_przy_ktorej_konczy_sie_odszranianie",
         "name": "Defrost temperatura parownika, przy której kończy się odszranianie",
         "register": 84,
         "min": 0,
@@ -685,6 +764,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_temperatura_zewnetrzna_dla_uruchomienia_odszraniania",
         "name": "Defrost temperatura zewnętrzna dla uruchomienia odszraniania",
         "register": 85,
         "min": -30,
@@ -694,6 +774,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_min_roznica_miedzy_powietrzem_a_parownikiem_wymagana_do_odszraniania",
         "name": "Defrost min różnica temp między powietrzem a parownikiem wymagana do odszraniania",
         "register": 86,
         "min": 1,
@@ -703,6 +784,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_opoznienie_rozpoczecia_odszraniania",
         "name": "Defrost opóźnienie rozpoczęcia odszraniania",
         "register": 87,
         "min": 0,
@@ -712,6 +794,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_minimalny_czas",
         "name": "Defrost minimalny czas",
         "register": 88,
         "min": 1,
@@ -721,6 +804,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_maksymalny_czas",
         "name": "Defrost maksymalny czas",
         "register": 89,
         "min": 1,
@@ -730,6 +814,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_interwal_odszraniania",
         "name": "Defrost interwał odszraniania",
         "register": 90,
         "min": 0,
@@ -739,6 +824,7 @@ ENTITIES = [
         "icon": "mdi:snowflake-melt",
     },
     {
+        "unique_id": "defrost_wymuszone_odszranianie_co",
         "name": "Defrost wymuszone odszranianie co",
         "register": 91,
         "min": 0,
@@ -747,123 +833,5 @@ ENTITIES = [
         "unit": "min",
         "icon": "mdi:snowflake-melt",
     },
-    # ------------------------------
-    # LICZNIKI SPRĘŻARKI
-    # ------------------------------
-    {
-        "name": "Ilość włączeń sprężarki daily",
-        "unique_id": "ilosc_wlaczen_sprezarki_daily",
-        "key": "start_sprezarki",
-        "reset": "daily",
-        "source_sensor": "binary_sensor.sprsun_<model>_sprezarka",
-        "icon": "mdi:bag-personal",
-    },
-    {
-        "name": "Ilość włączeń sprężarki monthly",
-        "unique_id": "ilosc_wlaczen_sprezarki_monthly",
-        "key": "start_sprezarki",
-        "reset": "monthly",
-        "source_sensor": "binary_sensor.sprsun_<model>_sprezarka",
-        "icon": "mdi:bag-personal",
-    },
-    {
-        "name": "Ilość włączeń sprężarki yearly",
-        "unique_id": "ilosc_wlaczen_sprezarki_yearly",
-        "key": "start_sprezarki",
-        "reset": "yearly",
-        "source_sensor": "binary_sensor.sprsun_<model>_sprezarka",
-        "icon": "mdi:bag-personal",
-    },
-    {
-        "name": "Ilość włączeń sprężarki total",
-        "unique_id": "ilosc_wlaczen_sprezarki_total",
-        "key": "start_sprezarki",
-        "source_sensor": "binary_sensor.sprsun_<model>_sprezarka",
-        "icon": "mdi:bag-personal",
-    },
-
-    # ------------------------------
-    # LICZNIKI WENTYLATORA
-    # ------------------------------
-    {
-        "name": "Ilość włączeń wentylatora daily",
-        "unique_id": "ilosc_wlaczen_wentylatora_daily",
-        "key": "start_wentylatora",
-        "reset": "daily",
-        "source_sensor": "binary_sensor.sprsun_<model>_wentylator",
-        "icon": "mdi:fan",
-    },
-    {
-        "name": "Ilość włączeń wentylatora monthly",
-        "unique_id": "ilosc_wlaczen_wentylatora_monthly",
-        "key": "start_wentylatora",
-        "reset": "monthly",
-        "source_sensor": "binary_sensor.sprsun_<model>_wentylator",
-        "icon": "mdi:fan",
-    },
-    {
-        "name": "Ilość włączeń wentylatora yearly",
-        "unique_id": "ilosc_wlaczen_wentylatora_yearly",
-        "key": "start_wentylatora",
-        "reset": "yearly",
-        "source_sensor": "binary_sensor.sprsun_<model>_wentylator",
-        "icon": "mdi:fan",
-    },
-    {
-        "name": "Ilość włączeń wentylatora total",
-        "unique_id": "ilosc_wlaczen_wentylatora_total",
-        "key": "start_wentylatora",
-        "source_sensor": "binary_sensor.sprsun_<model>_wentylator",
-        "icon": "mdi:fan",
-    },
-
-    # ------------------------------
-    # LICZNIKI DEFROSTÓW
-    # ------------------------------
-    {
-        "name": "Ilość defrostów daily",
-        "unique_id": "ilosc_defrostow_daily",
-        "key": "defrost",
-        "reset": "daily",
-        "source_sensor_sprezarka": "binary_sensor.sprsun_<model>_sprezarka",
-        "source_sensor_wentylator": "binary_sensor.sprsun_<model>_wentylator",
-        "icon": "mdi:snowflake-melt",
-    },
-    {
-        "name": "Ilość defrostów monthly",
-        "unique_id": "ilosc_defrostow_monthly",
-        "key": "defrost",
-        "reset": "monthly",
-        "source_sensor_sprezarka": "binary_sensor.sprsun_<model>_sprezarka",
-        "source_sensor_wentylator": "binary_sensor.sprsun_<model>_wentylator",
-        "icon": "mdi:snowflake-melt",
-    },
-    {
-        "name": "Ilość defrostów yearly",
-        "unique_id": "ilosc_defrostow_yearly",
-        "key": "defrost",
-        "reset": "yearly",
-        "source_sensor_sprezarka": "binary_sensor.sprsun_<model>_sprezarka",
-        "source_sensor_wentylator": "binary_sensor.sprsun_<model>_wentylator",
-        "icon": "mdi:snowflake-melt",
-    },
-    {
-        "name": "Ilość defrostów total",
-        "unique_id": "ilosc_defrostow_total",
-        "key": "defrost",
-        "source_sensor_sprezarka": "binary_sensor.sprsun_<model>_sprezarka",
-        "source_sensor_wentylator": "binary_sensor.sprsun_<model>_wentylator",
-        "icon": "mdi:snowflake-melt",
-    },
-
-    # ------------------------------
-    # LICZNIK ZAWORU 3D
-    # ------------------------------
-    {
-        "name": "Ilość przełączeń zaworu 3D total",
-        "unique_id": "ilosc_przelaczen_zaworu_3d_total",
-        "key": "valve_count",
-        "source_sensor": "binary_sensor.sprsun_<model>_zawor_trojdrogowy",
-        "icon": "mdi:valve",
-    },
 ]
+DATA = NUMBERS
