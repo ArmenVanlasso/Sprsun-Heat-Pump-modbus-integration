@@ -7,22 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
-# Importy buttonów dla wszystkich modeli
-from .models.CGK025V3L.buttons import ENTITIES as BUTTONS_025
-from .models.CGK030V3L.buttons import ENTITIES as BUTTONS_030
-from .models.CGK040V3L.buttons import ENTITIES as BUTTONS_040
-from .models.CGK050V3L.buttons import ENTITIES as BUTTONS_050
-from .models.CGK060V3L.buttons import ENTITIES as BUTTONS_060
-
 _LOGGER = logging.getLogger(__name__)
-
-MODEL_BUTTONS_MAP = {
-    "cgk_025v3l": BUTTONS_025,
-    "cgk_030v3l": BUTTONS_030,
-    "cgk_040v3l": BUTTONS_040,
-    "cgk_050v3l": BUTTONS_050,
-    "cgk_060v3l": BUTTONS_060,
-}
 
 
 async def async_setup_entry(
@@ -30,12 +15,15 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Rejestracja buttonów dla danego modelu."""
+    """Rejestracja buttonów dla danego modelu i języka."""
     data = hass.data[DOMAIN][entry.entry_id]
+
     coordinator: SprsunCoordinator = data["coordinator"]
     model: str = data["model"]
 
-    buttons_def = MODEL_BUTTONS_MAP.get(model, [])
+    # 🔥 Buttony z folderu model/lang
+    buttons_def = data["buttons"]
+
     entities = [
         SprsunGenericButton(coordinator, entry.entry_id, model, definition)
         for definition in buttons_def
@@ -57,10 +45,16 @@ class SprsunGenericButton(ButtonEntity):
 
         self._register = definition["register"]
 
+        # nazwa encji — prosto z pliku model/lang
         self._attr_name = definition["name"]
+
+        # unikalny ID
         self._attr_unique_id = f"{DOMAIN}_{model}_button_{self._register}"
+
+        # ikona
         self._attr_icon = definition.get("icon", "mdi:gesture-tap-button")
 
+        # entity_id generowane z nazwy encji
         slug = (
             f"sprsun_{model}_{definition['name']}"
             .lower()
