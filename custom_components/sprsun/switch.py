@@ -7,22 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
-# modele
-from .models.CGK025V3L.switches import ENTITIES as SWITCHES_025
-from .models.CGK030V3L.switches import ENTITIES as SWITCHES_030
-from .models.CGK040V3L.switches import ENTITIES as SWITCHES_040
-from .models.CGK050V3L.switches import ENTITIES as SWITCHES_050
-from .models.CGK060V3L.switches import ENTITIES as SWITCHES_060
-
 _LOGGER = logging.getLogger(__name__)
-
-MODEL_SWITCHES_MAP = {
-    "cgk_025v3l": SWITCHES_025,
-    "cgk_030v3l": SWITCHES_030,
-    "cgk_040v3l": SWITCHES_040,
-    "cgk_050v3l": SWITCHES_050,
-    "cgk_060v3l": SWITCHES_060,
-}
 
 
 async def async_setup_entry(
@@ -30,12 +15,16 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
+    """Rejestracja switchy dla danego modelu i języka."""
     data = hass.data[DOMAIN][entry.entry_id]
+
     coordinator: SprsunCoordinator = data["coordinator"]
     client = data["client"]
     model: str = data["model"]
 
-    switches_def = MODEL_SWITCHES_MAP.get(model.lower(), [])
+    # 🔥 definicje switchy z folderu model/lang
+    switches_def = data["switches"]
+
     entities = [
         SprsunSwitchEntity(coordinator, client, entry.entry_id, model, definition)
         for definition in switches_def
@@ -65,9 +54,11 @@ class SprsunSwitchEntity(SwitchEntity):
 
         self._verify = definition.get("verify")
 
+        # nazwa encji — prosto z pliku model/lang
         self._attr_name = definition["name"]
         self._attr_unique_id = f"{DOMAIN}_{model}_switch_{self._register}"
 
+        # entity_id generowane z nazwy encji
         slug = (
             f"sprsun_{model}_{definition['name']}"
             .lower()
@@ -90,32 +81,34 @@ class SprsunSwitchEntity(SwitchEntity):
     @property
     def is_on(self) -> bool:
         """Stan włącznika z verify lub fallback."""
+        # Brak verify → fallback na holding 1000+register
         if not self._verify:
-            v = self.coordinator.data.get(1000 + self._register)
-            return bool(v) == bool(self._cmd_on)          # ← NEW  (dla 1/0 lub True/False)
+            raw = self.coordinator.data.get(1000 + self._register)
+            return bool(raw) == bool(self._cmd_on)
 
-        v_dict      = self._verify
-        addr        = v_dict["address"]
-        itype       = v_dict.get("input_type", "coil").lower()
-        state_on    = v_dict.get("state_on", 1)
-        state_off   = v_dict.get("state_off", 0)
+        # verify → pełna logika
+        v = self._verify
+        addr = v["address"]
+        itype = v.get("input_type", "coil").lower()
+        state_on = v.get("state_on", 1)
+        state_off = v.get("state_off", 0)
 
         if itype == "discrete":
             raw = self.coordinator.data_coils.get(addr, False)
-            return bool(raw) == bool(state_on)          # ← NEW
+            return bool(raw) == bool(state_on)
 
         if itype == "coil":
             raw = self.coordinator.data.get(1000 + addr)
-            return bool(raw) == bool(state_on)          # ← NEW
+            return bool(raw) == bool(state_on)
 
         if itype == "holding":
             raw = self.coordinator.data.get(addr)
-            return bool(raw) == bool(state_on)          # ← NEW
+            return bool(raw) == bool(state_on)
 
         return False
 
     async def _write_value(self, value: int):
-        """Zapis przez FC5 (coil), nie FC6 (holding)."""
+        """Zapis przez FC5 (coil)."""
         try:
             await self._client.write_coil(self._register, bool(value))
             await self.coordinator.async_request_refresh()
