@@ -1,44 +1,183 @@
 {
-  "config": {
-    "step": {
-      "user": {
-        "title": "Sunsun heat-pump connection type",
-        "description": "Choose whether to connect via Ethernet (TCP) or through a serial/USB port (RTU)."
-      },
-      "details": {
-        "title": "Connection details",
-        "description": "Fill in the data appropriate for the selected connection type.",
-        "data": {
-          "host": "Heat-pump IP address",
-          "port": "Modbus TCP port",
-          "serial_port": "Serial port (e.g. /dev/ttyUSB0)",
-          "baudrate": "Baud rate (bps)",
-          "unit_id": "Unit ID / Slave ID",
-          "scan_interval": "Polling interval (s)",
-          "model": "Pump model"
-        }
-      }
-    },
-    "error": {
-      "host_required": "IP address is required.",
-      "invalid_port": "Port must be a number between 1 and 65555.",
-      "invalid_unit_id": "Unit ID must be between 1 and 255.",
-      "min_10": "Minimum value is 5 seconds.",
-      "already_configured": "This connection already exists."
+  "d07_zaw_3_drog": {
+    "entity_id": "three_way_valve_position",
+    "name": "Three-way valve position",
+    "mapping": {
+      "1": "DHW",
+      "2": "Heating"
     }
   },
-  "options": {
-    "step": {
-      "user": {
-        "title": "Sunsun integration options",
-        "description": "Adjust polling interval.",
-        "data": {
-          "scan_interval": "Polling interval (seconds)"
-        }
-      }
-    },
-    "error": {
-      "min_10": "Minimum value is 10 seconds."
+
+  "temp_powrotu": { "entity_id": "return_temperature", "name": "Return temperature" },
+  "temp_zasilania": { "entity_id": "supply_temperature", "name": "Supply temperature" },
+  "temp_zewnetrzna": { "entity_id": "outdoor_temperature", "name": "Outdoor temperature" },
+  "temp_sprezania": { "entity_id": "compression_temperature", "name": "Compression temperature" },
+  "temp_ssania": { "entity_id": "suction_temperature", "name": "Suction temperature" },
+  "cisnienie_sprezania": { "entity_id": "compression_pressure", "name": "Compression pressure" },
+  "cisnienie_ssania": { "entity_id": "suction_pressure", "name": "Suction pressure" },
+  "temp_cwu": { "entity_id": "dhw_temperature", "name": "DHW temperature" },
+  "temp_parownika": { "entity_id": "evaporator_temperature", "name": "Evaporator temperature" },
+  "y1_wentylator": { "entity_id": "y1_fan", "name": "Y1 Fan" },
+  "y3_pompa_obieg": { "entity_id": "y3_circulation_pump", "name": "Y3 Circulation pump" },
+  "dc_fan_1_output": { "entity_id": "fan_1_output", "name": "Fan 1 output" },
+  "dc_fan_1_feedback": { "entity_id": "fan_1_feedback", "name": "Fan 1 feedback" },
+  "dc_fan_2_output": { "entity_id": "fan_2_output", "name": "Fan 2 output" },
+  "dc_fan_2_feedback": { "entity_id": "fan_2_feedback", "name": "Fan 2 feedback" },
+  "wymagana_wydajnosc": { "entity_id": "required_capacity", "name": "Required capacity" },
+  "aktualna_wymagana_wydajnosc": { "entity_id": "current_required_capacity", "name": "Current required capacity" },
+  "obroty_sprezarki": { "entity_id": "compressor_speed", "name": "Compressor speed" },
+  "zawor_eev": { "entity_id": "eev_valve", "name": "EEV valve" },
+
+  "status_2": {
+    "entity_id": "status_2",
+    "name": "Status 2",
+    "mapping": {
+      "0": "OK",
+      "1": "Control",
+      "2": "Limit"
     }
+  },
+
+  "zabezpieczenie": {
+    "entity_id": "protection",
+    "name": "Protection",
+    "mapping": {
+      "0": "OK",
+      "1": "OK",
+      "2": "Low superheat",
+      "3": "Low pressure",
+      "4": "High pressure",
+      "5": "High condenser temperature"
+    }
+  },
+
+  "przegrzanie": { "entity_id": "superheat_temperature", "name": "Superheat temperature" },
+  "tryb_pracy_pompy": {
+    "entity_id": "pump_mode",
+    "name": "Pump mode",
+    "mapping": {
+      "0": "Cooling",
+      "1": "Heating",
+      "2": "DHW"
+    }
+  },
+
+  "temp_tloczenia": { "entity_id": "discharge_temperature", "name": "Discharge temperature" },
+  "status": {
+    "entity_id": "status",
+    "name": "Status",
+    "mapping": {
+      "0": "Preparation",
+      "1": "Running",
+      "2": "Stop Alarm",
+      "3": "Stop timer",
+      "4": "Stop service",
+      "5": "Stop control",
+      "6": "Stop",
+      "7": "Manual mode",
+      "8": "Anti-freeze",
+      "9": "Stop AC linkage",
+      "10": "Mode change"
+    }
+  },
+
+  "wersja_programu_1": { "entity_id": "program_version_1", "name": "Program version 1" },
+  "wersja_programu_2": { "entity_id": "program_version_2", "name": "Program version 2" },
+  "wersja_programu_3": { "entity_id": "program_version_3", "name": "Program version 3" },
+  "pompa_model_1": { "entity_id": "pump_model_1", "name": "Pump model 1" },
+  "pompa_model_2": { "entity_id": "pump_model_2", "name": "Pump model 2" },
+  "pompa_model_3": { "entity_id": "pump_model_3", "name": "Pump model 3" },
+  "moc_pobierana": { "entity_id": "power_consumption", "name": "Power consumption" },
+  "napiecie_falownika": { "entity_id": "inverter_voltage", "name": "Inverter voltage" },
+  "prad_falownika": { "entity_id": "inverter_current", "name": "Inverter current" },
+
+  "sprsun_compressor_runtime_total": {
+    "entity_id": "compressor_runtime_total",
+    "name": "Compressor runtime (total)"
+  },
+  "sprsun_compressor_runtime_daily": {
+    "entity_id": "compressor_runtime_daily",
+    "name": "Compressor runtime (daily)"
+  },
+  "sprsun_compressor_runtime_monthly": {
+    "entity_id": "compressor_runtime_monthly",
+    "name": "Compressor runtime (monthly)"
+  },
+  "sprsun_compressor_runtime_yearly": {
+    "entity_id": "compressor_runtime_yearly",
+    "name": "Compressor runtime (yearly)"
+  },
+
+  "ilosc_wlaczen_sprezarki_daily": {
+    "entity_id": "compressor_starts_daily",
+    "name": "Compressor starts daily"
+  },
+  "ilosc_wlaczen_sprezarki_monthly": {
+    "entity_id": "compressor_starts_monthly",
+    "name": "Compressor starts monthly"
+  },
+  "ilosc_wlaczen_sprezarki_yearly": {
+    "entity_id": "compressor_starts_yearly",
+    "name": "Compressor starts yearly"
+  },
+  "ilosc_wlaczen_sprezarki_total": {
+    "entity_id": "compressor_starts_total",
+    "name": "Compressor starts total"
+  },
+
+  "sprsun_fan_runtime_total": {
+    "entity_id": "fan_runtime_total",
+    "name": "Fan runtime (total)"
+  },
+  "sprsun_fan_runtime_daily": {
+    "entity_id": "fan_runtime_daily",
+    "name": "Fan runtime (daily)"
+  },
+  "sprsun_fan_runtime_monthly": {
+    "entity_id": "fan_runtime_monthly",
+    "name": "Fan runtime (monthly)"
+  },
+  "sprsun_fan_runtime_yearly": {
+    "entity_id": "fan_runtime_yearly",
+    "name": "Fan runtime (yearly)"
+  },
+
+  "ilosc_wlaczen_wentylatora_daily": {
+    "entity_id": "fan_starts_daily",
+    "name": "Fan starts daily"
+  },
+  "ilosc_wlaczen_wentylatora_monthly": {
+    "entity_id": "fan_starts_monthly",
+    "name": "Fan starts monthly"
+  },
+  "ilosc_wlaczen_wentylatora_yearly": {
+    "entity_id": "fan_starts_yearly",
+    "name": "Fan starts yearly"
+  },
+  "ilosc_wlaczen_wentylatora_total": {
+    "entity_id": "fan_starts_total",
+    "name": "Fan starts total"
+  },
+
+  "ilosc_defrostow_daily": {
+    "entity_id": "defrost_count_daily",
+    "name": "Defrost count daily"
+  },
+  "ilosc_defrostow_monthly": {
+    "entity_id": "defrost_count_monthly",
+    "name": "Defrost count monthly"
+  },
+  "ilosc_defrostow_yearly": {
+    "entity_id": "defrost_count_yearly",
+    "name": "Defrost count yearly"
+  },
+  "ilosc_defrostow_total": {
+    "entity_id": "defrost_count_total",
+    "name": "Defrost count total"
+  },
+
+  "ilosc_przelaczen_zaworu_3d_total": {
+    "entity_id": "three_way_valve_switches_total",
+    "name": "Three-way valve switches total"
   }
 }
