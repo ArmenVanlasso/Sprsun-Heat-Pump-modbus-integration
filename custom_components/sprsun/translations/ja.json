@@ -1,44 +1,183 @@
 {
-  "config": {
-    "step": {
-      "user": {
-        "title": "Sprsun ヒートポンプへの接続方式",
-        "description": "ポンプへの接続方法を選択してください：Ethernet（TCP）またはシリアルポート（RS485 / RTU）。"
-      },
-      "details": {
-        "title": "接続の詳細",
-        "description": "選択した接続タイプに応じて必要な情報を入力してください。",
-        "data": {
-          "host": "ポンプのIPアドレス",
-          "port": "Modbus TCP ポート",
-          "serialport": "シリアルポート（例: /dev/ttyUSB0）",
-          "baudrate": "通信速度 [bps]",
-          "unitid": "ポンプアドレス（Unit ID / Slave ID）",
-          "scaninterval": "ポーリング間隔 [秒]",
-          "model": "ポンプモデル"
-        }
-      }
-    },
-    "error": {
-      "hostrequired": "IPアドレスは必須です。",
-      "invalidport": "TCPポートは1〜65535の範囲で指定してください。",
-      "invalidunitid": "Unit ID は1〜255の範囲で指定してください。",
-      "min10": "最小値は10秒です。",
-      "alreadyconfigured": "同じ接続設定がすでに存在します。"
+  "d07_zaw_3_drog": {
+    "entity_id": "三方弁位置",
+    "name": "三方弁の位置",
+    "mapping": {
+      "1": "給湯",
+      "2": "暖房"
     }
   },
-  "options": {
-    "step": {
-      "user": {
-        "title": "Sprsun 統合オプション",
-        "description": "読み取り頻度を変更します。",
-        "data": {
-          "scaninterval": "ポーリング間隔 [秒]"
-        }
-      }
-    },
-    "error": {
-      "min_10": "最小値は10秒です。"
+
+  "temp_powrotu": { "entity_id": "戻り温度", "name": "戻り温度" },
+  "temp_zasilania": { "entity_id": "供給温度", "name": "供給温度" },
+  "temp_zewnetrzna": { "entity_id": "外気温度", "name": "外気温度" },
+  "temp_sprezania": { "entity_id": "圧縮温度", "name": "圧縮温度" },
+  "temp_ssania": { "entity_id": "吸入温度", "name": "吸入温度" },
+  "cisnienie_sprezania": { "entity_id": "圧縮圧力", "name": "圧縮圧力" },
+  "cisnienie_ssania": { "entity_id": "吸入圧力", "name": "吸入圧力" },
+  "temp_cwu": { "entity_id": "給湯温度", "name": "給湯温度" },
+  "temp_parownika": { "entity_id": "蒸発器温度", "name": "蒸発器温度" },
+  "y1_wentylator": { "entity_id": "y1ファン", "name": "Y1 ファン" },
+  "y3_pompa_obieg": { "entity_id": "y3循環ポンプ", "name": "Y3 循環ポンプ" },
+  "dc_fan_1_output": { "entity_id": "ファン1出力", "name": "ファン1 出力" },
+  "dc_fan_1_feedback": { "entity_id": "ファン1フィードバック", "name": "ファン1 フィードバック" },
+  "dc_fan_2_output": { "entity_id": "ファン2出力", "name": "ファン2 出力" },
+  "dc_fan_2_feedback": { "entity_id": "ファン2フィードバック", "name": "ファン2 フィードバック" },
+  "wymagana_wydajnosc": { "entity_id": "要求能力", "name": "要求能力" },
+  "aktualna_wymagana_wydajnosc": { "entity_id": "現在の要求能力", "name": "現在の要求能力" },
+  "obroty_sprezarki": { "entity_id": "コンプレッサー回転数", "name": "コンプレッサー回転数" },
+  "zawor_eev": { "entity_id": "eev弁", "name": "EEV 弁" },
+
+  "status_2": {
+    "entity_id": "ステータス2",
+    "name": "ステータス 2",
+    "mapping": {
+      "0": "正常",
+      "1": "制御中",
+      "2": "制限"
     }
+  },
+
+  "zabezpieczenie": {
+    "entity_id": "保護",
+    "name": "保護",
+    "mapping": {
+      "0": "正常",
+      "1": "正常",
+      "2": "低過熱",
+      "3": "低圧",
+      "4": "高圧",
+      "5": "高凝縮温度"
+    }
+  },
+
+  "przegrzanie": { "entity_id": "過熱温度", "name": "過熱温度" },
+  "tryb_pracy_pompy": {
+    "entity_id": "ポンプ運転モード",
+    "name": "ポンプ運転モード",
+    "mapping": {
+      "0": "冷房",
+      "1": "暖房",
+      "2": "給湯"
+    }
+  },
+
+  "temp_tloczenia": { "entity_id": "吐出温度", "name": "吐出温度" },
+  "status": {
+    "entity_id": "ステータス",
+    "name": "ステータス",
+    "mapping": {
+      "0": "準備中",
+      "1": "運転中",
+      "2": "停止（アラーム）",
+      "3": "停止（タイマー）",
+      "4": "停止（サービス）",
+      "5": "停止（制御）",
+      "6": "停止",
+      "7": "手動モード",
+      "8": "凍結防止",
+      "9": "AC連動停止",
+      "10": "モード変更"
+    }
+  },
+
+  "wersja_programu_1": { "entity_id": "プログラムバージョン1", "name": "プログラムバージョン 1" },
+  "wersja_programu_2": { "entity_id": "プログラムバージョン2", "name": "プログラムバージョン 2" },
+  "wersja_programu_3": { "entity_id": "プログラムバージョン3", "name": "プログラムバージョン 3" },
+  "pompa_model_1": { "entity_id": "ポンプモデル1", "name": "ポンプモデル 1" },
+  "pompa_model_2": { "entity_id": "ポンプモデル2", "name": "ポンプモデル 2" },
+  "pompa_model_3": { "entity_id": "ポンプモデル3", "name": "ポンプモデル 3" },
+  "moc_pobierana": { "entity_id": "消費電力", "name": "消費電力" },
+  "napiecie_falownika": { "entity_id": "インバータ電圧", "name": "インバータ電圧" },
+  "prad_falownika": { "entity_id": "インバータ電流", "name": "インバータ電流" },
+
+  "sprsun_compressor_runtime_total": {
+    "entity_id": "コンプレッサー稼働時間_総計",
+    "name": "コンプレッサー稼働時間（総計）"
+  },
+  "sprsun_compressor_runtime_daily": {
+    "entity_id": "コンプレッサー稼働時間_日次",
+    "name": "コンプレッサー稼働時間（日次）"
+  },
+  "sprsun_compressor_runtime_monthly": {
+    "entity_id": "コンプレッサー稼働時間_月次",
+    "name": "コンプレッサー稼働時間（月次）"
+  },
+  "sprsun_compressor_runtime_yearly": {
+    "entity_id": "コンプレッサー稼働時間_年次",
+    "name": "コンプレッサー稼働時間（年次）"
+  },
+
+  "ilosc_wlaczen_sprezarki_daily": {
+    "entity_id": "コンプレッサー起動回数_日次",
+    "name": "コンプレッサー起動回数（日次）"
+  },
+  "ilosc_wlaczen_sprezarki_monthly": {
+    "entity_id": "コンプレッサー起動回数_月次",
+    "name": "コンプレッサー起動回数（月次）"
+  },
+  "ilosc_wlaczen_sprezarki_yearly": {
+    "entity_id": "コンプレッサー起動回数_年次",
+    "name": "コンプレッサー起動回数（年次）"
+  },
+  "ilosc_wlaczen_sprezarki_total": {
+    "entity_id": "コンプレッサー起動回数_総計",
+    "name": "コンプレッサー起動回数（総計）"
+  },
+
+  "sprsun_fan_runtime_total": {
+    "entity_id": "ファン稼働時間_総計",
+    "name": "ファン稼働時間（総計）"
+  },
+  "sprsun_fan_runtime_daily": {
+    "entity_id": "ファン稼働時間_日次",
+    "name": "ファン稼働時間（日次）"
+  },
+  "sprsun_fan_runtime_monthly": {
+    "entity_id": "ファン稼働時間_月次",
+    "name": "ファン稼働時間（月次）"
+  },
+  "sprsun_fan_runtime_yearly": {
+    "entity_id": "ファン稼働時間_年次",
+    "name": "ファン稼働時間（年次）"
+  },
+
+  "ilosc_wlaczen_wentylatora_daily": {
+    "entity_id": "ファン起動回数_日次",
+    "name": "ファン起動回数（日次）"
+  },
+  "ilosc_wlaczen_wentylatora_monthly": {
+    "entity_id": "ファン起動回数_月次",
+    "name": "ファン起動回数（月次）"
+  },
+  "ilosc_wlaczen_wentylatora_yearly": {
+    "entity_id": "ファン起動回数_年次",
+    "name": "ファン起動回数（年次）"
+  },
+  "ilosc_wlaczen_wentylatora_total": {
+    "entity_id": "ファン起動回数_総計",
+    "name": "ファン起動回数（総計）"
+  },
+
+  "ilosc_defrostow_daily": {
+    "entity_id": "デフロスト回数_日次",
+    "name": "デフロスト回数（日次）"
+  },
+  "ilosc_defrostow_monthly": {
+    "entity_id": "デフロスト回数_月次",
+    "name": "デフロスト回数（月次）"
+  },
+  "ilosc_defrostow_yearly": {
+    "entity_id": "デフロスト回数_年次",
+    "name": "デフロスト回数（年次）"
+  },
+  "ilosc_defrostow_total": {
+    "entity_id": "デフロスト回数_総計",
+    "name": "デフロスト回数（総計）"
+  },
+
+  "ilosc_przelaczen_zaworu_3d_total": {
+    "entity_id": "三方弁切替回数_総計",
+    "name": "三方弁切替回数（総計）"
   }
 }
