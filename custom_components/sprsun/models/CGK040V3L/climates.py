@@ -1,11 +1,11 @@
 # climates.py
 from __future__ import annotations
-ENTITIES = [
+CLIMATES = [
     {
         "name": "Ogrzewanie temperatura zadana",
         "unique_id": "ogrzewanie_temperatura_zadana",
         # Ścieżka pliku modelowego (używana np. w device_info)
-        "model_path": __file__,
+        
         "temperature_unit": "C",
         "precision": 0,
         "temp_step": 1,
@@ -46,7 +46,7 @@ ENTITIES = [
         "name": "Chłodzenie temperatura zadana",
         "unique_id": "chlodzenie_temperatura_zadana",
         # Ścieżka pliku modelowego (używana np. w device_info)
-        "model_path": __file__,
+        
         "temperature_unit": "C",
         "precision": 0,
         "temp_step": 1,
@@ -80,7 +80,7 @@ ENTITIES = [
     {
         "name": "CWU temperatura zadana",
         "unique_id": "cwu_temperatura_zadana",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 195,
@@ -114,7 +114,7 @@ ENTITIES = [
     {
         "name": "Histereza ogrzewania i chłodzenia start",
         "unique_id": "histereza_ogrzewania_i_chlodzenia_start",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 6,
@@ -150,7 +150,7 @@ ENTITIES = [
     {
         "name": "Histereza ogrzewania i chłodzenia stop",
         "unique_id": "histereza_ogrzewania_i_chlodzenia_stop",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 7,
@@ -185,7 +185,7 @@ ENTITIES = [
     {
         "name": "CWU histereza start",
         "unique_id": "cwu_histereza_start",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 4,
@@ -219,7 +219,7 @@ ENTITIES = [
     {
         "name": "CWU histereza stop",
         "unique_id": "cwu_histereza_stop",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 5,
@@ -252,7 +252,7 @@ ENTITIES = [
     {
         "name": "Chłodzenie temperatura zewnętrzna X1",
         "unique_id": "chlodzenie_temperatura_zewnetrzna_x1",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 276,
@@ -285,7 +285,7 @@ ENTITIES = [
     {
         "name": "Chłodzenie temperatura zewnętrzna X2",
         "unique_id": "chlodzenie_temperatura_zewnetrzna_x2",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 277,
@@ -318,7 +318,7 @@ ENTITIES = [
     {
         "name": "Chłodzenie temperatura zewnętrzna X3",
         "unique_id": "chlodzenie_temperatura_zewnetrzna_x3",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 278,
@@ -351,7 +351,7 @@ ENTITIES = [
     {
         "name": "Chłodzenie temperatura zewnętrzna X4",
         "unique_id": "chlodzenie_temperatura_zewnetrzna_x4",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 279,
@@ -384,7 +384,7 @@ ENTITIES = [
     {
         "name": "Chłodzenie temperatura zasilania Y1",
         "unique_id": "chlodzenie_temperatura_zasilania_y1",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 336,
@@ -417,7 +417,7 @@ ENTITIES = [
     {
         "name": "Chłodzenie temperatura zasilania Y2",
         "unique_id": "chlodzenie_temperatura_zasilania_y2",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 288,
@@ -450,7 +450,7 @@ ENTITIES = [
     {
         "name": "Chłodzenie temperatura zasilania Y3",
         "unique_id": "chlodzenie_temperatura_zasilania_y3",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 289,
@@ -483,7 +483,7 @@ ENTITIES = [
     {
         "name": "Chłodzenie temperatura zasilania Y4",
         "unique_id": "chlodzenie_temperatura_zasilania_y4",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 290,
@@ -516,7 +516,7 @@ ENTITIES = [
     {
         "name": "Ogrzewanie temperatura zewnętrzna X1",
         "unique_id": "ogrzewanie_temperatura_zewnetrzna_x1",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 280,
@@ -549,7 +549,7 @@ ENTITIES = [
     {
         "name": "Ogrzewanie temperatura zewnętrzna X2",
         "unique_id": "ogrzewanie_temperatura_zewnetrzna_x2",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 281,
@@ -582,7 +582,7 @@ ENTITIES = [
     {
         "name": "Ogrzewanie temperatura zewnętrzna X3",
         "unique_id": "ogrzewanie_temperatura_zewnetrzna_x3",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 282,
@@ -615,7 +615,7 @@ ENTITIES = [
     {
         "name": "Ogrzewanie temperatura zewnętrzna X4",
         "unique_id": "ogrzewanie_temperatura_zewnetrzna_4",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 283,
@@ -648,7 +648,7 @@ ENTITIES = [
     {
         "name": "Ogrzewanie temperatura zasilania Y1",
         "unique_id": "ogrzewanie_temperatura_zasilania_y1",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 291,
@@ -681,7 +681,7 @@ ENTITIES = [
     {
         "name": "Ogrzewanie temperatura zasilania Y2",
         "unique_id": "ogrzewanie_temperatura_zasilania_y2",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 292,
@@ -714,7 +714,7 @@ ENTITIES = [
     {
         "name": "Ogrzewanie temperatura zasilania Y3",
         "unique_id": "ogrzewanie_temperatura_zasilania_y3",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 293,
@@ -747,7 +747,7 @@ ENTITIES = [
     {
         "name": "Ogrzewanie temperatura zasilania Y4",
         "unique_id": "ogrzewanie_temperatura_zasilania_y4",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 337,
@@ -780,7 +780,7 @@ ENTITIES = [
     {
         "name": "CWU temperatura zewnętrzna X1",
         "unique_id": "cwu_temperatura_zewnetrzna_x1",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 284,
@@ -813,7 +813,7 @@ ENTITIES = [
     {
         "name": "CWU temperatura zewnętrzna X2",
         "unique_id": "cwu_temperatura_zewnetrzna_x2",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 285,
@@ -846,7 +846,7 @@ ENTITIES = [
     {
         "name": "CWU temperatura zewnętrzna X3",
         "unique_id": "cwu_temperatura_zewnetrzna_x3",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 286,
@@ -879,7 +879,7 @@ ENTITIES = [
     {
         "name": "CWU temperatura zewnętrzna X4",
         "unique_id": "cwu_temperatura_zewnetrzna_x4",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 287,
@@ -912,7 +912,7 @@ ENTITIES = [
     {
         "name": "CWU temperatura zasilania Y1",
         "unique_id": "cwu_temperatura_zasilania_y1",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 294,
@@ -945,7 +945,7 @@ ENTITIES = [
     {
         "name": "CWU temperatura zasilania Y2",
         "unique_id": "cwu_temperatura_zasilania_y2",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 295,
@@ -978,7 +978,7 @@ ENTITIES = [
     {
         "name": "CWU temperatura zasilania Y3",
         "unique_id": "cwu_temperatura_zasilania_y3",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 296,
@@ -1011,7 +1011,7 @@ ENTITIES = [
     {
         "name": "CWU temperatura zasilania Y4",
         "unique_id": "cwu_temperatura_zasilania_y4",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 297,
@@ -1044,7 +1044,7 @@ ENTITIES = [
     {
         "name": "Funkcja czasowa temperatura chłodzenia X1",
         "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x1",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 248,
@@ -1077,7 +1077,7 @@ ENTITIES = [
     {
         "name": "Funkcja czasowa temperatura ogrzewania X1",
         "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x1",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 249,
@@ -1110,7 +1110,7 @@ ENTITIES = [
     {
         "name": "Funkcja czasowa temperatura chłodzenia X2",
         "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x2",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 252,
@@ -1143,7 +1143,7 @@ ENTITIES = [
     {
         "name": "Funkcja czasowa temperatura ogrzewania X2",
         "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x2",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 253,
@@ -1176,7 +1176,7 @@ ENTITIES = [
     {
         "name": "Funkcja czasowa temperatura chłodzenia X3",
         "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x3",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 256,
@@ -1209,7 +1209,7 @@ ENTITIES = [
     {
         "name": "Funkcja czasowa temperatura ogrzewania X3",
         "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x3",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 257,
@@ -1242,7 +1242,7 @@ ENTITIES = [
     {
         "name": "Funkcja czasowa temperatura chłodzenia X4",
         "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x4",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 260,
@@ -1275,7 +1275,7 @@ ENTITIES = [
     {
         "name": "Funkcja czasowa temperatura ogrzewania X4",
         "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x4",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 261,
@@ -1308,7 +1308,7 @@ ENTITIES = [
     {
         "name": "Temperatura załączenia grzałki",
         "unique_id": "temperatura_zalaczenia_grzalki",
-        "model_path": __file__,
+        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 14,
@@ -1342,7 +1342,7 @@ ENTITIES = [
     {
         "name": "Delta T",
         "unique_id": "delta_t",
-        "model_path": __file__,
+        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 15,
@@ -1370,3 +1370,4 @@ ENTITIES = [
     },
 
 ]
+DATA = CLIMATES
