@@ -1,4 +1,4 @@
-ENTITIES = [
+SWITCHES = [
     {
         "name": "Grzałka karteru",
         "address": 1,
@@ -166,3 +166,4 @@ ENTITIES = [
         "icon_off": "mdi:bathtub-outline",
     },
 ]
+DATA = SWITCHES
