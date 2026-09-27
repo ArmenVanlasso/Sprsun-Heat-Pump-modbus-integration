@@ -1,4 +1,4 @@
-ENTITIES = [
+SELECTS = [
     {
         "name": "Tryb pracy pompy",
         "register": 0,
@@ -77,3 +77,5 @@ ENTITIES = [
         },
     },
 ]
+
+DATA = SELECTS
