@@ -1,44 +1,523 @@
 {
-  "config": {
-    "step": {
-      "user": {
-        "title": "Rodzaj połączenia z pompową Sprsun",
-        "description": "Wybierz, jak chcesz się połączyć z pompą: przez Ethernet (TCP) lub przez port szeregowy (RS485 / RTU)."
-      },
-      "details": {
-        "title": "Szczegóły połączenia",
-        "description": "Uzupełnij dane odpowiednie dla wybranego typu połączenia.",
-        "data": {
-          "host": "Adres IP pompy",
-          "port": "Port Modbus TCP",
-          "serialport": "Port szeregowy (np. /dev/ttyUSB0)",
-          "baudrate": "Prędkość transmisji [bps]",
-          "unitid": "Adres pompy (Unit ID / Slave ID)",
-          "scaninterval": "Czas odpytywania [s]",
-          "model": "Model pompy"
-        }
-      }
-    },
-    "error": {
-      "hostrequired": "Adres IP jest wymagany.",
-      "invalidport": "Port TCP musi być liczbą z zakresu 1-65535.",
-      "invalidunitid": "Unit ID musi być liczbą z zakresu 1-255.",
-      "min10": "Minimalna wartość to 10 sekund.",
-      "alreadyconfigured": "Takie połączenie już istnieje."
+  "d07_zaw_3_drog": {
+    "entity_id": "zawor_trojdrogowy_pozycja",
+    "name": "Zawór trójdrogowy – pozycja",
+    "mapping": {
+      "1": "C.W.U.",
+      "2": "C.O."
     }
   },
-  "options": {
-    "step": {
-      "user": {
-        "title": "Opcje integracji Sprsun",
-        "description": "Zmień częstotliwość odczytów.",
-        "data": {
-          "scaninterval": "Czas odpytywania [s]"
-        }
-      }
-    },
-    "error": {
-      "min_10": "Minimalna wartość to 10 sekund."
+
+  "temp_powrotu": { "entity_id": "temperatura_powrotu", "name": "Temperatura powrotu" },
+  "temp_zasilania": { "entity_id": "temperatura_zasilania", "name": "Temperatura zasilania" },
+  "temp_zewnetrzna": { "entity_id": "temperatura_zewnetrzna", "name": "Temperatura zewnętrzna" },
+  "temp_sprezania": { "entity_id": "temperatura_sprezania", "name": "Temperatura sprężania" },
+  "temp_ssania": { "entity_id": "temperatura_ssania", "name": "Temperatura ssania" },
+  "cisnienie_sprezania": { "entity_id": "cisnienie_sprezania", "name": "Ciśnienie sprężania" },
+  "cisnienie_ssania": { "entity_id": "cisnienie_ssania", "name": "Ciśnienie ssania" },
+  "temp_cwu": { "entity_id": "temperatura_cwu", "name": "Temperatura CWU" },
+  "temp_parownika": { "entity_id": "temperatura_parownika", "name": "Temperatura parownika" },
+  "y1_wentylator": { "entity_id": "y1_wentylator", "name": "Y1 Wentylator" },
+  "y3_pompa_obieg": { "entity_id": "y3_pompa_obiegowa", "name": "Y3 Pompa obiegowa" },
+  "dc_fan_1_output": { "entity_id": "wentylator_1_sterowanie", "name": "Wentylator 1 sterowanie" },
+  "dc_fan_1_feedback": { "entity_id": "wentylator_1_pomiar", "name": "Wentylator 1 pomiar" },
+  "dc_fan_2_output": { "entity_id": "wentylator_2_sterowanie", "name": "Wentylator 2 sterowanie" },
+  "dc_fan_2_feedback": { "entity_id": "wentylator_2_pomiar", "name": "Wentylator 2 pomiar" },
+  "wymagana_wydajnosc": { "entity_id": "wymagana_wydajnosc", "name": "Wymagana wydajność" },
+  "aktualna_wymagana_wydajnosc": { "entity_id": "aktualna_wymagana_wydajnosc", "name": "Aktualna wymagana wydajność" },
+  "obroty_sprezarki": { "entity_id": "obroty_sprezarki", "name": "Obroty sprężarki" },
+  "zawor_eev": { "entity_id": "zawor_eev", "name": "Zawór EEV" },
+
+  "status_2": {
+    "entity_id": "status_2",
+    "name": "Status 2",
+    "mapping": {
+      "0": "OK",
+      "1": "Sterowanie",
+      "2": "Graniczny"
     }
+  },
+
+  "zabezpieczenie": {
+    "entity_id": "zabezpieczenie",
+    "name": "Zabezpieczenie",
+    "mapping": {
+      "0": "OK",
+      "1": "OK",
+      "2": "Niskie przegrzanie",
+      "3": "Niskie ciśnienie",
+      "4": "Wysokie ciśnienie",
+      "5": "Wysoka temperatura skraplacza"
+    }
+  },
+
+  "przegrzanie": { "entity_id": "temperatura_przegrzania", "name": "Temperatura przegrzania" },
+  "tryb_pracy_pompy": {
+    "entity_id": "tryb_pracy_pompy",
+    "name": "Tryb pracy pompy",
+    "mapping": {
+      "0": "Chłodzenie",
+      "1": "Ogrzewanie",
+      "2": "CWU"
+    }
+  },
+
+  "temp_tloczenia": { "entity_id": "temperatura_tloczenia", "name": "Temperatura tłoczenia" },
+  "status": {
+    "entity_id": "status",
+    "name": "Status",
+    "mapping": {
+      "0": "Przygotowanie",
+      "1": "Praca",
+      "2": "Stop Alarm",
+      "3": "Stop timer",
+      "4": "Stop obsługa",
+      "5": "Stop sterowanie",
+      "6": "Stop",
+      "7": "Tryb ręczny",
+      "8": "Antyzamarzanie",
+      "9": "Stop AC linkage",
+      "10": "Zmiana trybu"
+    }
+  },
+
+  "wersja_programu_1": { "entity_id": "wersja_programu_1", "name": "Wersja programu 1" },
+  "wersja_programu_2": { "entity_id": "wersja_programu_2", "name": "Wersja programu 2" },
+  "wersja_programu_3": { "entity_id": "wersja_programu_3", "name": "Wersja programu 3" },
+  "pompa_model_1": { "entity_id": "pompa_model_1", "name": "Pompa model 1" },
+  "pompa_model_2": { "entity_id": "pompa_model_2", "name": "Pompa model 2" },
+  "pompa_model_3": { "entity_id": "pompa_model_3", "name": "Pompa model 3" },
+  "moc_pobierana": { "entity_id": "moc_pobierana", "name": "Moc pobierana" },
+  "napiecie_falownika": { "entity_id": "napiecie_falownika", "name": "Napięcie falownika" },
+  "prad_falownika": { "entity_id": "prad_falownika", "name": "Prąd falownika" },
+
+  "sprsun_compressor_runtime_total": {
+    "entity_id": "czas_pracy_sprezarki_total",
+    "name": "Czas pracy sprężarki (total)"
+  },
+  "sprsun_compressor_runtime_daily": {
+    "entity_id": "czas_pracy_sprezarki_dzienny",
+    "name": "Czas pracy sprężarki (dzienny)"
+  },
+  "sprsun_compressor_runtime_monthly": {
+    "entity_id": "czas_pracy_sprezarki_miesieczny",
+    "name": "Czas pracy sprężarki (miesięczny)"
+  },
+  "sprsun_compressor_runtime_yearly": {
+    "entity_id": "czas_pracy_sprezarki_roczny",
+    "name": "Czas pracy sprężarki (roczny)"
+  },
+
+  "ilosc_wlaczen_sprezarki_daily": {
+    "entity_id": "ilosc_wlaczen_sprezarki_daily",
+    "name": "Ilość włączeń sprężarki daily"
+  },
+  "ilosc_wlaczen_sprezarki_monthly": {
+    "entity_id": "ilosc_wlaczen_sprezarki_monthly",
+    "name": "Ilość włączeń sprężarki monthly"
+  },
+  "ilosc_wlaczen_sprezarki_yearly": {
+    "entity_id": "ilosc_wlaczen_sprezarki_yearly",
+    "name": "Ilość włączeń sprężarki yearly"
+  },
+  "ilosc_wlaczen_sprezarki_total": {
+    "entity_id": "ilosc_wlaczen_sprezarki_total",
+    "name": "Ilość włączeń sprężarki total"
+  },
+
+  "sprsun_fan_runtime_total": {
+    "entity_id": "czas_pracy_wentylatora_total",
+    "name": "Czas pracy wentylatora (total)"
+  },
+  "sprsun_fan_runtime_daily": {
+    "entity_id": "czas_pracy_wentylatora_dzienny",
+    "name": "Czas pracy wentylatora (dzienny)"
+  },
+  "sprsun_fan_runtime_monthly": {
+    "entity_id": "czas_pracy_wentylatora_miesieczny",
+    "name": "Czas pracy wentylatora (miesięczny)"
+  },
+  "sprsun_fan_runtime_yearly": {
+    "entity_id": "czas_pracy_wentylatora_roczny",
+    "name": "Czas pracy wentylatora (roczny)"
+  },
+
+  "ilosc_wlaczen_wentylatora_daily": {
+    "entity_id": "ilosc_wlaczen_wentylatora_daily",
+    "name": "Ilość włączeń wentylatora daily"
+  },
+  "ilosc_wlaczen_wentylatora_monthly": {
+    "entity_id": "ilosc_wlaczen_wentylatora_monthly",
+    "name": "Ilość włączeń wentylatora monthly"
+  },
+  "ilosc_wlaczen_wentylatora_yearly": {
+    "entity_id": "ilosc_wlaczen_wentylatora_yearly",
+    "name": "Ilość włączeń wentylatora yearly"
+  },
+  "ilosc_wlaczen_wentylatora_total": {
+    "entity_id": "ilosc_wlaczen_wentylatora_total",
+    "name": "Ilość włączeń wentylatora total"
+  },
+
+  "ilosc_defrostow_daily": {
+    "entity_id": "ilosc_defrostow_daily",
+    "name": "Ilość defrostów daily"
+  },
+  "ilosc_defrostow_monthly": {
+    "entity_id": "ilosc_defrostow_monthly",
+    "name": "Ilość defrostów monthly"
+  },
+  "ilosc_defrostow_yearly": {
+    "entity_id": "ilosc_defrostow_yearly",
+    "name": "Ilość defrostów yealy"
+  },
+  "ilosc_defrostow_total": {
+    "entity_id": "ilosc_defrostow_total",
+    "name": "Ilość defrostów total"
+  },
+  "ilosc_przelaczen_zaworu_3d_total": {
+    "entity_id": "ilosc_przelaczen_zaworu_3d_total",
+    "name": "Ilość przełączeń zaworu 3D total"
+  },
+  "predkosc_sprezarki_w_trybie_nocnym": {
+    "entity_id": "predkosc_sprezarki_w_trybie_nocnym",
+    "name": "Prędkość sprężarki w trybie nocnym"
+  },
+  "predkosc_wentylatora_w_trybie_nocnym": {
+    "entity_id": "predkosc_wentylatora_w_trybie_nocnym",
+    "name": "Prędkość wentylatora w trybie nocnym"
+  },
+  "funkcja_czasowa_rok": {
+    "entity_id": "funkcja_czasowa_rok",
+    "name": "Funkcja czasowa rok"
+  },
+  "funkcja_czasowa_miesiac": {
+    "entity_id": "funkcja_czasowa_miesiac",
+    "name": "Funkcja czasowa miesiąc"
+  },
+  "funkcja_czasowa_dzien": {
+    "entity_id": "funkcja_czasowa_dzien",
+    "name": "Funkcja czasowa dzień"
+  },
+  "funkcja_czasowa_godzina": {
+    "entity_id": "funkcja_czasowa_godzina",
+    "name": "Funkcja czasowa godzina"
+  },
+  "funkcja_czasowa_minuta": {
+    "entity_id": "funkcja_czasowa_minuta",
+    "name": "Funkcja czasowa minuta"
+  },
+  "funkcja_czasowa_dzien_tygodnia": {
+    "entity_id": "funkcja_czasowa_dzien_tygodnia",
+    "name": "Funkcja czasowa dzień tygodnia"
+  },
+  "funkcja_czasowa_poniedzialek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_godzina_wlaczenia",
+    "name": "Funkcja czasowa poniedziałek godzina włączenia"
+  },
+  "funkcja_czasowa_poniedzialek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_minuta_wlaczenia",
+    "name": "Funkcja czasowa poniedziałek minuta włączenia"
+  },
+  "funkcja_czasowa_poniedzialek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_godzina_wylaczenia",
+    "name": "Funkcja czasowa poniedziałek godzina wyłączenia"
+  },
+  "funkcja_czasowa_poniedzialek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_minuta_wylaczenia",
+    "name": "Funkcja czasowa poniedziałek minuta wyłączenia"
+  },
+  "funkcja_czasowa_wtorek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_godzina_wlaczenia",
+    "name": "Funkcja czasowa wtorek godzina włączenia"
+  },
+  "funkcja_czasowa_wtorek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_minuta_wlaczenia",
+    "name": "Funkcja czasowa wtorek minuta włączenia"
+  },
+  "funkcja_czasowa_wtorek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_godzina_wylaczenia",
+    "name": "Funkcja czasowa wtorek godzina wyłączenia"
+  },
+  "funkcja_czasowa_wtorek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_minuta_wylaczenia",
+    "name": "Funkcja czasowa wtorek minuta wyłączenia"
+  },
+  "funkcja_czasowa_sroda_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_godzina_wlaczenia",
+    "name": "Funkcja czasowa środa godzina włączenia"
+  },
+  "funkcja_czasowa_sroda_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_minuta_wlaczenia",
+    "name": "Funkcja czasowa środa minuta włączenia"
+  },
+  "funkcja_czasowa_sroda_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_godzina_wylaczenia",
+    "name": "Funkcja czasowa środa godzina wyłączenia"
+  },
+  "funkcja_czasowa_sroda_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_minuta_wylaczenia",
+    "name": "Funkcja czasowa środa minuta wyłączenia"
+  },
+  "funkcja_czasowa_czwartek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_godzina_wlaczenia",
+    "name": "Funkcja czasowa czwartek godzina wlączenia"
+  },
+  "funkcja_czasowa_czwartek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_minuta_wlaczenia",
+    "name": "Funkcja czasowa czwartek minuta wlączenia"
+  },
+  "funkcja_czasowa_czwartek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_godzina_wylaczenia",
+    "name": "Funkcja czasowa czwartek godzina wyłączenia"
+  },
+  "funkcja_czasowa_czwartek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_minuta_wylaczenia",
+    "name": "Funkcja czasowa czwartek minuta wyłączenia"
+  },
+  "funkcja_czasowa_piatek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_godzina_wlaczenia",
+    "name": "Funkcja czasowa piątek godzina włączenia"
+  },
+  "funkcja_czasowa_piatek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_minuta_wlaczenia",
+    "name": "Funkcja czasowa piątek minuta włączenia"
+  },
+  "funkcja_czasowa_piatek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_godzina_wylaczenia",
+    "name": "Funkcja czasowa piątek godzina wyłączenia"
+  },
+  "funkcja_czasowa_piatek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_minuta_wylaczenia",
+    "name": "Funkcja czasowa piątek minuta wyłączenia"
+  },
+  "funkcja_czasowa_sobota_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_godzina_wlaczenia",
+    "name": "Funkcja czasowa sobota godzina włączenia"
+  },
+  "funkcja_czasowa_sobota_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_minuta_wlaczenia",
+    "name": "Funkcja czasowa sobota minuta włączenia"
+  },
+  "funkcja_czasowa_sobota_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_godzina_wylaczenia",
+    "name": "Funkcja czasowa sobota godzina wyłączenia"
+  },
+  "funkcja_czasowa_sobota_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_minuta_wylaczenia",
+    "name": "Funkcja czasowa sobota minuta wyłączenia"
+  },
+  "funkcja_czasowa_niedziela_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_godzina_wlaczenia",
+    "name": "Funkcja czasowa niedziela godzina włączenia"
+  },
+  "funkcja_czasowa_niedziela_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_minuta_wlaczenia",
+    "name": "Funkcja czasowa niedziela minuta włączenia"
+  },
+  "funkcja_czasowa_niedziela_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_godzina_wylaczenia",
+    "name": "Funkcja czasowa niedziela godzina wyłączenia"
+  },
+  "funkcja_czasowa_niedziela_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_minuta_wylaczenia",
+    "name": "Funkcja czasowa niedziela minuta wyłączenia"
+  },
+  "funkcja_czasowa_godz_x1": {
+    "entity_id": "funkcja_czasowa_godz_x1",
+    "name": "Funkcja czasowa godź X1"
+  },
+  "funkcja_czasowa_min_x1": {
+    "entity_id": "funkcja_czasowa_min_x1",
+    "name": "Funkcja czasowa min X1"
+  },
+  "funkcja_czasowa_godz_x2": {
+    "entity_id": "funkcja_czasowa_godz_x2",
+    "name": "Funkcja czasowa godź X2"
+  },
+  "funkcja_czasowa_min_x2": {
+    "entity_id": "funkcja_czasowa_min_x2",
+    "name": "Funkcja czasowa min X2"
+  },
+  "funkcja_czasowa_godz_x3": {
+    "entity_id": "funkcja_czasowa_godz_x3",
+    "name": "Funkcja czasowa godź X3"
+  },
+  "funkcja_czasowa_min_x3": {
+    "entity_id": "funkcja_czasowa_min_x3",
+    "name": "Funkcja czasowa min X3"
+  },
+  "funkcja_czasowa_godz_x4": {
+    "entity_id": "funkcja_czasowa_godz_x4",
+    "name": "Funkcja czasowa godź X4"
+  },
+  "funkcja_czasowa_min_x4": {
+    "entity_id": "funkcja_czasowa_min_x4",
+    "name": "Funkcja czasowa min X4"
+  },
+  "minimalna_nastawa_chlodzenia": {
+    "entity_id": "minimalna_nastawa_chlodzenia",
+    "name": "Minimalna nastawa chłodzenia"
+  },
+  "maksymalna_nastawa_chlodzenia": {
+    "entity_id": "maksymalna_nastawa_chlodzenia",
+    "name": "Maksymalna nastawa chłodzenia"
+  },
+  "adres": {
+    "entity_id": "adres",
+    "name": "Adres"
+  },
+  "opoznienie_zalaczenia_sprezarki": {
+    "entity_id": "opoznienie_zalaczenia_sprezarki",
+    "name": "Opóźnienie załączenia sprężarki"
+  },
+  "ambient_temperature_switch": {
+    "entity_id": "ambient_temperature_switch",
+    "name": "Ambient switch setpoint"
+  },
+  "minimalny_czas_postoju_sprezarki": {
+    "entity_id": "minimalny_czas_postoju_sprezarki",
+    "name": "Minimalny czas postoju sprężarki"
+  },
+  "temperatura_wyswietlacza_offset": {
+    "entity_id": "temperatura_wyswietlacza_offset",
+    "name": "Temperatura wyświetlacza offset"
+  },
+  "temperatura_zasilania_offset": {
+    "entity_id": "temperatura_zasilania_offset",
+    "name": "Temperatura zasilania offset"
+  },
+  "temperatura_zewnetrzna_offset": {
+    "entity_id": "temperatura_zewnetrzna_offset",
+    "name": "Temperatura zewnętrzna offset"
+  },
+  "temperatura_tloczenia_offset": {
+    "entity_id": "temperatura_tloczenia_offset",
+    "name": "Temperatura tłoczenia offset"
+  },
+  "temperatura_ssania_offset": {
+    "entity_id": "temperatura_ssania_offset",
+    "name": "Temperatura ssania offset"
+  },
+  "czujnik_wysokiego_cisnienia": {
+    "entity_id": "czujnik_wysokiego_cisnienia",
+    "name": "Czujnik wysokiego ciśnienia"
+  },
+  "czujnik_niskiego_cisnienia": {
+    "entity_id": "czujnik_niskiego_cisnienia",
+    "name": "Czujnik niskiego ciśnienia"
+  },
+  "temperatura_cwu_offset": {
+    "entity_id": "temperatura_cwu_offset",
+    "name": "Temperatura CWU offset"
+  },
+  "temperatura_parownika_offset": {
+    "entity_id": "temperatura_parownika_offset",
+    "name": "Temperatura parownika offset"
+  },
+  "ustaw_nowe_haslo_serwisowe": {
+    "entity_id": "ustaw_nowe_haslo_serwisowe",
+    "name": "Ustaw nowe hasło serwisowe"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_4_do_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_4_do_9",
+    "name": "Prędkość sprężarki 4<Temperatura zewnętrzna<=9"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_3_do_4": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_3_do_4",
+    "name": "Prędkość sprężarki -3<Temperatura zewnętrzna<=4"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_9_do_minus_3": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_9_do_minus_3",
+    "name": "Prędkość sprężarki -9<Temperatura zewnętrzna<=-3"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_15_do_minus_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_15_do_minus_9",
+    "name": "Prędkość sprężarki -15<Temperatura zewnętrzna<=-9"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_minus_15": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_minus_15",
+    "name": "Prędkość sprężarki Temperatura zewnętrzna <=-15"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_9",
+    "name": "Prędkość sprężarki 9<Temperatura zewnętrzna"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_38": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_38",
+    "name": "Prędkość sprężarki 38<Temperatura zewnętrzna"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_33_ponizej_38": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_33_ponizej_38",
+    "name": "Prędkość sprężarki 33<Temperatura zewnętrzna<=38"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_30_ponizej_33": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_30_ponizej_33",
+    "name": "Prędkość sprężarki 30<Temperatura zewnętrzna<=33"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_26": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_26",
+    "name": "Prędkość sprężarki temperatura zewnętrzna<=26"
+  },
+  "defrost_minimalna_predkosc_sprezarki_%": {
+    "entity_id": "defrost_minimalna_predkosc_sprezarki_%",
+    "name": "Defrost minimalna prędkość sprężarki %"
+  },
+  "defrost_docelowe_otwarcie_zaworu_eev": {
+    "entity_id": "defrost_docelowe_otwarcie_zaworu_eev",
+    "name": "Defrost docelowe otwarcie zaworu EEV"
+  },
+  "defrost_otwarcie_zaworu_eev_po_zakonczeniu": {
+    "entity_id": "defrost_otwarcie_zaworu_eev_po_zakonczeniu",
+    "name": "Defrost otwarcie zaworu EEV po zakończeniu"
+  },
+  "defrost_czas_otwarcia_zaworu_eev": {
+    "entity_id": "defrost_czas_otwarcia_zaworu_eev",
+    "name": "Defrost czas otwarcia zaworu EEV"
+  },
+  "defrost_docelowa_predkosc_sprezarki_podczas_odszraniania": {
+    "entity_id": "defrost_docelowa_predkosc_sprezarki_podczas_odszraniania",
+    "name": "Defrost docelowa prędkość sprężarki podczas odszraniania"
+  },
+  "defrost_predkosc_pompy_obiegowej": {
+    "entity_id": "defrost_predkosc_pompy_obiegowej",
+    "name": "Defrost prędkość pompy obiegowej"
+  },
+  "defrost_temperatura_parownika_przy_ktorej_rozpoczyna_sie_odszranianie": {
+    "entity_id": "defrost_temperatura_parownika_przy_ktorej_rozpoczyna_sie_odszranianie",
+    "name": "Defrost temperatura parownika, przy której rozpoczyna się odszranianie"
+  },
+  "defrost_temperatura_parownika_przy_ktorej_konczy_sie_odszranianie": {
+    "entity_id": "defrost_temperatura_parownika_przy_ktorej_konczy_sie_odszranianie",
+    "name": "Defrost temperatura parownika, przy której kończy się odszranianie"
+  },
+  "defrost_temperatura_zewnetrzna_dla_uruchomienia_odszraniania": {
+    "entity_id": "defrost_temperatura_zewnetrzna_dla_uruchomienia_odszraniania",
+    "name": "Defrost temperatura zewnętrzna dla uruchomienia odszraniania"
+  },
+  "defrost_min_roznica_miedzy_powietrzem_a_parownikiem_wymagana_do_odszraniania": {
+    "entity_id": "defrost_min_roznica_miedzy_powietrzem_a_parownikiem_wymagana_do_odszraniania",
+    "name": "Defrost min różnica temp między powietrzem a parownikiem wymagana do odszraniania"
+  },
+  "defrost_opoznienie_rozpoczecia_odszraniania": {
+    "entity_id": "defrost_opoznienie_rozpoczecia_odszraniania",
+    "name": "Defrost opóźnienie rozpoczęcia odszraniania"
+  },
+  "defrost_minimalny_czas": {
+    "entity_id": "defrost_minimalny_czas",
+    "name": "Defrost minimalny czas"
+  },
+  "defrost_maksymalny_czas": {
+    "entity_id": "defrost_maksymalny_czas",
+    "name": "Defrost maksymalny czas"
+  },
+  "defrost_interwal_odszraniania": {
+    "entity_id": "defrost_interwal_odszraniania",
+    "name": "Defrost interwał odszraniania"
+  },
+  "defrost_wymuszone_odszranianie_co": {
+    "entity_id": "defrost_wymuszone_odszranianie_co",
+    "name": "Defrost wymuszone odszranianie co"
   }
+
 }
