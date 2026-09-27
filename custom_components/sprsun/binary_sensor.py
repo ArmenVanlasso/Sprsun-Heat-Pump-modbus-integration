@@ -7,22 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
 
-# Import definicji binary sensorów per model
-from .models.CGK025V3L.binary_sensors import BINARY_SENSORS as BINARY_025
-from .models.CGK030V3L.binary_sensors import BINARY_SENSORS as BINARY_030
-from .models.CGK040V3L.binary_sensors import BINARY_SENSORS as BINARY_040
-from .models.CGK050V3L.binary_sensors import BINARY_SENSORS as BINARY_050
-from .models.CGK060V3L.binary_sensors import BINARY_SENSORS as BINARY_060
-
 _LOGGER = logging.getLogger(__name__)
-
-MODEL_BINARY_MAP = {
-    "cgk_025v3l": BINARY_025,
-    "cgk_030v3l": BINARY_030,
-    "cgk_040v3l": BINARY_040,
-    "cgk_050v3l": BINARY_050,
-    "cgk_060v3l": BINARY_060,
-}
 
 
 async def async_setup_entry(
@@ -30,33 +15,38 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Rejestracja binary sensorów dla danego modelu."""
+    """Rejestracja binary sensorów dla danego modelu i języka."""
     data = hass.data[DOMAIN][entry.entry_id]
+
     coordinator: SprsunCoordinator = data["coordinator"]
     model: str = data["model"]
+    lang: str = data["language"]
 
-    sensors_def = MODEL_BINARY_MAP.get(model, [])
+    # 🔥 Binary sensory z folderu model/lang
+    sensors_def = data["binary_sensors"]
+
     entities = [
         SprsunBinarySensor(coordinator, entry.entry_id, model, definition)
         for definition in sensors_def
     ]
 
-    async_add_entities(entities)
-
-    # Sensor aktywnych alarmów
+    # 🔥 Sensor aktywnych alarmów — z folderu modelowego (bez języka)
     try:
-        model_folder = model.replace("_", "").upper()
+        model_folder = model.upper()
 
         module = __import__(
-        f"custom_components.sprsun.models.{model_folder}.sensor_alarm",
-        fromlist=["SprsunActiveAlarmsSensor"],
+            f"custom_components.sprsun.models.{model_folder}.sensor_alarm",
+            fromlist=["SprsunActiveAlarmsSensor"],
         )
 
         alarm_class = getattr(module, "SprsunActiveAlarmsSensor")
-        alarm_sensor = alarm_class(coordinator, entry.entry_id, model)
-        async_add_entities([alarm_sensor])
+        alarm_sensor = alarm_class(coordinator, data["client"], entry.entry_id, model)
+        entities.append(alarm_sensor)
+
     except Exception as err:
         _LOGGER.error("Nie udało się załadować sensora alarmów: %s", err)
+
+    async_add_entities(entities)
 
 
 class SprsunBinarySensor(BinarySensorEntity):
@@ -73,9 +63,13 @@ class SprsunBinarySensor(BinarySensorEntity):
         self._address = definition["address"]
         self._index = definition.get("index", 0)
 
+        # nazwa encji — prosto z pliku model/lang
         self._attr_name = definition["name"]
+
+        # unikalny ID
         self._attr_unique_id = f"{DOMAIN}_{model}_binary_{self._address}"
 
+        # entity_id generowane z nazwy encji
         slug = (
             f"sprsun_{model}_{definition['name']}"
             .lower()
@@ -101,17 +95,9 @@ class SprsunBinarySensor(BinarySensorEntity):
             self.coordinator.async_add_listener(self.async_write_ha_state)
         )
 
-    # ---------------------------------------------------------
-    # IKONA
-    # ---------------------------------------------------------
-
     @property
     def icon(self):
         return self._icon_on if self.is_on else self._icon_off
-
-    # ---------------------------------------------------------
-    # ODCZYT STANU
-    # ---------------------------------------------------------
 
     @property
     def is_on(self):
@@ -125,10 +111,6 @@ class SprsunBinarySensor(BinarySensorEntity):
         except Exception:
             return False
 
-    # ---------------------------------------------------------
-    # DODATKOWE ATRYBUTY
-    # ---------------------------------------------------------
-
     @property
     def extra_state_attributes(self):
         if not self._mapping:
@@ -136,10 +118,6 @@ class SprsunBinarySensor(BinarySensorEntity):
 
         value = 1 if self.is_on else 0
         return {"description": self._mapping.get(value, "Nieznany")}
-
-    # ---------------------------------------------------------
-    # DEVICE INFO
-    # ---------------------------------------------------------
 
     @property
     def device_info(self):
