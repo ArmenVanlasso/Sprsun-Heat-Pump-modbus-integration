@@ -180,4 +180,26 @@
     "entity_id": "三方弁切替回数_総計",
     "name": "三方弁切替回数（総計）"
   }
+,
+  "ilosc_przelaczen_pompy_obiegowej_total": {
+    "entity_id": "循環ポンプ切替回数_総計",
+    "name": "循環ポンプ切替回数（総計）"
+  },
+
+  "sprsun_pump_runtime_total": {
+    "entity_id": "循環ポンプ稼働時間_総計",
+    "name": "循環ポンプ稼働時間（総計）"
+  },
+  "sprsun_pump_runtime_daily": {
+    "entity_id": "循環ポンプ稼働時間_日次",
+    "name": "循環ポンプ稼働時間（日次）"
+  },
+  "sprsun_pump_runtime_monthly": {
+    "entity_id": "循環ポンプ稼働時間_月次",
+    "name": "循環ポンプ稼働時間（月次）"
+  },
+  "sprsun_pump_runtime_yearly": {
+    "entity_id": "循環ポンプ稼働時間_年次",
+    "name": "循環ポンプ稼働時間（年次）"
+  }
 }
