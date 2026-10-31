@@ -180,4 +180,26 @@
     "entity_id": "three_way_valve_switches_total",
     "name": "Three-way valve switches total"
   }
+,
+  "ilosc_przelaczen_pompy_obiegowej_total": {
+    "entity_id": "circulation_pump_switches_total",
+    "name": "Circulation pump switches total"
+  },
+
+  "sprsun_pump_runtime_total": {
+    "entity_id": "circulation_pump_runtime_total",
+    "name": "Circulation pump runtime (total)"
+  },
+  "sprsun_pump_runtime_daily": {
+    "entity_id": "circulation_pump_runtime_daily",
+    "name": "Circulation pump runtime (daily)"
+  },
+  "sprsun_pump_runtime_monthly": {
+    "entity_id": "circulation_pump_runtime_monthly",
+    "name": "Circulation pump runtime (monthly)"
+  },
+  "sprsun_pump_runtime_yearly": {
+    "entity_id": "circulation_pump_runtime_yearly",
+    "name": "Circulation pump runtime (yearly)"
+  }
 }
