@@ -1,44 +1,621 @@
 {
-  "config": {
-    "step": {
-      "user": {
-        "title": "Sprsun nasosuna qoşulma növü",
-        "description": "Nasosa necə qoşulmaq istədiyinizi seçin: Ethernet (TCP) və ya serial port (RS485 / RTU)."
-      },
-      "details": {
-        "title": "Qoşulma detalları",
-        "description": "Seçilmiş qoşulma növünə uyğun məlumatları doldurun.",
-        "data": {
-          "host": "Nasosun IP ünvanı",
-          "port": "Modbus TCP portu",
-          "serialport": "Serial port (məsələn: /dev/ttyUSB0)",
-          "baudrate": "Ötürmə sürəti [bps]",
-          "unitid": "Nasos ünvanı (Unit ID / Slave ID)",
-          "scaninterval": "Sorğu intervalı [s]",
-          "model": "Nasos modeli"
-        }
-      }
-    },
-    "error": {
-      "hostrequired": "IP ünvanı tələb olunur.",
-      "invalidport": "TCP portu 1–65535 aralığında bir rəqəm olmalıdır.",
-      "invalidunitid": "Unit ID 1–255 aralığında bir rəqəm olmalıdır.",
-      "min10": "Minimum dəyər 10 saniyədir.",
-      "alreadyconfigured": "Belə bir qoşulma artıq mövcuddur."
+  "d07_zaw_3_drog": {
+    "entity_id": "zawor_trojdrogowy_pozycja",
+    "name": "Üçyollu klapanın mövqeyi",
+    "mapping": {
+      "0": "İsitmə",
+      "1": "Məişət isti suyu"
     }
   },
-  "options": {
-    "step": {
-      "user": {
-        "title": "Sprsun inteqrasiya seçimləri",
-        "description": "Oxuma tezliyini dəyişin.",
-        "data": {
-          "scaninterval": "Sorğu intervalı [s]"
-        }
-      }
-    },
-    "error": {
-      "min_10": "Minimum dəyər 10 saniyədir."
+  "temp_powrotu": {
+    "entity_id": "temperatura_powrotu",
+    "name": "Qayıdış temperaturu"
+  },
+  "temp_zasilania": {
+    "entity_id": "temperatura_zasilania",
+    "name": "Gediş temperaturu"
+  },
+  "temp_zewnetrzna": {
+    "entity_id": "temperatura_zewnetrzna",
+    "name": "Xarici temperatur"
+  },
+  "temp_sprezania": {
+    "entity_id": "temperatura_sprezania",
+    "name": "Sıxılma temperaturu"
+  },
+  "temp_ssania": {
+    "entity_id": "temperatura_ssania",
+    "name": "Sorulma temperaturu"
+  },
+  "cisnienie_sprezania": {
+    "entity_id": "cisnienie_sprezania",
+    "name": "Basma təzyiqi"
+  },
+  "cisnienie_ssania": {
+    "entity_id": "cisnienie_ssania",
+    "name": "Sorulma təzyiqi"
+  },
+  "temp_cwu": {
+    "entity_id": "temperatura_cwu",
+    "name": "Məişət isti suyu temperaturu"
+  },
+  "temp_parownika": {
+    "entity_id": "temperatura_parownika",
+    "name": "Buxarlandırıcının temperaturu"
+  },
+  "y1_wentylator": {
+    "entity_id": "y1_wentylator",
+    "name": "Y1 ventilyatoru"
+  },
+  "y3_pompa_obieg": {
+    "entity_id": "y3_pompa_obiegowa",
+    "name": "Y3 dövriyyə nasosu"
+  },
+  "dc_fan_1_output": {
+    "entity_id": "wentylator_1_sterowanie",
+    "name": "1-ci ventilyatorun idarəetmə siqnalı"
+  },
+  "dc_fan_1_feedback": {
+    "entity_id": "wentylator_1_pomiar",
+    "name": "1-ci ventilyatorun faktiki göstəricisi"
+  },
+  "dc_fan_2_output": {
+    "entity_id": "wentylator_2_sterowanie",
+    "name": "2-ci ventilyatorun idarəetmə siqnalı"
+  },
+  "dc_fan_2_feedback": {
+    "entity_id": "wentylator_2_pomiar",
+    "name": "2-ci ventilyatorun faktiki göstəricisi"
+  },
+  "wymagana_wydajnosc": {
+    "entity_id": "wymagana_wydajnosc",
+    "name": "Tələb olunan məhsuldarlıq"
+  },
+  "aktualna_wymagana_wydajnosc": {
+    "entity_id": "aktualna_wymagana_wydajnosc",
+    "name": "Cari tələb olunan məhsuldarlıq"
+  },
+  "obroty_sprezarki": {
+    "entity_id": "obroty_sprezarki",
+    "name": "Kompressorun sürəti"
+  },
+  "zawor_eev": {
+    "entity_id": "zawor_eev",
+    "name": "EEV klapanı"
+  },
+  "status_2": {
+    "entity_id": "status_2",
+    "name": "Status 2",
+    "mapping": {
+      "0": "Normal",
+      "1": "İdarəetmə",
+      "2": "Məhdud"
     }
+  },
+  "zabezpieczenie": {
+    "entity_id": "zabezpieczenie",
+    "name": "Mühafizə",
+    "mapping": {
+      "0": "Normal",
+      "1": "Normal",
+      "2": "Aşağı superqızma",
+      "3": "Aşağı təzyiq",
+      "4": "Yüksək təzyiq",
+      "5": "Kondensatorun yüksək temperaturu"
+    }
+  },
+  "przegrzanie": {
+    "entity_id": "temperatura_przegrzania",
+    "name": "Superqızma temperaturu"
+  },
+  "tryb_pracy_pompy": {
+    "entity_id": "tryb_pracy_pompy",
+    "name": "Nasosun iş rejimi",
+    "mapping": {
+      "0": "Soyutma",
+      "1": "İsitmə",
+      "2": "Məişət isti suyu"
+    }
+  },
+  "temp_tloczenia": {
+    "entity_id": "temperatura_tloczenia",
+    "name": "Basma qazının temperaturu"
+  },
+  "status": {
+    "entity_id": "status",
+    "name": "Status",
+    "mapping": {
+      "0": "Hazırlıq",
+      "1": "İşləyir",
+      "2": "Siqnal səbəbindən dayanıb",
+      "3": "Taymerə görə dayanıb",
+      "4": "Servis tərəfindən dayandırılıb",
+      "5": "İdarəetmə tərəfindən dayandırılıb",
+      "6": "Dayanıb",
+      "7": "Əl rejimi",
+      "8": "Donmadan qorunma",
+      "9": "AC əlaqəsi səbəbindən dayanıb",
+      "10": "Rejim dəyişikliyi"
+    }
+  },
+  "wersja_programu_1": {
+    "entity_id": "wersja_programu_1",
+    "name": "Proqram versiyası 1"
+  },
+  "wersja_programu_2": {
+    "entity_id": "wersja_programu_2",
+    "name": "Proqram versiyası 2"
+  },
+  "wersja_programu_3": {
+    "entity_id": "wersja_programu_3",
+    "name": "Proqram versiyası 3"
+  },
+  "pompa_model_1": {
+    "entity_id": "pompa_model_1",
+    "name": "İstilik nasosunun modeli 1"
+  },
+  "pompa_model_2": {
+    "entity_id": "pompa_model_2",
+    "name": "İstilik nasosunun modeli 2"
+  },
+  "pompa_model_3": {
+    "entity_id": "pompa_model_3",
+    "name": "İstilik nasosunun modeli 3"
+  },
+  "moc_pobierana": {
+    "entity_id": "moc_pobierana",
+    "name": "İstehlak olunan güc"
+  },
+  "napiecie_falownika": {
+    "entity_id": "napiecie_falownika",
+    "name": "İnvertorun gərginliyi"
+  },
+  "prad_falownika": {
+    "entity_id": "prad_falownika",
+    "name": "İnvertorun cərəyanı"
+  },
+  "sprsun_compressor_runtime_total": {
+    "entity_id": "czas_pracy_sprezarki_total",
+    "name": "Kompressorun ümumi işləmə müddəti"
+  },
+  "sprsun_compressor_runtime_daily": {
+    "entity_id": "czas_pracy_sprezarki_dzienny",
+    "name": "Kompressorun gündəlik işləmə müddəti"
+  },
+  "sprsun_compressor_runtime_monthly": {
+    "entity_id": "czas_pracy_sprezarki_miesieczny",
+    "name": "Kompressorun aylıq işləmə müddəti"
+  },
+  "sprsun_compressor_runtime_yearly": {
+    "entity_id": "czas_pracy_sprezarki_roczny",
+    "name": "Kompressorun illik işləmə müddəti"
+  },
+  "ilosc_wlaczen_sprezarki_daily": {
+    "entity_id": "ilosc_wlaczen_sprezarki_daily",
+    "name": "Kompressorun gündəlik işə düşmə sayı"
+  },
+  "ilosc_wlaczen_sprezarki_monthly": {
+    "entity_id": "ilosc_wlaczen_sprezarki_monthly",
+    "name": "Kompressorun aylıq işə düşmə sayı"
+  },
+  "ilosc_wlaczen_sprezarki_yearly": {
+    "entity_id": "ilosc_wlaczen_sprezarki_yearly",
+    "name": "Kompressorun illik işə düşmə sayı"
+  },
+  "ilosc_wlaczen_sprezarki_total": {
+    "entity_id": "ilosc_wlaczen_sprezarki_total",
+    "name": "Kompressorun ümumi işə düşmə sayı"
+  },
+  "sprsun_fan_runtime_total": {
+    "entity_id": "czas_pracy_wentylatora_total",
+    "name": "Ventilyatorun ümumi işləmə müddəti"
+  },
+  "sprsun_fan_runtime_daily": {
+    "entity_id": "czas_pracy_wentylatora_dzienny",
+    "name": "Ventilyatorun gündəlik işləmə müddəti"
+  },
+  "sprsun_fan_runtime_monthly": {
+    "entity_id": "czas_pracy_wentylatora_miesieczny",
+    "name": "Ventilyatorun aylıq işləmə müddəti"
+  },
+  "sprsun_fan_runtime_yearly": {
+    "entity_id": "czas_pracy_wentylatora_roczny",
+    "name": "Ventilyatorun illik işləmə müddəti"
+  },
+  "ilosc_wlaczen_wentylatora_daily": {
+    "entity_id": "ilosc_wlaczen_wentylatora_daily",
+    "name": "Ventilyatorun gündəlik işə düşmə sayı"
+  },
+  "ilosc_wlaczen_wentylatora_monthly": {
+    "entity_id": "ilosc_wlaczen_wentylatora_monthly",
+    "name": "Ventilyatorun aylıq işə düşmə sayı"
+  },
+  "ilosc_wlaczen_wentylatora_yearly": {
+    "entity_id": "ilosc_wlaczen_wentylatora_yearly",
+    "name": "Ventilyatorun illik işə düşmə sayı"
+  },
+  "ilosc_wlaczen_wentylatora_total": {
+    "entity_id": "ilosc_wlaczen_wentylatora_total",
+    "name": "Ventilyatorun ümumi işə düşmə sayı"
+  },
+  "ilosc_defrostow_daily": {
+    "entity_id": "ilosc_defrostow_daily",
+    "name": "Gündəlik buzərimə dövrlərinin sayı"
+  },
+  "ilosc_defrostow_monthly": {
+    "entity_id": "ilosc_defrostow_monthly",
+    "name": "Aylıq buzərimə dövrlərinin sayı"
+  },
+  "ilosc_defrostow_yearly": {
+    "entity_id": "ilosc_defrostow_yearly",
+    "name": "İllik buzərimə dövrlərinin sayı"
+  },
+  "ilosc_defrostow_total": {
+    "entity_id": "ilosc_defrostow_total",
+    "name": "Ümumi buzərimə dövrlərinin sayı"
+  },
+  "ilosc_przelaczen_zaworu_3d_total": {
+    "entity_id": "ilosc_przelaczen_zaworu_3d_total",
+    "name": "Üçyollu klapanın ümumi keçid sayı"
+  },
+  "predkosc_sprezarki_w_trybie_nocnym": {
+    "entity_id": "predkosc_sprezarki_w_trybie_nocnym",
+    "name": "Kompressorun gecə rejimində sürəti"
+  },
+  "predkosc_wentylatora_w_trybie_nocnym": {
+    "entity_id": "predkosc_wentylatora_w_trybie_nocnym",
+    "name": "Ventilyatorun gecə rejimində sürəti"
+  },
+  "funkcja_czasowa_rok": {
+    "entity_id": "funkcja_czasowa_rok",
+    "name": "Cədvəl: il"
+  },
+  "funkcja_czasowa_miesiac": {
+    "entity_id": "funkcja_czasowa_miesiac",
+    "name": "Cədvəl: ay"
+  },
+  "funkcja_czasowa_dzien": {
+    "entity_id": "funkcja_czasowa_dzien",
+    "name": "Cədvəl: gün"
+  },
+  "funkcja_czasowa_godzina": {
+    "entity_id": "funkcja_czasowa_godzina",
+    "name": "Cədvəl: saat"
+  },
+  "funkcja_czasowa_minuta": {
+    "entity_id": "funkcja_czasowa_minuta",
+    "name": "Cədvəl: dəqiqə"
+  },
+  "funkcja_czasowa_dzien_tygodnia": {
+    "entity_id": "funkcja_czasowa_dzien_tygodnia",
+    "name": "Cədvəl: həftənin günü"
+  },
+  "funkcja_czasowa_poniedzialek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_godzina_wlaczenia",
+    "name": "Cədvəl: bazar ertəsi işə düşmə saatı"
+  },
+  "funkcja_czasowa_poniedzialek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_minuta_wlaczenia",
+    "name": "Cədvəl: bazar ertəsi işə düşmə dəqiqəsi"
+  },
+  "funkcja_czasowa_poniedzialek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_godzina_wylaczenia",
+    "name": "Cədvəl: bazar ertəsi sönmə saatı"
+  },
+  "funkcja_czasowa_poniedzialek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_minuta_wylaczenia",
+    "name": "Cədvəl: bazar ertəsi sönmə dəqiqəsi"
+  },
+  "funkcja_czasowa_wtorek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_godzina_wlaczenia",
+    "name": "Cədvəl: çərşənbə axşamı işə düşmə saatı"
+  },
+  "funkcja_czasowa_wtorek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_minuta_wlaczenia",
+    "name": "Cədvəl: çərşənbə axşamı işə düşmə dəqiqəsi"
+  },
+  "funkcja_czasowa_wtorek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_godzina_wylaczenia",
+    "name": "Cədvəl: çərşənbə axşamı sönmə saatı"
+  },
+  "funkcja_czasowa_wtorek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_minuta_wylaczenia",
+    "name": "Cədvəl: çərşənbə axşamı sönmə dəqiqəsi"
+  },
+  "funkcja_czasowa_sroda_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_godzina_wlaczenia",
+    "name": "Cədvəl: çərşənbə işə düşmə saatı"
+  },
+  "funkcja_czasowa_sroda_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_minuta_wlaczenia",
+    "name": "Cədvəl: çərşənbə işə düşmə dəqiqəsi"
+  },
+  "funkcja_czasowa_sroda_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_godzina_wylaczenia",
+    "name": "Cədvəl: çərşənbə sönmə saatı"
+  },
+  "funkcja_czasowa_sroda_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_minuta_wylaczenia",
+    "name": "Cədvəl: çərşənbə sönmə dəqiqəsi"
+  },
+  "funkcja_czasowa_czwartek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_godzina_wlaczenia",
+    "name": "Cədvəl: cümə axşamı işə düşmə saatı"
+  },
+  "funkcja_czasowa_czwartek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_minuta_wlaczenia",
+    "name": "Cədvəl: cümə axşamı işə düşmə dəqiqəsi"
+  },
+  "funkcja_czasowa_czwartek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_godzina_wylaczenia",
+    "name": "Cədvəl: cümə axşamı sönmə saatı"
+  },
+  "funkcja_czasowa_czwartek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_minuta_wylaczenia",
+    "name": "Cədvəl: cümə axşamı sönmə dəqiqəsi"
+  },
+  "funkcja_czasowa_piatek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_godzina_wlaczenia",
+    "name": "Cədvəl: cümə işə düşmə saatı"
+  },
+  "funkcja_czasowa_piatek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_minuta_wlaczenia",
+    "name": "Cədvəl: cümə işə düşmə dəqiqəsi"
+  },
+  "funkcja_czasowa_piatek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_godzina_wylaczenia",
+    "name": "Cədvəl: cümə sönmə saatı"
+  },
+  "funkcja_czasowa_piatek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_minuta_wylaczenia",
+    "name": "Cədvəl: cümə sönmə dəqiqəsi"
+  },
+  "funkcja_czasowa_sobota_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_godzina_wlaczenia",
+    "name": "Cədvəl: şənbə işə düşmə saatı"
+  },
+  "funkcja_czasowa_sobota_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_minuta_wlaczenia",
+    "name": "Cədvəl: şənbə işə düşmə dəqiqəsi"
+  },
+  "funkcja_czasowa_sobota_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_godzina_wylaczenia",
+    "name": "Cədvəl: şənbə sönmə saatı"
+  },
+  "funkcja_czasowa_sobota_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_minuta_wylaczenia",
+    "name": "Cədvəl: şənbə sönmə dəqiqəsi"
+  },
+  "funkcja_czasowa_niedziela_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_godzina_wlaczenia",
+    "name": "Cədvəl: bazar işə düşmə saatı"
+  },
+  "funkcja_czasowa_niedziela_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_minuta_wlaczenia",
+    "name": "Cədvəl: bazar işə düşmə dəqiqəsi"
+  },
+  "funkcja_czasowa_niedziela_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_godzina_wylaczenia",
+    "name": "Cədvəl: bazar sönmə saatı"
+  },
+  "funkcja_czasowa_niedziela_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_minuta_wylaczenia",
+    "name": "Cədvəl: bazar sönmə dəqiqəsi"
+  },
+  "funkcja_czasowa_godz_x1": {
+    "entity_id": "funkcja_czasowa_godz_x1",
+    "name": "Cədvəl: X1 saatı"
+  },
+  "funkcja_czasowa_min_x1": {
+    "entity_id": "funkcja_czasowa_min_x1",
+    "name": "Cədvəl: X1 dəqiqəsi"
+  },
+  "funkcja_czasowa_godz_x2": {
+    "entity_id": "funkcja_czasowa_godz_x2",
+    "name": "Cədvəl: X2 saatı"
+  },
+  "funkcja_czasowa_min_x2": {
+    "entity_id": "funkcja_czasowa_min_x2",
+    "name": "Cədvəl: X2 dəqiqəsi"
+  },
+  "funkcja_czasowa_godz_x3": {
+    "entity_id": "funkcja_czasowa_godz_x3",
+    "name": "Cədvəl: X3 saatı"
+  },
+  "funkcja_czasowa_min_x3": {
+    "entity_id": "funkcja_czasowa_min_x3",
+    "name": "Cədvəl: X3 dəqiqəsi"
+  },
+  "funkcja_czasowa_godz_x4": {
+    "entity_id": "funkcja_czasowa_godz_x4",
+    "name": "Cədvəl: X4 saatı"
+  },
+  "funkcja_czasowa_min_x4": {
+    "entity_id": "funkcja_czasowa_min_x4",
+    "name": "Cədvəl: X4 dəqiqəsi"
+  },
+  "minimalna_nastawa_chlodzenia": {
+    "entity_id": "minimalna_nastawa_chlodzenia",
+    "name": "Soyutma üçün minimum təyinat temperaturu"
+  },
+  "maksymalna_nastawa_chlodzenia": {
+    "entity_id": "maksymalna_nastawa_chlodzenia",
+    "name": "Soyutma üçün maksimum təyinat temperaturu"
+  },
+  "adres": {
+    "entity_id": "adres",
+    "name": "Ünvan"
+  },
+  "opoznienie_zalaczenia_sprezarki": {
+    "entity_id": "opoznienie_zalaczenia_sprezarki",
+    "name": "Kompressorun işə düşmə gecikməsi"
+  },
+  "ambient_temperature_switch": {
+    "entity_id": "ambient_temperature_switch",
+    "name": "Xarici temperatur açarının təyinatı"
+  },
+  "minimalny_czas_postoju_sprezarki": {
+    "entity_id": "minimalny_czas_postoju_sprezarki",
+    "name": "Kompressorun minimum dayanma müddəti"
+  },
+  "temperatura_wyswietlacza_offset": {
+    "entity_id": "temperatura_wyswietlacza_offset",
+    "name": "Ekran temperaturunun korreksiyası"
+  },
+  "temperatura_zasilania_offset": {
+    "entity_id": "temperatura_zasilania_offset",
+    "name": "Gediş temperaturunun korreksiyası"
+  },
+  "temperatura_zewnetrzna_offset": {
+    "entity_id": "temperatura_zewnetrzna_offset",
+    "name": "Xarici temperaturun korreksiyası"
+  },
+  "temperatura_tloczenia_offset": {
+    "entity_id": "temperatura_tloczenia_offset",
+    "name": "Basma temperaturunun korreksiyası"
+  },
+  "temperatura_ssania_offset": {
+    "entity_id": "temperatura_ssania_offset",
+    "name": "Sorulma temperaturunun korreksiyası"
+  },
+  "czujnik_wysokiego_cisnienia": {
+    "entity_id": "czujnik_wysokiego_cisnienia",
+    "name": "Yüksək təzyiq sensoru"
+  },
+  "czujnik_niskiego_cisnienia": {
+    "entity_id": "czujnik_niskiego_cisnienia",
+    "name": "Aşağı təzyiq sensoru"
+  },
+  "temperatura_cwu_offset": {
+    "entity_id": "temperatura_cwu_offset",
+    "name": "Məişət isti suyu temperaturunun korreksiyası"
+  },
+  "temperatura_parownika_offset": {
+    "entity_id": "temperatura_parownika_offset",
+    "name": "Buxarlandırıcı temperaturunun korreksiyası"
+  },
+  "ustaw_nowe_haslo_serwisowe": {
+    "entity_id": "ustaw_nowe_haslo_serwisowe",
+    "name": "Yeni servis parolunu təyin et"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_4_do_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_4_do_9",
+    "name": "Kompressorun sürəti: 4 < xarici temperatur ≤ 9"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_3_do_4": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_3_do_4",
+    "name": "Kompressorun sürəti: -3 < xarici temperatur ≤ 4"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_9_do_minus_3": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_9_do_minus_3",
+    "name": "Kompressorun sürəti: -9 < xarici temperatur ≤ -3"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_15_do_minus_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_15_do_minus_9",
+    "name": "Kompressorun sürəti: -15 < xarici temperatur ≤ -9"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_minus_15": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_minus_15",
+    "name": "Kompressorun sürəti: xarici temperatur ≤ -15"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_9",
+    "name": "Kompressorun sürəti: xarici temperatur > 9"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_38": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_38",
+    "name": "Kompressorun sürəti: xarici temperatur > 38"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_33_ponizej_38": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_33_ponizej_38",
+    "name": "Kompressorun sürəti: 33 < xarici temperatur ≤ 38"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_30_ponizej_33": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_30_ponizej_33",
+    "name": "Kompressorun sürəti: 30 < xarici temperatur ≤ 33"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_26": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_26",
+    "name": "Kompressorun sürəti: xarici temperatur ≤ 26"
+  },
+  "defrost_minimalna_predkosc_sprezarki_%": {
+    "entity_id": "defrost_minimalna_predkosc_sprezarki_%",
+    "name": "Buzərimə: kompressorun minimum sürəti (%)"
+  },
+  "defrost_docelowe_otwarcie_zaworu_eev": {
+    "entity_id": "defrost_docelowe_otwarcie_zaworu_eev",
+    "name": "Buzərimə: EEV klapanının hədəf açılma faizi"
+  },
+  "defrost_otwarcie_zaworu_eev_po_zakonczeniu": {
+    "entity_id": "defrost_otwarcie_zaworu_eev_po_zakonczeniu",
+    "name": "Buzərimədən sonra EEV klapanının açılması"
+  },
+  "defrost_czas_otwarcia_zaworu_eev": {
+    "entity_id": "defrost_czas_otwarcia_zaworu_eev",
+    "name": "Buzərimə: EEV klapanının açıq qalma müddəti"
+  },
+  "defrost_docelowa_predkosc_sprezarki_podczas_odszraniania": {
+    "entity_id": "defrost_docelowa_predkosc_sprezarki_podczas_odszraniania",
+    "name": "Buzərimə zamanı kompressorun hədəf sürəti"
+  },
+  "defrost_predkosc_pompy_obiegowej": {
+    "entity_id": "defrost_predkosc_pompy_obiegowej",
+    "name": "Buzərimə zamanı dövriyyə nasosunun sürəti"
+  },
+  "defrost_temperatura_parownika_przy_ktorej_rozpoczyna_sie_odszranianie": {
+    "entity_id": "defrost_temperatura_parownika_przy_ktorej_rozpoczyna_sie_odszranianie",
+    "name": "Buzərimənin başlama buxarlandırıcı temperaturu"
+  },
+  "defrost_temperatura_parownika_przy_ktorej_konczy_sie_odszranianie": {
+    "entity_id": "defrost_temperatura_parownika_przy_ktorej_konczy_sie_odszranianie",
+    "name": "Buzərimənin bitmə buxarlandırıcı temperaturu"
+  },
+  "defrost_temperatura_zewnetrzna_dla_uruchomienia_odszraniania": {
+    "entity_id": "defrost_temperatura_zewnetrzna_dla_uruchomienia_odszraniania",
+    "name": "Buzərimənin başlanması üçün xarici temperatur"
+  },
+  "defrost_min_roznica_miedzy_powietrzem_a_parownikiem_wymagana_do_odszraniania": {
+    "entity_id": "defrost_min_roznica_miedzy_powietrzem_a_parownikiem_wymagana_do_odszraniania",
+    "name": "Buzərimə üçün hava ilə buxarlandırıcı arasındakı minimum temperatur fərqi"
+  },
+  "defrost_opoznienie_rozpoczecia_odszraniania": {
+    "entity_id": "defrost_opoznienie_rozpoczecia_odszraniania",
+    "name": "Buzərimənin başlanma gecikməsi"
+  },
+  "defrost_minimalny_czas": {
+    "entity_id": "defrost_minimalny_czas",
+    "name": "Buzərimənin minimum müddəti"
+  },
+  "defrost_maksymalny_czas": {
+    "entity_id": "defrost_maksymalny_czas",
+    "name": "Buzərimənin maksimum müddəti"
+  },
+  "defrost_interwal_odszraniania": {
+    "entity_id": "defrost_interwal_odszraniania",
+    "name": "Buzərimə intervalı"
+  },
+  "defrost_wymuszone_odszranianie_co": {
+    "entity_id": "defrost_wymuszone_odszranianie_co",
+    "name": "Məcburi buzərimə intervalı"
+  },
+  "ilosc_przelaczen_pompy_obiegowej_total": {
+    "entity_id": "ilosc_przelaczen_pompy_obiegowej_total",
+    "name": "Dövriyyə nasosunun ümumi işə düşmə sayı"
+  },
+  "sprsun_pump_runtime_total": {
+    "entity_id": "czas_pracy_pompy_obiegowej_total",
+    "name": "Dövriyyə nasosunun ümumi işləmə müddəti"
+  },
+  "sprsun_pump_runtime_daily": {
+    "entity_id": "czas_pracy_pompy_obiegowej_dzienny",
+    "name": "Dövriyyə nasosunun gündəlik işləmə müddəti"
+  },
+  "sprsun_pump_runtime_monthly": {
+    "entity_id": "czas_pracy_pompy_obiegowej_miesieczny",
+    "name": "Dövriyyə nasosunun aylıq işləmə müddəti"
+  },
+  "sprsun_pump_runtime_yearly": {
+    "entity_id": "czas_pracy_pompy_obiegowej_roczny",
+    "name": "Dövriyyə nasosunun illik işləmə müddəti"
   }
 }
