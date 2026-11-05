@@ -76,17 +76,6 @@ class HeatPumpClimate(ClimateEntity):
         self._max_temp = definition.get("max_temp", 60)
         self._step = definition.get("temp_step", 1)
 
-        self._hide_temp_when_off = definition.get("hide_temp_when_off", False)
-        self._disable_slider_when_off = definition.get("disable_slider_when_off", False)
-        self._temperature_control_register = definition.get(
-            "temperature_control_register"
-        )
-
-        self._temperature_control_values = definition.get(
-            "temperature_control_values",
-            []
-        )
-
         # --- Presety ---
         self._preset_register = definition.get("preset_register")
         self._preset_values = definition.get("preset_values", {})
@@ -120,9 +109,6 @@ class HeatPumpClimate(ClimateEntity):
     # ============================================================
     @property
     def hvac_mode(self) -> HVACMode:
-
-        if not self._temperature_control_allowed():
-            return HVACMode.OFF
 
         if self._hvac_mode_register is None:
             return HVACMode.OFF
@@ -215,12 +201,6 @@ class HeatPumpClimate(ClimateEntity):
     @property
     def current_temperature(self) -> float | None:
 
-        if not self._temperature_control_allowed():
-            return None
-
-        if self._hide_temp_when_off and self.hvac_mode == HVACMode.OFF:
-            return None
-
         if self._current_temp_reg is None:
             return None
 
@@ -239,9 +219,6 @@ class HeatPumpClimate(ClimateEntity):
     @property
     def target_temperature(self) -> float | None:
 
-        if not self._temperature_control_allowed():
-            return None
-
         if self._target_temp_register is None:
             return None
 
@@ -257,20 +234,18 @@ class HeatPumpClimate(ClimateEntity):
     # ============================================================
     #  FUNKCJE
     # ============================================================
-    def _temperature_control_allowed(self) -> bool:
-        """Sprawdza czy encja może być sterowana w aktualnym trybie pracy."""
+    @property
+    def supported_features(self) -> ClimateEntityFeature:
+        features = ClimateEntityFeature(0)
 
-        if self._temperature_control_register is None:
-            return True
+        if self._target_temp_register is not None:
+            features |= ClimateEntityFeature.TARGET_TEMPERATURE
 
-        value = self.coordinator.data.get(
-            self._temperature_control_register
-        )
+        if self._preset_values:
+            features |= ClimateEntityFeature.PRESET_MODE
 
-        if value is None:
-            return False
+        return features
 
-        return value in self._temperature_control_values
     @property
     def supported_features(self) -> ClimateEntityFeature:
         features = ClimateEntityFeature(0)
@@ -292,9 +267,6 @@ class HeatPumpClimate(ClimateEntity):
             return
 
         if self._target_temp_register is None:
-            return
-
-        if not self._temperature_control_allowed():
             return
 
         value = int(temp / self._scale)
