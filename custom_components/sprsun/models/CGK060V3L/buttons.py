@@ -1,4 +1,4 @@
-ENTITIES = [
+BUTTONS = [
     {
         "name": "Przywracanie ustawień fabrycznych pompy",
         "register": 57,
@@ -10,3 +10,4 @@ ENTITIES = [
         "icon": "mdi:restore",
     },
 ]
+DATA = BUTTONS
