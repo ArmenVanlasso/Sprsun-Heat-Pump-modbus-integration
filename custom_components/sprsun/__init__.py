@@ -74,10 +74,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     model = entry.data[CONF_MODEL].replace("-", "").replace("_", "")
     lang = entry.data[CONF_LANGUAGE].lower()
     unit_id = int(entry.data[CONF_UNIT_ID])
-    scan_interval = int(entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL))
+
+    # Starsze wersje integracji zapisywały interwał w entry.options.
+    # Po rekonfiguracji jest on przenoszony do entry.data.
+    scan_interval = int(
+        entry.options.get(
+            CONF_SCAN_INTERVAL,
+            entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+        )
+    )
+
     connection_type = entry.data[CONF_CONNECTION_TYPE]
 
-    # NOWE — pobranie ustawień offsetów czasów pracy
+    # Ustawienia początkowe czasów pracy sprężarki i wentylatora.
     set_fan_hours = entry.data.get(CONF_SET_FAN_HOURS, False)
     fan_hours = int(entry.data.get(CONF_FAN_HOURS, 0))
 
@@ -105,14 +114,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # --- ścieżki do plików modelowych ---
     model_folder = Path(__file__).parent / "models" / model.upper()
 
-    sensors        = await async_load_py_dict(hass, model_folder / "sensors.py")
-    switches       = await async_load_py_dict(hass, model_folder / "switches.py")
+    sensors = await async_load_py_dict(hass, model_folder / "sensors.py")
+    switches = await async_load_py_dict(hass, model_folder / "switches.py")
     binary_sensors = await async_load_py_dict(hass, model_folder / "binary_sensors.py")
-    numbers        = await async_load_py_dict(hass, model_folder / "numbers.py")
-    selects        = await async_load_py_dict(hass, model_folder / "selects.py")
-    buttons        = await async_load_py_dict(hass, model_folder / "buttons.py")
-    climates       = await async_load_py_dict(hass, model_folder / "climates.py")
-    logic_ns       = await async_load_py_dict(hass, model_folder / "logic_sensors.py")
+    numbers = await async_load_py_dict(hass, model_folder / "numbers.py")
+    selects = await async_load_py_dict(hass, model_folder / "selects.py")
+    buttons = await async_load_py_dict(hass, model_folder / "buttons.py")
+    climates = await async_load_py_dict(hass, model_folder / "climates.py")
+    logic_ns = await async_load_py_dict(hass, model_folder / "logic_sensors.py")
 
     # --- zapis w hass.data ---
     hass.data[DOMAIN][entry.entry_id] = {
@@ -120,8 +129,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "model": model,
         "language": lang,
         "coordinator": coordinator,
+        "scan_interval": scan_interval,
 
-        # offsety czasów pracy
+        # Offsety czasów pracy.
         "set_fan_hours": set_fan_hours,
         "fan_hours": fan_hours,
         "set_compressor_hours": set_compressor_hours,
@@ -134,30 +144,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "selects": selects.get("DATA", selects),
         "buttons": buttons.get("DATA", buttons),
         "climates": climates.get("DATA", climates),
-
         "logic_sensors": logic_ns.get("logic_sensors", []),
     }
 
-    # ==================================================================
-    #  NOWE — WSTRZYKNIĘCIE OFFSETÓW DO SENSORÓW LOGICZNYCH (TOTAL)
-    # ==================================================================
+    # Wstrzyknięcie offsetów do sensorów logicznych TOTAL.
     logic_sensors = hass.data[DOMAIN][entry.entry_id]["logic_sensors"]
     logic_offsets = entry.data.get("logic_offsets", {})
 
-    for ls in logic_sensors:
-        args = ls.get("args", {})
+    for logic_sensor in logic_sensors:
+        args = logic_sensor.get("args", {})
         uid = args.get("unique_id")
 
         if args.get("allow_offset") and uid:
             args["offset"] = logic_offsets.get(uid, 0)
             _LOGGER.debug(
                 "Sprsun: ustawiam offset=%s dla logicznego sensora %s",
-                args["offset"], uid
+                args["offset"],
+                uid,
             )
 
-    # ==================================================================
-    #  ŁADOWANIE PLATFORM
-    # ==================================================================
+    # --- ładowanie platform ---
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
