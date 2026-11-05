@@ -4,8 +4,6 @@ CLIMATES = [
     {
         "name": "Ogrzewanie temperatura zadana",
         "unique_id": "ogrzewanie_temperatura_zadana",
-        # Ścieżka pliku modelowego (używana np. w device_info)
-        
         "temperature_unit": "C",
         "precision": 0,
         "temp_step": 1,
@@ -24,18 +22,7 @@ CLIMATES = [
             "heat": 1,
             "off": [0, 2],
         },
-        # DODATKOWA OPCJA (jeśli kiedyś będziesz chciał):
-        # możliwość zdefiniowania drugiego rejestru, który "blokuje" tryby
-        # Tu zostawiamy puste, ale climate.py potrafi to obsłużyć, jeśli kiedyś
-        # dodasz te pola w konkretnej encji:
-        #
-        # "hvac_mode_register_2": 300,          # drugi rejestr do warunku blokady
-        # "hvac_mode_block_values": [0],        # jeśli reg2 w tej liście → OFF
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
-        "preset_register": 0,
+            "preset_register": 0,
             "preset_values": {
             "Chłodzenie": 0,
             "Ogrzewanie": 1,
@@ -47,8 +34,6 @@ CLIMATES = [
     {
         "name": "Chłodzenie temperatura zadana",
         "unique_id": "chlodzenie_temperatura_zadana",
-        # Ścieżka pliku modelowego (używana np. w device_info)
-        
         "temperature_unit": "C",
         "precision": 0,
         "temp_step": 1,
@@ -67,10 +52,6 @@ CLIMATES = [
             "cool": 0,
             "off": [1, 2],
         },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "preset_register": 0,
         "preset_values": {
             "Chłodzenie": 0,
@@ -84,7 +65,6 @@ CLIMATES = [
     {
         "name": "CWU temperatura zadana",
         "unique_id": "cwu_temperatura_zadana",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 195,
@@ -103,10 +83,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "scale": 0.1,
         "precision": 0,
         "temp_step": 1,
@@ -117,6 +93,7 @@ CLIMATES = [
         "icon_off": "mdi:bathtub",
 
     },
+
     {
         "name": "Histereza ogrzewania i chłodzenia start",
         "unique_id": "histereza_ogrzewania_i_chlodzenia_start",
@@ -140,8 +117,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
         "scale": 0.1,
         "precision": 0,
         "temp_step": 1,
@@ -153,6 +128,7 @@ CLIMATES = [
         "icon_off": "mdi:radiator-off",
 
     },
+
     {
         "name": "Histereza ogrzewania i chłodzenia stop",
         "unique_id": "histereza_ogrzewania_i_chlodzenia_stop",
@@ -176,8 +152,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
         "temperature_unit": "C",
         "min_temp": 0,
         "max_temp": 5,
@@ -188,6 +162,7 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "CWU histereza start",
         "unique_id": "cwu_histereza_start",
@@ -210,10 +185,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": 1,
         "max_temp": 15,
@@ -224,6 +195,7 @@ CLIMATES = [
         "icon_off": "mdi:bathtub-outline",
 
     },
+
     {
         "name": "CWU histereza stop",
         "unique_id": "cwu_histereza_stop",
@@ -246,10 +218,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": 0,
         "max_temp": 5,
@@ -259,10 +227,10 @@ CLIMATES = [
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
     },
+
     {
         "name": "Chłodzenie temperatura zewnętrzna X1",
         "unique_id": "chlodzenie_temperatura_zewnetrzna_x1",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 276,
@@ -281,10 +249,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 16,
         "max_temp": 60,
@@ -294,10 +258,10 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Chłodzenie temperatura zewnętrzna X2",
         "unique_id": "chlodzenie_temperatura_zewnetrzna_x2",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 277,
@@ -316,10 +280,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 16,
         "max_temp": 60,
@@ -329,10 +289,10 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Chłodzenie temperatura zewnętrzna X3",
         "unique_id": "chlodzenie_temperatura_zewnetrzna_x3",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 278,
@@ -351,10 +311,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 16,
         "max_temp": 60,
@@ -364,6 +320,7 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Chłodzenie temperatura zewnętrzna X4",
         "unique_id": "chlodzenie_temperatura_zewnetrzna_x4",
@@ -386,10 +343,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 16,
         "max_temp": 60,
@@ -399,6 +352,7 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Chłodzenie temperatura zasilania Y1",
         "unique_id": "chlodzenie_temperatura_zasilania_y1",
@@ -421,10 +375,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 7,
         "max_temp": 18,
@@ -434,10 +384,10 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Chłodzenie temperatura zasilania Y2",
         "unique_id": "chlodzenie_temperatura_zasilania_y2",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 288,
@@ -456,10 +406,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 7,
         "max_temp": 18,
@@ -469,6 +415,7 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Chłodzenie temperatura zasilania Y3",
         "unique_id": "chlodzenie_temperatura_zasilania_y3",
@@ -491,10 +438,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 7,
         "max_temp": 18,
@@ -504,10 +447,10 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Chłodzenie temperatura zasilania Y4",
         "unique_id": "chlodzenie_temperatura_zasilania_y4",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 290,
@@ -526,10 +469,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 7,
         "max_temp": 18,
@@ -539,10 +478,10 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Ogrzewanie temperatura zewnętrzna X1",
         "unique_id": "ogrzewanie_temperatura_zewnetrzna_x1",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 280,
@@ -561,10 +500,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": -50,
         "max_temp": 20,
@@ -574,10 +509,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Ogrzewanie temperatura zewnętrzna X2",
         "unique_id": "ogrzewanie_temperatura_zewnetrzna_x2",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 281,
@@ -596,10 +531,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": -50,
         "max_temp": 20,
@@ -609,10 +540,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Ogrzewanie temperatura zewnętrzna X3",
         "unique_id": "ogrzewanie_temperatura_zewnetrzna_x3",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 282,
@@ -631,10 +562,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": -50,
         "max_temp": 20,
@@ -644,10 +571,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Ogrzewanie temperatura zewnętrzna X4",
         "unique_id": "ogrzewanie_temperatura_zewnetrzna_4",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 283,
@@ -666,10 +593,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": -50,
         "max_temp": 20,
@@ -679,10 +602,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Ogrzewanie temperatura zasilania Y1",
         "unique_id": "ogrzewanie_temperatura_zasilania_y1",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 291,
@@ -701,10 +624,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": 15,
         "max_temp": 55,
@@ -714,10 +633,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Ogrzewanie temperatura zasilania Y2",
         "unique_id": "ogrzewanie_temperatura_zasilania_y2",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 292,
@@ -736,10 +655,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": 15,
         "max_temp": 55,
@@ -749,10 +664,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Ogrzewanie temperatura zasilania Y3",
         "unique_id": "ogrzewanie_temperatura_zasilania_y3",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 293,
@@ -771,10 +686,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": 15,
         "max_temp": 55,
@@ -784,10 +695,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Ogrzewanie temperatura zasilania Y4",
         "unique_id": "ogrzewanie_temperatura_zasilania_y4",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 337,
@@ -806,10 +717,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": 15,
         "max_temp": 55,
@@ -819,10 +726,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "CWU temperatura zewnętrzna X1",
         "unique_id": "cwu_temperatura_zewnetrzna_x1",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 284,
@@ -841,10 +748,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": -50,
         "max_temp": 50,
@@ -854,10 +757,10 @@ CLIMATES = [
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
     },
+
     {
         "name": "CWU temperatura zewnętrzna X2",
         "unique_id": "cwu_temperatura_zewnetrzna_x2",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 285,
@@ -876,10 +779,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": -50,
         "max_temp": 50,
@@ -889,10 +788,10 @@ CLIMATES = [
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
     },
+
     {
         "name": "CWU temperatura zewnętrzna X3",
         "unique_id": "cwu_temperatura_zewnetrzna_x3",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 286,
@@ -911,10 +810,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": -50,
         "max_temp": 50,
@@ -924,10 +819,10 @@ CLIMATES = [
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
     },
+
     {
         "name": "CWU temperatura zewnętrzna X4",
         "unique_id": "cwu_temperatura_zewnetrzna_x4",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 287,
@@ -946,10 +841,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": -50,
         "max_temp": 50,
@@ -959,10 +850,10 @@ CLIMATES = [
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
     },
+
     {
         "name": "CWU temperatura zasilania Y1",
         "unique_id": "cwu_temperatura_zasilania_y1",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 294,
@@ -981,10 +872,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": 10,
         "max_temp": 55,
@@ -994,10 +881,10 @@ CLIMATES = [
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
     },
+
     {
         "name": "CWU temperatura zasilania Y2",
         "unique_id": "cwu_temperatura_zasilania_y2",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 295,
@@ -1016,10 +903,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": 10,
         "max_temp": 55,
@@ -1029,10 +912,10 @@ CLIMATES = [
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
     },
+
     {
         "name": "CWU temperatura zasilania Y3",
         "unique_id": "cwu_temperatura_zasilania_y3",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 296,
@@ -1051,10 +934,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": 10,
         "max_temp": 55,
@@ -1064,10 +943,10 @@ CLIMATES = [
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
     },
+
     {
         "name": "CWU temperatura zasilania Y4",
         "unique_id": "cwu_temperatura_zasilania_y4",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 297,
@@ -1086,10 +965,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [2, 3, 4],
         "temperature_unit": "C",
         "min_temp": 10,
         "max_temp": 55,
@@ -1099,10 +974,10 @@ CLIMATES = [
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
     },
+
     {
         "name": "Funkcja czasowa temperatura chłodzenia X1",
         "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x1",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 248,
@@ -1121,10 +996,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 7,
         "max_temp": 18,
@@ -1134,10 +1005,10 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Funkcja czasowa temperatura ogrzewania X1",
         "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x1",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 249,
@@ -1156,10 +1027,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": 15,
         "max_temp": 55,
@@ -1169,10 +1036,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Funkcja czasowa temperatura chłodzenia X2",
         "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x2",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 252,
@@ -1191,10 +1058,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 7,
         "max_temp": 18,
@@ -1204,10 +1067,10 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Funkcja czasowa temperatura ogrzewania X2",
         "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x2",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 253,
@@ -1226,10 +1089,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": 15,
         "max_temp": 55,
@@ -1239,10 +1098,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Funkcja czasowa temperatura chłodzenia X3",
         "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x3",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 256,
@@ -1261,10 +1120,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 7,
         "max_temp": 18,
@@ -1274,10 +1129,10 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Funkcja czasowa temperatura ogrzewania X3",
         "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x3",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 257,
@@ -1296,10 +1151,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": 15,
         "max_temp": 55,
@@ -1309,10 +1160,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Funkcja czasowa temperatura chłodzenia X4",
         "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x4",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 260,
@@ -1331,10 +1182,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [0, 3],
         "temperature_unit": "C",
         "min_temp": 7,
         "max_temp": 18,
@@ -1344,10 +1191,10 @@ CLIMATES = [
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
     },
+
     {
         "name": "Funkcja czasowa temperatura ogrzewania X4",
         "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x4",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 261,
@@ -1366,10 +1213,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
-        "temperature_control_register": 0,
-        "temperature_control_values": [1, 4],
         "temperature_unit": "C",
         "min_temp": 15,
         "max_temp": 55,
@@ -1379,10 +1222,10 @@ CLIMATES = [
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
     },
+
     {
         "name": "Temperatura załączenia grzałki",
         "unique_id": "temperatura_zalaczenia_grzalki",
-        
         "data_type": "int16",
         "input_type": "holding",
         "current_temp_register": 14,
@@ -1401,8 +1244,6 @@ CLIMATES = [
             "Chłodzenie+CWU": 3,
             "Ogrzewanie+CWU": 4,
             },
-        "hide_temp_when_off": True,
-        "disable_slider_when_off": True,
         "temperature_unit": "C",
         "min_temp": -30,
         "max_temp": 20,
@@ -1413,10 +1254,10 @@ CLIMATES = [
         "icon_off": "mdi:heating-coil",
 
     },
+
     {
         "name": "Delta T",
         "unique_id": "delta_t",
-        
         "data_type": "uint16",
         "input_type": "holding",
         "current_temp_register": 15,
