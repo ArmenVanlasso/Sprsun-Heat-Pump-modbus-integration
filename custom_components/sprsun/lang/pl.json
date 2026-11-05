@@ -4,30 +4,85 @@
     "name": "Zawór trójdrogowy – pozycja",
     "mapping": {
       "1": "C.W.U.",
-      "2": "C.O."
+      "0": "C.O."
     }
   },
-
-  "temp_powrotu": { "entity_id": "temperatura_powrotu", "name": "Temperatura powrotu" },
-  "temp_zasilania": { "entity_id": "temperatura_zasilania", "name": "Temperatura zasilania" },
-  "temp_zewnetrzna": { "entity_id": "temperatura_zewnetrzna", "name": "Temperatura zewnętrzna" },
-  "temp_sprezania": { "entity_id": "temperatura_sprezania", "name": "Temperatura sprężania" },
-  "temp_ssania": { "entity_id": "temperatura_ssania", "name": "Temperatura ssania" },
-  "cisnienie_sprezania": { "entity_id": "cisnienie_sprezania", "name": "Ciśnienie sprężania" },
-  "cisnienie_ssania": { "entity_id": "cisnienie_ssania", "name": "Ciśnienie ssania" },
-  "temp_cwu": { "entity_id": "temperatura_cwu", "name": "Temperatura CWU" },
-  "temp_parownika": { "entity_id": "temperatura_parownika", "name": "Temperatura parownika" },
-  "y1_wentylator": { "entity_id": "y1_wentylator", "name": "Y1 Wentylator" },
-  "y3_pompa_obieg": { "entity_id": "y3_pompa_obiegowa", "name": "Y3 Pompa obiegowa" },
-  "dc_fan_1_output": { "entity_id": "wentylator_1_sterowanie", "name": "Wentylator 1 sterowanie" },
-  "dc_fan_1_feedback": { "entity_id": "wentylator_1_pomiar", "name": "Wentylator 1 pomiar" },
-  "dc_fan_2_output": { "entity_id": "wentylator_2_sterowanie", "name": "Wentylator 2 sterowanie" },
-  "dc_fan_2_feedback": { "entity_id": "wentylator_2_pomiar", "name": "Wentylator 2 pomiar" },
-  "wymagana_wydajnosc": { "entity_id": "wymagana_wydajnosc", "name": "Wymagana wydajność" },
-  "aktualna_wymagana_wydajnosc": { "entity_id": "aktualna_wymagana_wydajnosc", "name": "Aktualna wymagana wydajność" },
-  "obroty_sprezarki": { "entity_id": "obroty_sprezarki", "name": "Obroty sprężarki" },
-  "zawor_eev": { "entity_id": "zawor_eev", "name": "Zawór EEV" },
-
+  "temp_powrotu": {
+    "entity_id": "temperatura_powrotu",
+    "name": "Temperatura powrotu"
+  },
+  "temp_zasilania": {
+    "entity_id": "temperatura_zasilania",
+    "name": "Temperatura zasilania"
+  },
+  "temp_zewnetrzna": {
+    "entity_id": "temperatura_zewnetrzna",
+    "name": "Temperatura zewnętrzna"
+  },
+  "temp_sprezania": {
+    "entity_id": "temperatura_sprezania",
+    "name": "Temperatura sprężania"
+  },
+  "temp_ssania": {
+    "entity_id": "temperatura_ssania",
+    "name": "Temperatura ssania"
+  },
+  "cisnienie_sprezania": {
+    "entity_id": "cisnienie_sprezania",
+    "name": "Ciśnienie sprężania"
+  },
+  "cisnienie_ssania": {
+    "entity_id": "cisnienie_ssania",
+    "name": "Ciśnienie ssania"
+  },
+  "temp_cwu": {
+    "entity_id": "temperatura_cwu",
+    "name": "Temperatura CWU"
+  },
+  "temp_parownika": {
+    "entity_id": "temperatura_parownika",
+    "name": "Temperatura parownika"
+  },
+  "y1_wentylator": {
+    "entity_id": "y1_wentylator",
+    "name": "Y1 Wentylator"
+  },
+  "y3_pompa_obieg": {
+    "entity_id": "y3_pompa_obiegowa",
+    "name": "Y3 Pompa obiegowa"
+  },
+  "dc_fan_1_output": {
+    "entity_id": "wentylator_1_sterowanie",
+    "name": "Wentylator 1 sterowanie"
+  },
+  "dc_fan_1_feedback": {
+    "entity_id": "wentylator_1_pomiar",
+    "name": "Wentylator 1 pomiar"
+  },
+  "dc_fan_2_output": {
+    "entity_id": "wentylator_2_sterowanie",
+    "name": "Wentylator 2 sterowanie"
+  },
+  "dc_fan_2_feedback": {
+    "entity_id": "wentylator_2_pomiar",
+    "name": "Wentylator 2 pomiar"
+  },
+  "wymagana_wydajnosc": {
+    "entity_id": "wymagana_wydajnosc",
+    "name": "Wymagana wydajność"
+  },
+  "aktualna_wymagana_wydajnosc": {
+    "entity_id": "aktualna_wymagana_wydajnosc",
+    "name": "Aktualna wymagana wydajność"
+  },
+  "obroty_sprezarki": {
+    "entity_id": "obroty_sprezarki",
+    "name": "Obroty sprężarki"
+  },
+  "zawor_eev": {
+    "entity_id": "zawor_eev",
+    "name": "Zawór EEV"
+  },
   "status_2": {
     "entity_id": "status_2",
     "name": "Status 2",
@@ -37,7 +92,6 @@
       "2": "Graniczny"
     }
   },
-
   "zabezpieczenie": {
     "entity_id": "zabezpieczenie",
     "name": "Zabezpieczenie",
@@ -50,8 +104,10 @@
       "5": "Wysoka temperatura skraplacza"
     }
   },
-
-  "przegrzanie": { "entity_id": "temperatura_przegrzania", "name": "Temperatura przegrzania" },
+  "przegrzanie": {
+    "entity_id": "temperatura_przegrzania",
+    "name": "Temperatura przegrzania"
+  },
   "tryb_pracy_pompy": {
     "entity_id": "tryb_pracy_pompy",
     "name": "Tryb pracy pompy",
@@ -61,8 +117,10 @@
       "2": "CWU"
     }
   },
-
-  "temp_tloczenia": { "entity_id": "temperatura_tloczenia", "name": "Temperatura tłoczenia" },
+  "temp_tloczenia": {
+    "entity_id": "temperatura_tloczenia",
+    "name": "Temperatura tłoczenia"
+  },
   "status": {
     "entity_id": "status",
     "name": "Status",
@@ -80,17 +138,42 @@
       "10": "Zmiana trybu"
     }
   },
-
-  "wersja_programu_1": { "entity_id": "wersja_programu_1", "name": "Wersja programu 1" },
-  "wersja_programu_2": { "entity_id": "wersja_programu_2", "name": "Wersja programu 2" },
-  "wersja_programu_3": { "entity_id": "wersja_programu_3", "name": "Wersja programu 3" },
-  "pompa_model_1": { "entity_id": "pompa_model_1", "name": "Pompa model 1" },
-  "pompa_model_2": { "entity_id": "pompa_model_2", "name": "Pompa model 2" },
-  "pompa_model_3": { "entity_id": "pompa_model_3", "name": "Pompa model 3" },
-  "moc_pobierana": { "entity_id": "moc_pobierana", "name": "Moc pobierana" },
-  "napiecie_falownika": { "entity_id": "napiecie_falownika", "name": "Napięcie falownika" },
-  "prad_falownika": { "entity_id": "prad_falownika", "name": "Prąd falownika" },
-
+  "wersja_programu_1": {
+    "entity_id": "wersja_programu_1",
+    "name": "Wersja programu 1"
+  },
+  "wersja_programu_2": {
+    "entity_id": "wersja_programu_2",
+    "name": "Wersja programu 2"
+  },
+  "wersja_programu_3": {
+    "entity_id": "wersja_programu_3",
+    "name": "Wersja programu 3"
+  },
+  "pompa_model_1": {
+    "entity_id": "pompa_model_1",
+    "name": "Pompa model 1"
+  },
+  "pompa_model_2": {
+    "entity_id": "pompa_model_2",
+    "name": "Pompa model 2"
+  },
+  "pompa_model_3": {
+    "entity_id": "pompa_model_3",
+    "name": "Pompa model 3"
+  },
+  "moc_pobierana": {
+    "entity_id": "moc_pobierana",
+    "name": "Moc pobierana"
+  },
+  "napiecie_falownika": {
+    "entity_id": "napiecie_falownika",
+    "name": "Napięcie falownika"
+  },
+  "prad_falownika": {
+    "entity_id": "prad_falownika",
+    "name": "Prąd falownika"
+  },
   "sprsun_compressor_runtime_total": {
     "entity_id": "czas_pracy_sprezarki_total",
     "name": "Czas pracy sprężarki (total)"
@@ -107,7 +190,6 @@
     "entity_id": "czas_pracy_sprezarki_roczny",
     "name": "Czas pracy sprężarki (roczny)"
   },
-
   "ilosc_wlaczen_sprezarki_daily": {
     "entity_id": "ilosc_wlaczen_sprezarki_daily",
     "name": "Ilość włączeń sprężarki daily"
@@ -124,7 +206,6 @@
     "entity_id": "ilosc_wlaczen_sprezarki_total",
     "name": "Ilość włączeń sprężarki total"
   },
-
   "sprsun_fan_runtime_total": {
     "entity_id": "czas_pracy_wentylatora_total",
     "name": "Czas pracy wentylatora (total)"
@@ -141,7 +222,6 @@
     "entity_id": "czas_pracy_wentylatora_roczny",
     "name": "Czas pracy wentylatora (roczny)"
   },
-
   "ilosc_wlaczen_wentylatora_daily": {
     "entity_id": "ilosc_wlaczen_wentylatora_daily",
     "name": "Ilość włączeń wentylatora daily"
@@ -158,7 +238,6 @@
     "entity_id": "ilosc_wlaczen_wentylatora_total",
     "name": "Ilość włączeń wentylatora total"
   },
-
   "ilosc_defrostow_daily": {
     "entity_id": "ilosc_defrostow_daily",
     "name": "Ilość defrostów daily"
@@ -518,6 +597,25 @@
   "defrost_wymuszone_odszranianie_co": {
     "entity_id": "defrost_wymuszone_odszranianie_co",
     "name": "Defrost wymuszone odszranianie co"
+  },
+  "ilosc_przelaczen_pompy_obiegowej_total": {
+    "entity_id": "ilosc_przelaczen_pompy_obiegowej_total",
+    "name": "Ilość przełączeń pompy obiegowej total"
+  },
+  "sprsun_pump_runtime_total": {
+    "entity_id": "czas_pracy_pompy_obiegowej_total",
+    "name": "Czas pracy pompy obiegowej (total)"
+  },
+  "sprsun_pump_runtime_daily": {
+    "entity_id": "czas_pracy_pompy_obiegowej_dzienny",
+    "name": "Czas pracy pompy obiegowej (dzienny)"
+  },
+  "sprsun_pump_runtime_monthly": {
+    "entity_id": "czas_pracy_pompy_obiegowej_miesieczny",
+    "name": "Czas pracy pompy obiegowej (miesięczny)"
+  },
+  "sprsun_pump_runtime_yearly": {
+    "entity_id": "czas_pracy_pompy_obiegowej_roczny",
+    "name": "Czas pracy pompy obiegowej (roczny)"
   }
-
 }
