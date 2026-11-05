@@ -1,4 +1,6 @@
+import re
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from ...const import DOMAIN
 
 # Mapa alarmów: adres → (kod, opis)
@@ -170,14 +172,16 @@ ALARM_MAP = {
     177: ("AL174", "Rozłączenie slave 9"),
 }
 
-
-class SprsunActiveAlarmsSensor(SensorEntity):
+class SprsunActiveAlarmsSensor(CoordinatorEntity, SensorEntity):
     """Sensor zbiorczy pokazujący aktywne alarmy."""
 
     _attr_should_poll = False
     _attr_name = "Aktywne alarmy"
 
-    def __init__(self, client, entry_id, model):
+    def __init__(self, coordinator, client, entry_id, model):
+        super().__init__(coordinator)
+
+        self.coordinator = coordinator
         self._client = client
         self._entry_id = entry_id
         self._model = model
@@ -185,7 +189,20 @@ class SprsunActiveAlarmsSensor(SensorEntity):
         self._attr_available = True
 
         self._attr_unique_id = f"sprsun_{model}_active_alarms"
-        self.entity_id = f"sensor.sprsun_{model}_active_alarms"
+        import re
+        raw = f"sprsun_{model}_active_alarms".lower()
+        slug = re.sub(r"[^a-z0-9_]", "_", raw)
+        slug = re.sub(r"_+", "_", slug)
+        slug = slug.strip("_")
+        self.entity_id = f"sensor.{slug}"
+
+    async def async_added_to_hass(self):
+        from homeassistant.helpers.event import async_track_time_interval
+        from datetime import timedelta
+
+        self._unsub = async_track_time_interval(
+            self.hass, self._update_alarms, timedelta(seconds=10)
+        )
 
     @property
     def device_info(self):
@@ -220,12 +237,13 @@ class SprsunActiveAlarmsSensor(SensorEntity):
             }
         }
 
-    async def async_update(self):
+    async def _update_alarms(self, now):
         values = await self._client.read_discrete_inputs(13, 165)
 
         if not values:
             self._active = []
             self._attr_available = False
+            self.async_write_ha_state()
             return
 
         active = []
