@@ -78,6 +78,14 @@ class HeatPumpClimate(ClimateEntity):
 
         self._hide_temp_when_off = definition.get("hide_temp_when_off", False)
         self._disable_slider_when_off = definition.get("disable_slider_when_off", False)
+        self._temperature_control_register = definition.get(
+            "temperature_control_register"
+        )
+
+        self._temperature_control_values = definition.get(
+            "temperature_control_values",
+            []
+        )
 
         # --- Presety ---
         self._preset_register = definition.get("preset_register")
@@ -112,6 +120,10 @@ class HeatPumpClimate(ClimateEntity):
     # ============================================================
     @property
     def hvac_mode(self) -> HVACMode:
+
+        if not self._temperature_control_allowed():
+            return HVACMode.OFF
+
         if self._hvac_mode_register is None:
             return HVACMode.OFF
 
@@ -202,6 +214,10 @@ class HeatPumpClimate(ClimateEntity):
     # ============================================================
     @property
     def current_temperature(self) -> float | None:
+
+        if not self._temperature_control_allowed():
+            return None
+
         if self._hide_temp_when_off and self.hvac_mode == HVACMode.OFF:
             return None
 
@@ -222,6 +238,10 @@ class HeatPumpClimate(ClimateEntity):
     # ============================================================
     @property
     def target_temperature(self) -> float | None:
+
+        if not self._temperature_control_allowed():
+            return None
+
         if self._target_temp_register is None:
             return None
 
@@ -237,33 +257,55 @@ class HeatPumpClimate(ClimateEntity):
     # ============================================================
     #  FUNKCJE
     # ============================================================
+    def _temperature_control_allowed(self) -> bool:
+        """Sprawdza czy encja może być sterowana w aktualnym trybie pracy."""
+
+        if self._temperature_control_register is None:
+            return True
+
+        value = self.coordinator.data.get(
+            self._temperature_control_register
+        )
+
+        if value is None:
+            return False
+
+        return value in self._temperature_control_values
     @property
     def supported_features(self) -> ClimateEntityFeature:
         features = ClimateEntityFeature(0)
 
+        if self._temperature_control_allowed():
+            features |= ClimateEntityFeature.TARGET_TEMPERATURE
+
         if self._preset_values:
             features |= ClimateEntityFeature.PRESET_MODE
 
-        if not (self._disable_slider_when_off and self.hvac_mode == HVACMode.OFF):
-            features |= ClimateEntityFeature.TARGET_TEMPERATURE
-
         return features
-
     # ============================================================
     #  ZMIANA TEMPERATURY
     # ============================================================
     async def async_set_temperature(self, **kwargs):
         temp = kwargs.get("temperature")
-        if temp is None or self._target_temp_register is None:
+
+        if temp is None:
             return
 
-        if self._disable_slider_when_off and self.hvac_mode == HVACMode.OFF:
+        if self._target_temp_register is None:
+            return
+
+        if not self._temperature_control_allowed():
             return
 
         value = int(temp / self._scale)
 
-        await self._client.write_register(self._target_temp_register, value)
+        await self._client.write_register(
+            self._target_temp_register,
+            value,
+        )
+
         await asyncio.sleep(0.5)
+
         await self.coordinator.async_request_refresh()
 
     # ============================================================
