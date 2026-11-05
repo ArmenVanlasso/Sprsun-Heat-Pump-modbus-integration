@@ -1,44 +1,621 @@
 {
-  "config": {
-    "step": {
-      "user": {
-        "title": "Тип на връзката с термопомпата Sprsun",
-        "description": "Изберете как да се свържете с помпата: чрез Ethernet (TCP) или чрез сериен порт (RS485 / RTU)."
-      },
-      "details": {
-        "title": "Детайли за връзката",
-        "description": "Попълнете данните, съответстващи на избрания тип връзка.",
-        "data": {
-          "host": "IP адрес на помпата",
-          "port": "Modbus TCP порт",
-          "serialport": "Сериен порт (напр. /dev/ttyUSB0)",
-          "baudrate": "Скорост на предаване [bps]",
-          "unitid": "Адрес на помпата (Unit ID / Slave ID)",
-          "scaninterval": "Интервал на запитване [s]",
-          "model": "Модел на помпата"
-        }
-      }
-    },
-    "error": {
-      "hostrequired": "IP адресът е задължителен.",
-      "invalidport": "TCP портът трябва да бъде число в диапазона 1–65535.",
-      "invalidunitid": "Unit ID трябва да бъде число в диапазона 1–255.",
-      "min10": "Минималната стойност е 10 секунди.",
-      "alreadyconfigured": "Такава връзка вече съществува."
+  "d07_zaw_3_drog": {
+    "entity_id": "zawor_trojdrogowy_pozycja",
+    "name": "Положение на трипътния вентил",
+    "mapping": {
+      "0": "Отопление",
+      "1": "Битова гореща вода"
     }
   },
-  "options": {
-    "step": {
-      "user": {
-        "title": "Опции за интеграция на Sprsun",
-        "description": "Променете честотата на отчитане.",
-        "data": {
-          "scaninterval": "Интервал на запитване [s]"
-        }
-      }
-    },
-    "error": {
-      "min_10": "Минималната стойност е 10 секунди."
+  "temp_powrotu": {
+    "entity_id": "temperatura_powrotu",
+    "name": "Температура на връщащата вода"
+  },
+  "temp_zasilania": {
+    "entity_id": "temperatura_zasilania",
+    "name": "Температура на подаващата вода"
+  },
+  "temp_zewnetrzna": {
+    "entity_id": "temperatura_zewnetrzna",
+    "name": "Външна температура"
+  },
+  "temp_sprezania": {
+    "entity_id": "temperatura_sprezania",
+    "name": "Температура на сгъстяване"
+  },
+  "temp_ssania": {
+    "entity_id": "temperatura_ssania",
+    "name": "Температура на засмукване"
+  },
+  "cisnienie_sprezania": {
+    "entity_id": "cisnienie_sprezania",
+    "name": "Налягане на нагнетяване"
+  },
+  "cisnienie_ssania": {
+    "entity_id": "cisnienie_ssania",
+    "name": "Налягане на засмукване"
+  },
+  "temp_cwu": {
+    "entity_id": "temperatura_cwu",
+    "name": "Температура на битовата гореща вода"
+  },
+  "temp_parownika": {
+    "entity_id": "temperatura_parownika",
+    "name": "Температура на изпарителя"
+  },
+  "y1_wentylator": {
+    "entity_id": "y1_wentylator",
+    "name": "Y1 Вентилатор"
+  },
+  "y3_pompa_obieg": {
+    "entity_id": "y3_pompa_obiegowa",
+    "name": "Y3 Циркулационна помпа"
+  },
+  "dc_fan_1_output": {
+    "entity_id": "wentylator_1_sterowanie",
+    "name": "Управление на вентилатор 1"
+  },
+  "dc_fan_1_feedback": {
+    "entity_id": "wentylator_1_pomiar",
+    "name": "Обратна връзка от вентилатор 1"
+  },
+  "dc_fan_2_output": {
+    "entity_id": "wentylator_2_sterowanie",
+    "name": "Управление на вентилатор 2"
+  },
+  "dc_fan_2_feedback": {
+    "entity_id": "wentylator_2_pomiar",
+    "name": "Обратна връзка от вентилатор 2"
+  },
+  "wymagana_wydajnosc": {
+    "entity_id": "wymagana_wydajnosc",
+    "name": "Необходима мощност"
+  },
+  "aktualna_wymagana_wydajnosc": {
+    "entity_id": "aktualna_wymagana_wydajnosc",
+    "name": "Текуща необходима мощност"
+  },
+  "obroty_sprezarki": {
+    "entity_id": "obroty_sprezarki",
+    "name": "Обороти на компресора"
+  },
+  "zawor_eev": {
+    "entity_id": "zawor_eev",
+    "name": "EEV клапан"
+  },
+  "status_2": {
+    "entity_id": "status_2",
+    "name": "Статус 2",
+    "mapping": {
+      "0": "OK",
+      "1": "Управление",
+      "2": "Ограничение"
     }
+  },
+  "zabezpieczenie": {
+    "entity_id": "zabezpieczenie",
+    "name": "Защита",
+    "mapping": {
+      "0": "OK",
+      "1": "OK",
+      "2": "Ниско прегряване",
+      "3": "Ниско налягане",
+      "4": "Високо налягане",
+      "5": "Висока температура на кондензатора"
+    }
+  },
+  "przegrzanie": {
+    "entity_id": "temperatura_przegrzania",
+    "name": "Температура на прегряване"
+  },
+  "tryb_pracy_pompy": {
+    "entity_id": "tryb_pracy_pompy",
+    "name": "Режим на термопомпата",
+    "mapping": {
+      "0": "Охлаждане",
+      "1": "Отопление",
+      "2": "Битова гореща вода"
+    }
+  },
+  "temp_tloczenia": {
+    "entity_id": "temperatura_tloczenia",
+    "name": "Температура на нагнетяване"
+  },
+  "status": {
+    "entity_id": "status",
+    "name": "Статус",
+    "mapping": {
+      "0": "Подготовка",
+      "1": "Работа",
+      "2": "Спиране по аларма",
+      "3": "Спиране по таймер",
+      "4": "Спиране от обслужването",
+      "5": "Спиране от управлението",
+      "6": "Спряно",
+      "7": "Ръчен режим",
+      "8": "Защита от замръзване",
+      "9": "Спиране чрез AC връзка",
+      "10": "Смяна на режима"
+    }
+  },
+  "wersja_programu_1": {
+    "entity_id": "wersja_programu_1",
+    "name": "Версия на програмата 1"
+  },
+  "wersja_programu_2": {
+    "entity_id": "wersja_programu_2",
+    "name": "Версия на програмата 2"
+  },
+  "wersja_programu_3": {
+    "entity_id": "wersja_programu_3",
+    "name": "Версия на програмата 3"
+  },
+  "pompa_model_1": {
+    "entity_id": "pompa_model_1",
+    "name": "Модел на термопомпата 1"
+  },
+  "pompa_model_2": {
+    "entity_id": "pompa_model_2",
+    "name": "Модел на термопомпата 2"
+  },
+  "pompa_model_3": {
+    "entity_id": "pompa_model_3",
+    "name": "Модел на термопомпата 3"
+  },
+  "moc_pobierana": {
+    "entity_id": "moc_pobierana",
+    "name": "Консумирана мощност"
+  },
+  "napiecie_falownika": {
+    "entity_id": "napiecie_falownika",
+    "name": "Напрежение на инвертора"
+  },
+  "prad_falownika": {
+    "entity_id": "prad_falownika",
+    "name": "Ток на инвертора"
+  },
+  "sprsun_compressor_runtime_total": {
+    "entity_id": "czas_pracy_sprezarki_total",
+    "name": "Време на работа на компресора (общо)"
+  },
+  "sprsun_compressor_runtime_daily": {
+    "entity_id": "czas_pracy_sprezarki_dzienny",
+    "name": "Време на работа на компресора (дневно)"
+  },
+  "sprsun_compressor_runtime_monthly": {
+    "entity_id": "czas_pracy_sprezarki_miesieczny",
+    "name": "Време на работа на компресора (месечно)"
+  },
+  "sprsun_compressor_runtime_yearly": {
+    "entity_id": "czas_pracy_sprezarki_roczny",
+    "name": "Време на работа на компресора (годишно)"
+  },
+  "ilosc_wlaczen_sprezarki_daily": {
+    "entity_id": "ilosc_wlaczen_sprezarki_daily",
+    "name": "Брой стартирания на компресора (дневно)"
+  },
+  "ilosc_wlaczen_sprezarki_monthly": {
+    "entity_id": "ilosc_wlaczen_sprezarki_monthly",
+    "name": "Брой стартирания на компресора (месечно)"
+  },
+  "ilosc_wlaczen_sprezarki_yearly": {
+    "entity_id": "ilosc_wlaczen_sprezarki_yearly",
+    "name": "Брой стартирания на компресора (годишно)"
+  },
+  "ilosc_wlaczen_sprezarki_total": {
+    "entity_id": "ilosc_wlaczen_sprezarki_total",
+    "name": "Брой стартирания на компресора (общо)"
+  },
+  "sprsun_fan_runtime_total": {
+    "entity_id": "czas_pracy_wentylatora_total",
+    "name": "Време на работа на вентилатора (общо)"
+  },
+  "sprsun_fan_runtime_daily": {
+    "entity_id": "czas_pracy_wentylatora_dzienny",
+    "name": "Време на работа на вентилатора (дневно)"
+  },
+  "sprsun_fan_runtime_monthly": {
+    "entity_id": "czas_pracy_wentylatora_miesieczny",
+    "name": "Време на работа на вентилатора (месечно)"
+  },
+  "sprsun_fan_runtime_yearly": {
+    "entity_id": "czas_pracy_wentylatora_roczny",
+    "name": "Време на работа на вентилатора (годишно)"
+  },
+  "ilosc_wlaczen_wentylatora_daily": {
+    "entity_id": "ilosc_wlaczen_wentylatora_daily",
+    "name": "Брой стартирания на вентилатора (дневно)"
+  },
+  "ilosc_wlaczen_wentylatora_monthly": {
+    "entity_id": "ilosc_wlaczen_wentylatora_monthly",
+    "name": "Брой стартирания на вентилатора (месечно)"
+  },
+  "ilosc_wlaczen_wentylatora_yearly": {
+    "entity_id": "ilosc_wlaczen_wentylatora_yearly",
+    "name": "Брой стартирания на вентилатора (годишно)"
+  },
+  "ilosc_wlaczen_wentylatora_total": {
+    "entity_id": "ilosc_wlaczen_wentylatora_total",
+    "name": "Брой стартирания на вентилатора (общо)"
+  },
+  "ilosc_defrostow_daily": {
+    "entity_id": "ilosc_defrostow_daily",
+    "name": "Брой размразявания (дневно)"
+  },
+  "ilosc_defrostow_monthly": {
+    "entity_id": "ilosc_defrostow_monthly",
+    "name": "Брой размразявания (месечно)"
+  },
+  "ilosc_defrostow_yearly": {
+    "entity_id": "ilosc_defrostow_yearly",
+    "name": "Брой размразявания (годишно)"
+  },
+  "ilosc_defrostow_total": {
+    "entity_id": "ilosc_defrostow_total",
+    "name": "Брой размразявания (общо)"
+  },
+  "ilosc_przelaczen_zaworu_3d_total": {
+    "entity_id": "ilosc_przelaczen_zaworu_3d_total",
+    "name": "Брой превключвания на трипътния вентил (общо)"
+  },
+  "predkosc_sprezarki_w_trybie_nocnym": {
+    "entity_id": "predkosc_sprezarki_w_trybie_nocnym",
+    "name": "Скорост на компресора в нощен режим"
+  },
+  "predkosc_wentylatora_w_trybie_nocnym": {
+    "entity_id": "predkosc_wentylatora_w_trybie_nocnym",
+    "name": "Скорост на вентилатора в нощен режим"
+  },
+  "funkcja_czasowa_rok": {
+    "entity_id": "funkcja_czasowa_rok",
+    "name": "График – година"
+  },
+  "funkcja_czasowa_miesiac": {
+    "entity_id": "funkcja_czasowa_miesiac",
+    "name": "График – месец"
+  },
+  "funkcja_czasowa_dzien": {
+    "entity_id": "funkcja_czasowa_dzien",
+    "name": "График – ден"
+  },
+  "funkcja_czasowa_godzina": {
+    "entity_id": "funkcja_czasowa_godzina",
+    "name": "График – час"
+  },
+  "funkcja_czasowa_minuta": {
+    "entity_id": "funkcja_czasowa_minuta",
+    "name": "График – минута"
+  },
+  "funkcja_czasowa_dzien_tygodnia": {
+    "entity_id": "funkcja_czasowa_dzien_tygodnia",
+    "name": "График – ден от седмицата"
+  },
+  "funkcja_czasowa_poniedzialek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_godzina_wlaczenia",
+    "name": "График – понеделник, час на включване"
+  },
+  "funkcja_czasowa_poniedzialek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_minuta_wlaczenia",
+    "name": "График – понеделник, минута на включване"
+  },
+  "funkcja_czasowa_poniedzialek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_godzina_wylaczenia",
+    "name": "График – понеделник, час на изключване"
+  },
+  "funkcja_czasowa_poniedzialek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_minuta_wylaczenia",
+    "name": "График – понеделник, минута на изключване"
+  },
+  "funkcja_czasowa_wtorek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_godzina_wlaczenia",
+    "name": "График – вторник, час на включване"
+  },
+  "funkcja_czasowa_wtorek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_minuta_wlaczenia",
+    "name": "График – вторник, минута на включване"
+  },
+  "funkcja_czasowa_wtorek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_godzina_wylaczenia",
+    "name": "График – вторник, час на изключване"
+  },
+  "funkcja_czasowa_wtorek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_minuta_wylaczenia",
+    "name": "График – вторник, минута на изключване"
+  },
+  "funkcja_czasowa_sroda_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_godzina_wlaczenia",
+    "name": "График – сряда, час на включване"
+  },
+  "funkcja_czasowa_sroda_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_minuta_wlaczenia",
+    "name": "График – сряда, минута на включване"
+  },
+  "funkcja_czasowa_sroda_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_godzina_wylaczenia",
+    "name": "График – сряда, час на изключване"
+  },
+  "funkcja_czasowa_sroda_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_minuta_wylaczenia",
+    "name": "График – сряда, минута на изключване"
+  },
+  "funkcja_czasowa_czwartek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_godzina_wlaczenia",
+    "name": "График – четвъртък, час на включване"
+  },
+  "funkcja_czasowa_czwartek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_minuta_wlaczenia",
+    "name": "График – четвъртък, минута на включване"
+  },
+  "funkcja_czasowa_czwartek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_godzina_wylaczenia",
+    "name": "График – четвъртък, час на изключване"
+  },
+  "funkcja_czasowa_czwartek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_minuta_wylaczenia",
+    "name": "График – четвъртък, минута на изключване"
+  },
+  "funkcja_czasowa_piatek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_godzina_wlaczenia",
+    "name": "График – петък, час на включване"
+  },
+  "funkcja_czasowa_piatek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_minuta_wlaczenia",
+    "name": "График – петък, минута на включване"
+  },
+  "funkcja_czasowa_piatek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_godzina_wylaczenia",
+    "name": "График – петък, час на изключване"
+  },
+  "funkcja_czasowa_piatek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_minuta_wylaczenia",
+    "name": "График – петък, минута на изключване"
+  },
+  "funkcja_czasowa_sobota_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_godzina_wlaczenia",
+    "name": "График – събота, час на включване"
+  },
+  "funkcja_czasowa_sobota_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_minuta_wlaczenia",
+    "name": "График – събота, минута на включване"
+  },
+  "funkcja_czasowa_sobota_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_godzina_wylaczenia",
+    "name": "График – събота, час на изключване"
+  },
+  "funkcja_czasowa_sobota_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_minuta_wylaczenia",
+    "name": "График – събота, минута на изключване"
+  },
+  "funkcja_czasowa_niedziela_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_godzina_wlaczenia",
+    "name": "График – неделя, час на включване"
+  },
+  "funkcja_czasowa_niedziela_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_minuta_wlaczenia",
+    "name": "График – неделя, минута на включване"
+  },
+  "funkcja_czasowa_niedziela_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_godzina_wylaczenia",
+    "name": "График – неделя, час на изключване"
+  },
+  "funkcja_czasowa_niedziela_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_minuta_wylaczenia",
+    "name": "График – неделя, минута на изключване"
+  },
+  "funkcja_czasowa_godz_x1": {
+    "entity_id": "funkcja_czasowa_godz_x1",
+    "name": "График – час X1"
+  },
+  "funkcja_czasowa_min_x1": {
+    "entity_id": "funkcja_czasowa_min_x1",
+    "name": "График – минута X1"
+  },
+  "funkcja_czasowa_godz_x2": {
+    "entity_id": "funkcja_czasowa_godz_x2",
+    "name": "График – час X2"
+  },
+  "funkcja_czasowa_min_x2": {
+    "entity_id": "funkcja_czasowa_min_x2",
+    "name": "График – минута X2"
+  },
+  "funkcja_czasowa_godz_x3": {
+    "entity_id": "funkcja_czasowa_godz_x3",
+    "name": "График – час X3"
+  },
+  "funkcja_czasowa_min_x3": {
+    "entity_id": "funkcja_czasowa_min_x3",
+    "name": "График – минута X3"
+  },
+  "funkcja_czasowa_godz_x4": {
+    "entity_id": "funkcja_czasowa_godz_x4",
+    "name": "График – час X4"
+  },
+  "funkcja_czasowa_min_x4": {
+    "entity_id": "funkcja_czasowa_min_x4",
+    "name": "График – минута X4"
+  },
+  "minimalna_nastawa_chlodzenia": {
+    "entity_id": "minimalna_nastawa_chlodzenia",
+    "name": "Минимална зададена температура за охлаждане"
+  },
+  "maksymalna_nastawa_chlodzenia": {
+    "entity_id": "maksymalna_nastawa_chlodzenia",
+    "name": "Максимална зададена температура за охлаждане"
+  },
+  "adres": {
+    "entity_id": "adres",
+    "name": "Адрес"
+  },
+  "opoznienie_zalaczenia_sprezarki": {
+    "entity_id": "opoznienie_zalaczenia_sprezarki",
+    "name": "Забавяне при стартиране на компресора"
+  },
+  "ambient_temperature_switch": {
+    "entity_id": "ambient_temperature_switch",
+    "name": "Зададена температура за превключване според външната температура"
+  },
+  "minimalny_czas_postoju_sprezarki": {
+    "entity_id": "minimalny_czas_postoju_sprezarki",
+    "name": "Минимално време за престой на компресора"
+  },
+  "temperatura_wyswietlacza_offset": {
+    "entity_id": "temperatura_wyswietlacza_offset",
+    "name": "Корекция на температурата на дисплея"
+  },
+  "temperatura_zasilania_offset": {
+    "entity_id": "temperatura_zasilania_offset",
+    "name": "Корекция на температурата на подаващата вода"
+  },
+  "temperatura_zewnetrzna_offset": {
+    "entity_id": "temperatura_zewnetrzna_offset",
+    "name": "Корекция на външната температура"
+  },
+  "temperatura_tloczenia_offset": {
+    "entity_id": "temperatura_tloczenia_offset",
+    "name": "Корекция на температурата на нагнетяване"
+  },
+  "temperatura_ssania_offset": {
+    "entity_id": "temperatura_ssania_offset",
+    "name": "Корекция на температурата на засмукване"
+  },
+  "czujnik_wysokiego_cisnienia": {
+    "entity_id": "czujnik_wysokiego_cisnienia",
+    "name": "Датчик за високо налягане"
+  },
+  "czujnik_niskiego_cisnienia": {
+    "entity_id": "czujnik_niskiego_cisnienia",
+    "name": "Датчик за ниско налягане"
+  },
+  "temperatura_cwu_offset": {
+    "entity_id": "temperatura_cwu_offset",
+    "name": "Корекция на температурата на битовата гореща вода"
+  },
+  "temperatura_parownika_offset": {
+    "entity_id": "temperatura_parownika_offset",
+    "name": "Корекция на температурата на изпарителя"
+  },
+  "ustaw_nowe_haslo_serwisowe": {
+    "entity_id": "ustaw_nowe_haslo_serwisowe",
+    "name": "Задаване на нова сервизна парола"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_4_do_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_4_do_9",
+    "name": "Скорост на компресора: 4 < външна температура ≤ 9"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_3_do_4": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_3_do_4",
+    "name": "Скорост на компресора: -3 < външна температура ≤ 4"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_9_do_minus_3": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_9_do_minus_3",
+    "name": "Скорост на компресора: -9 < външна температура ≤ -3"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_15_do_minus_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_15_do_minus_9",
+    "name": "Скорост на компресора: -15 < външна температура ≤ -9"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_minus_15": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_minus_15",
+    "name": "Скорост на компресора: външна температура ≤ -15"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_9",
+    "name": "Скорост на компресора: външна температура > 9"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_38": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_38",
+    "name": "Скорост на компресора: външна температура > 38"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_33_ponizej_38": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_33_ponizej_38",
+    "name": "Скорост на компресора: 33 < външна температура ≤ 38"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_30_ponizej_33": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_30_ponizej_33",
+    "name": "Скорост на компресора: 30 < външна температура ≤ 33"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_26": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_26",
+    "name": "Скорост на компресора: външна температура ≤ 26"
+  },
+  "defrost_minimalna_predkosc_sprezarki_%": {
+    "entity_id": "defrost_minimalna_predkosc_sprezarki_%",
+    "name": "Размразяване – минимална скорост на компресора (%)"
+  },
+  "defrost_docelowe_otwarcie_zaworu_eev": {
+    "entity_id": "defrost_docelowe_otwarcie_zaworu_eev",
+    "name": "Размразяване – целево отваряне на EEV клапана"
+  },
+  "defrost_otwarcie_zaworu_eev_po_zakonczeniu": {
+    "entity_id": "defrost_otwarcie_zaworu_eev_po_zakonczeniu",
+    "name": "Размразяване – отваряне на EEV клапана след приключване"
+  },
+  "defrost_czas_otwarcia_zaworu_eev": {
+    "entity_id": "defrost_czas_otwarcia_zaworu_eev",
+    "name": "Размразяване – време за отваряне на EEV клапана"
+  },
+  "defrost_docelowa_predkosc_sprezarki_podczas_odszraniania": {
+    "entity_id": "defrost_docelowa_predkosc_sprezarki_podczas_odszraniania",
+    "name": "Размразяване – целева скорост на компресора"
+  },
+  "defrost_predkosc_pompy_obiegowej": {
+    "entity_id": "defrost_predkosc_pompy_obiegowej",
+    "name": "Размразяване – скорост на циркулационната помпа"
+  },
+  "defrost_temperatura_parownika_przy_ktorej_rozpoczyna_sie_odszranianie": {
+    "entity_id": "defrost_temperatura_parownika_przy_ktorej_rozpoczyna_sie_odszranianie",
+    "name": "Размразяване – температура на изпарителя за започване"
+  },
+  "defrost_temperatura_parownika_przy_ktorej_konczy_sie_odszranianie": {
+    "entity_id": "defrost_temperatura_parownika_przy_ktorej_konczy_sie_odszranianie",
+    "name": "Размразяване – температура на изпарителя за приключване"
+  },
+  "defrost_temperatura_zewnetrzna_dla_uruchomienia_odszraniania": {
+    "entity_id": "defrost_temperatura_zewnetrzna_dla_uruchomienia_odszraniania",
+    "name": "Размразяване – външна температура за стартиране"
+  },
+  "defrost_min_roznica_miedzy_powietrzem_a_parownikiem_wymagana_do_odszraniania": {
+    "entity_id": "defrost_min_roznica_miedzy_powietrzem_a_parownikiem_wymagana_do_odszraniania",
+    "name": "Размразяване – минимална разлика между температурата на въздуха и изпарителя"
+  },
+  "defrost_opoznienie_rozpoczecia_odszraniania": {
+    "entity_id": "defrost_opoznienie_rozpoczecia_odszraniania",
+    "name": "Размразяване – забавяне на стартирането"
+  },
+  "defrost_minimalny_czas": {
+    "entity_id": "defrost_minimalny_czas",
+    "name": "Размразяване – минимално време"
+  },
+  "defrost_maksymalny_czas": {
+    "entity_id": "defrost_maksymalny_czas",
+    "name": "Размразяване – максимално време"
+  },
+  "defrost_interwal_odszraniania": {
+    "entity_id": "defrost_interwal_odszraniania",
+    "name": "Размразяване – интервал"
+  },
+  "defrost_wymuszone_odszranianie_co": {
+    "entity_id": "defrost_wymuszone_odszranianie_co",
+    "name": "Размразяване – принудително размразяване на всеки"
+  },
+  "ilosc_przelaczen_pompy_obiegowej_total": {
+    "entity_id": "ilosc_przelaczen_pompy_obiegowej_total",
+    "name": "Брой включвания на циркулационната помпа (общо)"
+  },
+  "sprsun_pump_runtime_total": {
+    "entity_id": "czas_pracy_pompy_obiegowej_total",
+    "name": "Време на работа на циркулационната помпа (общо)"
+  },
+  "sprsun_pump_runtime_daily": {
+    "entity_id": "czas_pracy_pompy_obiegowej_dzienny",
+    "name": "Време на работа на циркулационната помпа (дневно)"
+  },
+  "sprsun_pump_runtime_monthly": {
+    "entity_id": "czas_pracy_pompy_obiegowej_miesieczny",
+    "name": "Време на работа на циркулационната помпа (месечно)"
+  },
+  "sprsun_pump_runtime_yearly": {
+    "entity_id": "czas_pracy_pompy_obiegowej_roczny",
+    "name": "Време на работа на циркулационната помпа (годишно)"
   }
 }
