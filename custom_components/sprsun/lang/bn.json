@@ -1,44 +1,621 @@
 {
-  "config": {
-    "step": {
-      "user": {
-        "title": "Sprsun হিট পাম্পের সংযোগের ধরন",
-        "description": "পাম্পের সাথে কীভাবে সংযোগ করতে চান তা নির্বাচন করুন: Ethernet (TCP) অথবা সিরিয়াল পোর্ট (RS485 / RTU)।"
-      },
-      "details": {
-        "title": "সংযোগের বিবরণ",
-        "description": "নির্বাচিত সংযোগের ধরন অনুযায়ী প্রয়োজনীয় তথ্য পূরণ করুন।",
-        "data": {
-          "host": "পাম্পের IP ঠিকানা",
-          "port": "Modbus TCP পোর্ট",
-          "serialport": "সিরিয়াল পোর্ট (যেমন: /dev/ttyUSB0)",
-          "baudrate": "ডেটা ট্রান্সমিশন গতি [bps]",
-          "unitid": "পাম্পের ঠিকানা (Unit ID / Slave ID)",
-          "scaninterval": "পোলিং ইন্টারভাল [সেকেন্ড]",
-          "model": "পাম্পের মডেল"
-        }
-      }
-    },
-    "error": {
-      "hostrequired": "IP ঠিকানা আবশ্যক।",
-      "invalidport": "TCP পোর্ট 1 থেকে 65535 এর মধ্যে একটি সংখ্যা হতে হবে।",
-      "invalidunitid": "Unit ID 1 থেকে 255 এর মধ্যে একটি সংখ্যা হতে হবে।",
-      "min10": "সর্বনিম্ন মান 10 সেকেন্ড।",
-      "alreadyconfigured": "এই ধরনের একটি সংযোগ ইতিমধ্যেই বিদ্যমান।"
+  "d07_zaw_3_drog": {
+    "entity_id": "zawor_trojdrogowy_pozycja",
+    "name": "তিন-মুখী ভালভের অবস্থান",
+    "mapping": {
+      "0": "হিটিং",
+      "1": "গৃহস্থালি গরম পানি"
     }
   },
-  "options": {
-    "step": {
-      "user": {
-        "title": "Sprsun ইন্টিগ্রেশন অপশন",
-        "description": "রিডিং ফ্রিকোয়েন্সি পরিবর্তন করুন।",
-        "data": {
-          "scaninterval": "পোলিং ইন্টারভাল [সেকেন্ড]"
-        }
-      }
-    },
-    "error": {
-      "min_10": "সর্বনিম্ন মান 10 সেকেন্ড।"
+  "temp_powrotu": {
+    "entity_id": "temperatura_powrotu",
+    "name": "রিটার্ন পানির তাপমাত্রা"
+  },
+  "temp_zasilania": {
+    "entity_id": "temperatura_zasilania",
+    "name": "সরবরাহকৃত পানির তাপমাত্রা"
+  },
+  "temp_zewnetrzna": {
+    "entity_id": "temperatura_zewnetrzna",
+    "name": "বাইরের তাপমাত্রা"
+  },
+  "temp_sprezania": {
+    "entity_id": "temperatura_sprezania",
+    "name": "সংকোচন তাপমাত্রা"
+  },
+  "temp_ssania": {
+    "entity_id": "temperatura_ssania",
+    "name": "সাকশন তাপমাত্রা"
+  },
+  "cisnienie_sprezania": {
+    "entity_id": "cisnienie_sprezania",
+    "name": "ডিসচার্জ চাপ"
+  },
+  "cisnienie_ssania": {
+    "entity_id": "cisnienie_ssania",
+    "name": "সাকশন চাপ"
+  },
+  "temp_cwu": {
+    "entity_id": "temperatura_cwu",
+    "name": "গৃহস্থালি গরম পানির তাপমাত্রা"
+  },
+  "temp_parownika": {
+    "entity_id": "temperatura_parownika",
+    "name": "ইভাপোরেটরের তাপমাত্রা"
+  },
+  "y1_wentylator": {
+    "entity_id": "y1_wentylator",
+    "name": "Y1 ফ্যান"
+  },
+  "y3_pompa_obieg": {
+    "entity_id": "y3_pompa_obiegowa",
+    "name": "Y3 সঞ্চালন পাম্প"
+  },
+  "dc_fan_1_output": {
+    "entity_id": "wentylator_1_sterowanie",
+    "name": "ফ্যান ১ নিয়ন্ত্রণ"
+  },
+  "dc_fan_1_feedback": {
+    "entity_id": "wentylator_1_pomiar",
+    "name": "ফ্যান ১ ফিডব্যাক"
+  },
+  "dc_fan_2_output": {
+    "entity_id": "wentylator_2_sterowanie",
+    "name": "ফ্যান ২ নিয়ন্ত্রণ"
+  },
+  "dc_fan_2_feedback": {
+    "entity_id": "wentylator_2_pomiar",
+    "name": "ফ্যান ২ ফিডব্যাক"
+  },
+  "wymagana_wydajnosc": {
+    "entity_id": "wymagana_wydajnosc",
+    "name": "প্রয়োজনীয় ক্ষমতা"
+  },
+  "aktualna_wymagana_wydajnosc": {
+    "entity_id": "aktualna_wymagana_wydajnosc",
+    "name": "বর্তমান প্রয়োজনীয় ক্ষমতা"
+  },
+  "obroty_sprezarki": {
+    "entity_id": "obroty_sprezarki",
+    "name": "কম্প্রেসরের গতি"
+  },
+  "zawor_eev": {
+    "entity_id": "zawor_eev",
+    "name": "EEV ভালভ"
+  },
+  "status_2": {
+    "entity_id": "status_2",
+    "name": "স্ট্যাটাস ২",
+    "mapping": {
+      "0": "ঠিক আছে",
+      "1": "নিয়ন্ত্রণ",
+      "2": "সীমাবদ্ধ"
     }
+  },
+  "zabezpieczenie": {
+    "entity_id": "zabezpieczenie",
+    "name": "সুরক্ষা",
+    "mapping": {
+      "0": "ঠিক আছে",
+      "1": "ঠিক আছে",
+      "2": "কম সুপারহিট",
+      "3": "নিম্নচাপ",
+      "4": "উচ্চচাপ",
+      "5": "কনডেনসারের উচ্চ তাপমাত্রা"
+    }
+  },
+  "przegrzanie": {
+    "entity_id": "temperatura_przegrzania",
+    "name": "সুপারহিট তাপমাত্রা"
+  },
+  "tryb_pracy_pompy": {
+    "entity_id": "tryb_pracy_pompy",
+    "name": "হিট পাম্পের কার্যপ্রণালী",
+    "mapping": {
+      "0": "শীতলীকরণ",
+      "1": "হিটিং",
+      "2": "গৃহস্থালি গরম পানি"
+    }
+  },
+  "temp_tloczenia": {
+    "entity_id": "temperatura_tloczenia",
+    "name": "ডিসচার্জ তাপমাত্রা"
+  },
+  "status": {
+    "entity_id": "status",
+    "name": "স্ট্যাটাস",
+    "mapping": {
+      "0": "প্রস্তুতি",
+      "1": "চলমান",
+      "2": "অ্যালার্মে বন্ধ",
+      "3": "টাইমারে বন্ধ",
+      "4": "পরিষেবা থেকে বন্ধ",
+      "5": "নিয়ন্ত্রণ থেকে বন্ধ",
+      "6": "বন্ধ",
+      "7": "ম্যানুয়াল মোড",
+      "8": "জমে যাওয়া প্রতিরোধ",
+      "9": "AC সংযোগে বন্ধ",
+      "10": "মোড পরিবর্তন"
+    }
+  },
+  "wersja_programu_1": {
+    "entity_id": "wersja_programu_1",
+    "name": "প্রোগ্রাম সংস্করণ ১"
+  },
+  "wersja_programu_2": {
+    "entity_id": "wersja_programu_2",
+    "name": "প্রোগ্রাম সংস্করণ ২"
+  },
+  "wersja_programu_3": {
+    "entity_id": "wersja_programu_3",
+    "name": "প্রোগ্রাম সংস্করণ ৩"
+  },
+  "pompa_model_1": {
+    "entity_id": "pompa_model_1",
+    "name": "হিট পাম্প মডেল ১"
+  },
+  "pompa_model_2": {
+    "entity_id": "pompa_model_2",
+    "name": "হিট পাম্প মডেল ২"
+  },
+  "pompa_model_3": {
+    "entity_id": "pompa_model_3",
+    "name": "হিট পাম্প মডেল ৩"
+  },
+  "moc_pobierana": {
+    "entity_id": "moc_pobierana",
+    "name": "বিদ্যুৎ খরচের ক্ষমতা"
+  },
+  "napiecie_falownika": {
+    "entity_id": "napiecie_falownika",
+    "name": "ইনভার্টারের ভোল্টেজ"
+  },
+  "prad_falownika": {
+    "entity_id": "prad_falownika",
+    "name": "ইনভার্টারের কারেন্ট"
+  },
+  "sprsun_compressor_runtime_total": {
+    "entity_id": "czas_pracy_sprezarki_total",
+    "name": "কম্প্রেসরের মোট চলার সময়"
+  },
+  "sprsun_compressor_runtime_daily": {
+    "entity_id": "czas_pracy_sprezarki_dzienny",
+    "name": "কম্প্রেসরের দৈনিক চলার সময়"
+  },
+  "sprsun_compressor_runtime_monthly": {
+    "entity_id": "czas_pracy_sprezarki_miesieczny",
+    "name": "কম্প্রেসরের মাসিক চলার সময়"
+  },
+  "sprsun_compressor_runtime_yearly": {
+    "entity_id": "czas_pracy_sprezarki_roczny",
+    "name": "কম্প্রেসরের বার্ষিক চলার সময়"
+  },
+  "ilosc_wlaczen_sprezarki_daily": {
+    "entity_id": "ilosc_wlaczen_sprezarki_daily",
+    "name": "কম্প্রেসর চালু হওয়ার সংখ্যা (দৈনিক)"
+  },
+  "ilosc_wlaczen_sprezarki_monthly": {
+    "entity_id": "ilosc_wlaczen_sprezarki_monthly",
+    "name": "কম্প্রেসর চালু হওয়ার সংখ্যা (মাসিক)"
+  },
+  "ilosc_wlaczen_sprezarki_yearly": {
+    "entity_id": "ilosc_wlaczen_sprezarki_yearly",
+    "name": "কম্প্রেসর চালু হওয়ার সংখ্যা (বার্ষিক)"
+  },
+  "ilosc_wlaczen_sprezarki_total": {
+    "entity_id": "ilosc_wlaczen_sprezarki_total",
+    "name": "কম্প্রেসর চালু হওয়ার মোট সংখ্যা"
+  },
+  "sprsun_fan_runtime_total": {
+    "entity_id": "czas_pracy_wentylatora_total",
+    "name": "ফ্যানের মোট চলার সময়"
+  },
+  "sprsun_fan_runtime_daily": {
+    "entity_id": "czas_pracy_wentylatora_dzienny",
+    "name": "ফ্যানের দৈনিক চলার সময়"
+  },
+  "sprsun_fan_runtime_monthly": {
+    "entity_id": "czas_pracy_wentylatora_miesieczny",
+    "name": "ফ্যানের মাসিক চলার সময়"
+  },
+  "sprsun_fan_runtime_yearly": {
+    "entity_id": "czas_pracy_wentylatora_roczny",
+    "name": "ফ্যানের বার্ষিক চলার সময়"
+  },
+  "ilosc_wlaczen_wentylatora_daily": {
+    "entity_id": "ilosc_wlaczen_wentylatora_daily",
+    "name": "ফ্যান চালু হওয়ার সংখ্যা (দৈনিক)"
+  },
+  "ilosc_wlaczen_wentylatora_monthly": {
+    "entity_id": "ilosc_wlaczen_wentylatora_monthly",
+    "name": "ফ্যান চালু হওয়ার সংখ্যা (মাসিক)"
+  },
+  "ilosc_wlaczen_wentylatora_yearly": {
+    "entity_id": "ilosc_wlaczen_wentylatora_yearly",
+    "name": "ফ্যান চালু হওয়ার সংখ্যা (বার্ষিক)"
+  },
+  "ilosc_wlaczen_wentylatora_total": {
+    "entity_id": "ilosc_wlaczen_wentylatora_total",
+    "name": "ফ্যান চালু হওয়ার মোট সংখ্যা"
+  },
+  "ilosc_defrostow_daily": {
+    "entity_id": "ilosc_defrostow_daily",
+    "name": "ডিফ্রস্টের সংখ্যা (দৈনিক)"
+  },
+  "ilosc_defrostow_monthly": {
+    "entity_id": "ilosc_defrostow_monthly",
+    "name": "ডিফ্রস্টের সংখ্যা (মাসিক)"
+  },
+  "ilosc_defrostow_yearly": {
+    "entity_id": "ilosc_defrostow_yearly",
+    "name": "ডিফ্রস্টের সংখ্যা (বার্ষিক)"
+  },
+  "ilosc_defrostow_total": {
+    "entity_id": "ilosc_defrostow_total",
+    "name": "ডিফ্রস্টের মোট সংখ্যা"
+  },
+  "ilosc_przelaczen_zaworu_3d_total": {
+    "entity_id": "ilosc_przelaczen_zaworu_3d_total",
+    "name": "তিন-মুখী ভালভের মোট সুইচের সংখ্যা"
+  },
+  "predkosc_sprezarki_w_trybie_nocnym": {
+    "entity_id": "predkosc_sprezarki_w_trybie_nocnym",
+    "name": "রাতের মোডে কম্প্রেসরের গতি"
+  },
+  "predkosc_wentylatora_w_trybie_nocnym": {
+    "entity_id": "predkosc_wentylatora_w_trybie_nocnym",
+    "name": "রাতের মোডে ফ্যানের গতি"
+  },
+  "funkcja_czasowa_rok": {
+    "entity_id": "funkcja_czasowa_rok",
+    "name": "সময়সূচি – বছর"
+  },
+  "funkcja_czasowa_miesiac": {
+    "entity_id": "funkcja_czasowa_miesiac",
+    "name": "সময়সূচি – মাস"
+  },
+  "funkcja_czasowa_dzien": {
+    "entity_id": "funkcja_czasowa_dzien",
+    "name": "সময়সূচি – দিন"
+  },
+  "funkcja_czasowa_godzina": {
+    "entity_id": "funkcja_czasowa_godzina",
+    "name": "সময়সূচি – ঘণ্টা"
+  },
+  "funkcja_czasowa_minuta": {
+    "entity_id": "funkcja_czasowa_minuta",
+    "name": "সময়সূচি – মিনিট"
+  },
+  "funkcja_czasowa_dzien_tygodnia": {
+    "entity_id": "funkcja_czasowa_dzien_tygodnia",
+    "name": "সময়সূচি – সপ্তাহের দিন"
+  },
+  "funkcja_czasowa_poniedzialek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_godzina_wlaczenia",
+    "name": "সময়সূচি – সোমবার, চালু করার ঘণ্টা"
+  },
+  "funkcja_czasowa_poniedzialek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_minuta_wlaczenia",
+    "name": "সময়সূচি – সোমবার, চালু করার মিনিট"
+  },
+  "funkcja_czasowa_poniedzialek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_godzina_wylaczenia",
+    "name": "সময়সূচি – সোমবার, বন্ধ করার ঘণ্টা"
+  },
+  "funkcja_czasowa_poniedzialek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_poniedzialek_minuta_wylaczenia",
+    "name": "সময়সূচি – সোমবার, বন্ধ করার মিনিট"
+  },
+  "funkcja_czasowa_wtorek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_godzina_wlaczenia",
+    "name": "সময়সূচি – মঙ্গলবার, চালু করার ঘণ্টা"
+  },
+  "funkcja_czasowa_wtorek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_minuta_wlaczenia",
+    "name": "সময়সূচি – মঙ্গলবার, চালু করার মিনিট"
+  },
+  "funkcja_czasowa_wtorek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_godzina_wylaczenia",
+    "name": "সময়সূচি – মঙ্গলবার, বন্ধ করার ঘণ্টা"
+  },
+  "funkcja_czasowa_wtorek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_wtorek_minuta_wylaczenia",
+    "name": "সময়সূচি – মঙ্গলবার, বন্ধ করার মিনিট"
+  },
+  "funkcja_czasowa_sroda_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_godzina_wlaczenia",
+    "name": "সময়সূচি – বুধবার, চালু করার ঘণ্টা"
+  },
+  "funkcja_czasowa_sroda_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_minuta_wlaczenia",
+    "name": "সময়সূচি – বুধবার, চালু করার মিনিট"
+  },
+  "funkcja_czasowa_sroda_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_godzina_wylaczenia",
+    "name": "সময়সূচি – বুধবার, বন্ধ করার ঘণ্টা"
+  },
+  "funkcja_czasowa_sroda_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sroda_minuta_wylaczenia",
+    "name": "সময়সূচি – বুধবার, বন্ধ করার মিনিট"
+  },
+  "funkcja_czasowa_czwartek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_godzina_wlaczenia",
+    "name": "সময়সূচি – বৃহস্পতিবার, চালু করার ঘণ্টা"
+  },
+  "funkcja_czasowa_czwartek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_minuta_wlaczenia",
+    "name": "সময়সূচি – বৃহস্পতিবার, চালু করার মিনিট"
+  },
+  "funkcja_czasowa_czwartek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_godzina_wylaczenia",
+    "name": "সময়সূচি – বৃহস্পতিবার, বন্ধ করার ঘণ্টা"
+  },
+  "funkcja_czasowa_czwartek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_czwartek_minuta_wylaczenia",
+    "name": "সময়সূচি – বৃহস্পতিবার, বন্ধ করার মিনিট"
+  },
+  "funkcja_czasowa_piatek_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_godzina_wlaczenia",
+    "name": "সময়সূচি – শুক্রবার, চালু করার ঘণ্টা"
+  },
+  "funkcja_czasowa_piatek_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_minuta_wlaczenia",
+    "name": "সময়সূচি – শুক্রবার, চালু করার মিনিট"
+  },
+  "funkcja_czasowa_piatek_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_godzina_wylaczenia",
+    "name": "সময়সূচি – শুক্রবার, বন্ধ করার ঘণ্টা"
+  },
+  "funkcja_czasowa_piatek_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_piatek_minuta_wylaczenia",
+    "name": "সময়সূচি – শুক্রবার, বন্ধ করার মিনিট"
+  },
+  "funkcja_czasowa_sobota_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_godzina_wlaczenia",
+    "name": "সময়সূচি – শনিবার, চালু করার ঘণ্টা"
+  },
+  "funkcja_czasowa_sobota_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_minuta_wlaczenia",
+    "name": "সময়সূচি – শনিবার, চালু করার মিনিট"
+  },
+  "funkcja_czasowa_sobota_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_godzina_wylaczenia",
+    "name": "সময়সূচি – শনিবার, বন্ধ করার ঘণ্টা"
+  },
+  "funkcja_czasowa_sobota_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_sobota_minuta_wylaczenia",
+    "name": "সময়সূচি – শনিবার, বন্ধ করার মিনিট"
+  },
+  "funkcja_czasowa_niedziela_godzina_wlaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_godzina_wlaczenia",
+    "name": "সময়সূচি – রবিবার, চালু করার ঘণ্টা"
+  },
+  "funkcja_czasowa_niedziela_minuta_wlaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_minuta_wlaczenia",
+    "name": "সময়সূচি – রবিবার, চালু করার মিনিট"
+  },
+  "funkcja_czasowa_niedziela_godzina_wylaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_godzina_wylaczenia",
+    "name": "সময়সূচি – রবিবার, বন্ধ করার ঘণ্টা"
+  },
+  "funkcja_czasowa_niedziela_minuta_wylaczenia": {
+    "entity_id": "funkcja_czasowa_niedziela_minuta_wylaczenia",
+    "name": "সময়সূচি – রবিবার, বন্ধ করার মিনিট"
+  },
+  "funkcja_czasowa_godz_x1": {
+    "entity_id": "funkcja_czasowa_godz_x1",
+    "name": "সময়সূচি – ঘণ্টা X1"
+  },
+  "funkcja_czasowa_min_x1": {
+    "entity_id": "funkcja_czasowa_min_x1",
+    "name": "সময়সূচি – মিনিট X1"
+  },
+  "funkcja_czasowa_godz_x2": {
+    "entity_id": "funkcja_czasowa_godz_x2",
+    "name": "সময়সূচি – ঘণ্টা X2"
+  },
+  "funkcja_czasowa_min_x2": {
+    "entity_id": "funkcja_czasowa_min_x2",
+    "name": "সময়সূচি – মিনিট X2"
+  },
+  "funkcja_czasowa_godz_x3": {
+    "entity_id": "funkcja_czasowa_godz_x3",
+    "name": "সময়সূচি – ঘণ্টা X3"
+  },
+  "funkcja_czasowa_min_x3": {
+    "entity_id": "funkcja_czasowa_min_x3",
+    "name": "সময়সূচি – মিনিট X3"
+  },
+  "funkcja_czasowa_godz_x4": {
+    "entity_id": "funkcja_czasowa_godz_x4",
+    "name": "সময়সূচি – ঘণ্টা X4"
+  },
+  "funkcja_czasowa_min_x4": {
+    "entity_id": "funkcja_czasowa_min_x4",
+    "name": "সময়সূচি – মিনিট X4"
+  },
+  "minimalna_nastawa_chlodzenia": {
+    "entity_id": "minimalna_nastawa_chlodzenia",
+    "name": "শীতলীকরণের সর্বনিম্ন সেটপয়েন্ট"
+  },
+  "maksymalna_nastawa_chlodzenia": {
+    "entity_id": "maksymalna_nastawa_chlodzenia",
+    "name": "শীতলীকরণের সর্বোচ্চ সেটপয়েন্ট"
+  },
+  "adres": {
+    "entity_id": "adres",
+    "name": "ঠিকানা"
+  },
+  "opoznienie_zalaczenia_sprezarki": {
+    "entity_id": "opoznienie_zalaczenia_sprezarki",
+    "name": "কম্প্রেসর চালু হওয়ার বিলম্ব"
+  },
+  "ambient_temperature_switch": {
+    "entity_id": "ambient_temperature_switch",
+    "name": "বাইরের তাপমাত্রা অনুযায়ী সুইচ করার সেটপয়েন্ট"
+  },
+  "minimalny_czas_postoju_sprezarki": {
+    "entity_id": "minimalny_czas_postoju_sprezarki",
+    "name": "কম্প্রেসরের সর্বনিম্ন বন্ধ থাকার সময়"
+  },
+  "temperatura_wyswietlacza_offset": {
+    "entity_id": "temperatura_wyswietlacza_offset",
+    "name": "ডিসপ্লের তাপমাত্রা সংশোধন"
+  },
+  "temperatura_zasilania_offset": {
+    "entity_id": "temperatura_zasilania_offset",
+    "name": "সরবরাহ পানির তাপমাত্রা সংশোধন"
+  },
+  "temperatura_zewnetrzna_offset": {
+    "entity_id": "temperatura_zewnetrzna_offset",
+    "name": "বাইরের তাপমাত্রা সংশোধন"
+  },
+  "temperatura_tloczenia_offset": {
+    "entity_id": "temperatura_tloczenia_offset",
+    "name": "ডিসচার্জ তাপমাত্রা সংশোধন"
+  },
+  "temperatura_ssania_offset": {
+    "entity_id": "temperatura_ssania_offset",
+    "name": "সাকশন তাপমাত্রা সংশোধন"
+  },
+  "czujnik_wysokiego_cisnienia": {
+    "entity_id": "czujnik_wysokiego_cisnienia",
+    "name": "উচ্চচাপ সেন্সর"
+  },
+  "czujnik_niskiego_cisnienia": {
+    "entity_id": "czujnik_niskiego_cisnienia",
+    "name": "নিম্নচাপ সেন্সর"
+  },
+  "temperatura_cwu_offset": {
+    "entity_id": "temperatura_cwu_offset",
+    "name": "গৃহস্থালি গরম পানির তাপমাত্রা সংশোধন"
+  },
+  "temperatura_parownika_offset": {
+    "entity_id": "temperatura_parownika_offset",
+    "name": "ইভাপোরেটরের তাপমাত্রা সংশোধন"
+  },
+  "ustaw_nowe_haslo_serwisowe": {
+    "entity_id": "ustaw_nowe_haslo_serwisowe",
+    "name": "নতুন সার্ভিস পাসওয়ার্ড সেট করুন"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_4_do_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_4_do_9",
+    "name": "কম্প্রেসরের গতি: ৪ < বাইরের তাপমাত্রা ≤ ৯"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_3_do_4": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_3_do_4",
+    "name": "কম্প্রেসরের গতি: -৩ < বাইরের তাপমাত্রা ≤ ৪"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_9_do_minus_3": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_9_do_minus_3",
+    "name": "কম্প্রেসরের গতি: -৯ < বাইরের তাপমাত্রা ≤ -৩"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_15_do_minus_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_minus_15_do_minus_9",
+    "name": "কম্প্রেসরের গতি: -১৫ < বাইরের তাপমাত্রা ≤ -৯"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_minus_15": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_minus_15",
+    "name": "কম্প্রেসরের গতি: বাইরের তাপমাত্রা ≤ -১৫"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_9": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_9",
+    "name": "কম্প্রেসরের গতি: বাইরের তাপমাত্রা > ৯"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_38": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_38",
+    "name": "কম্প্রেসরের গতি: বাইরের তাপমাত্রা > ৩৮"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_33_ponizej_38": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_33_ponizej_38",
+    "name": "কম্প্রেসরের গতি: ৩৩ < বাইরের তাপমাত্রা ≤ ৩৮"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_30_ponizej_33": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_powyzej_30_ponizej_33",
+    "name": "কম্প্রেসরের গতি: ৩০ < বাইরের তাপমাত্রা ≤ ৩৩"
+  },
+  "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_26": {
+    "entity_id": "predkosc_sprezarki_gdy_temperatura_zewnetrzna_ponizej_26",
+    "name": "কম্প্রেসরের গতি: বাইরের তাপমাত্রা ≤ ২৬"
+  },
+  "defrost_minimalna_predkosc_sprezarki_%": {
+    "entity_id": "defrost_minimalna_predkosc_sprezarki_%",
+    "name": "ডিফ্রস্ট – কম্প্রেসরের সর্বনিম্ন গতি (%)"
+  },
+  "defrost_docelowe_otwarcie_zaworu_eev": {
+    "entity_id": "defrost_docelowe_otwarcie_zaworu_eev",
+    "name": "ডিফ্রস্ট – EEV ভালভের লক্ষ্য খোলার মাত্রা"
+  },
+  "defrost_otwarcie_zaworu_eev_po_zakonczeniu": {
+    "entity_id": "defrost_otwarcie_zaworu_eev_po_zakonczeniu",
+    "name": "ডিফ্রস্ট শেষে EEV ভালভের খোলার মাত্রা"
+  },
+  "defrost_czas_otwarcia_zaworu_eev": {
+    "entity_id": "defrost_czas_otwarcia_zaworu_eev",
+    "name": "ডিফ্রস্ট – EEV ভালভ খোলার সময়"
+  },
+  "defrost_docelowa_predkosc_sprezarki_podczas_odszraniania": {
+    "entity_id": "defrost_docelowa_predkosc_sprezarki_podczas_odszraniania",
+    "name": "ডিফ্রস্ট – কম্প্রেসরের লক্ষ্য গতি"
+  },
+  "defrost_predkosc_pompy_obiegowej": {
+    "entity_id": "defrost_predkosc_pompy_obiegowej",
+    "name": "ডিফ্রস্ট – সঞ্চালন পাম্পের গতি"
+  },
+  "defrost_temperatura_parownika_przy_ktorej_rozpoczyna_sie_odszranianie": {
+    "entity_id": "defrost_temperatura_parownika_przy_ktorej_rozpoczyna_sie_odszranianie",
+    "name": "ডিফ্রস্ট শুরু করার ইভাপোরেটর তাপমাত্রা"
+  },
+  "defrost_temperatura_parownika_przy_ktorej_konczy_sie_odszranianie": {
+    "entity_id": "defrost_temperatura_parownika_przy_ktorej_konczy_sie_odszranianie",
+    "name": "ডিফ্রস্ট শেষ করার ইভাপোরেটর তাপমাত্রা"
+  },
+  "defrost_temperatura_zewnetrzna_dla_uruchomienia_odszraniania": {
+    "entity_id": "defrost_temperatura_zewnetrzna_dla_uruchomienia_odszraniania",
+    "name": "ডিফ্রস্ট শুরু করার বাইরের তাপমাত্রা"
+  },
+  "defrost_min_roznica_miedzy_powietrzem_a_parownikiem_wymagana_do_odszraniania": {
+    "entity_id": "defrost_min_roznica_miedzy_powietrzem_a_parownikiem_wymagana_do_odszraniania",
+    "name": "ডিফ্রস্টের জন্য বাতাস ও ইভাপোরেটরের তাপমাত্রার সর্বনিম্ন পার্থক্য"
+  },
+  "defrost_opoznienie_rozpoczecia_odszraniania": {
+    "entity_id": "defrost_opoznienie_rozpoczecia_odszraniania",
+    "name": "ডিফ্রস্ট শুরু হওয়ার বিলম্ব"
+  },
+  "defrost_minimalny_czas": {
+    "entity_id": "defrost_minimalny_czas",
+    "name": "ডিফ্রস্টের সর্বনিম্ন সময়"
+  },
+  "defrost_maksymalny_czas": {
+    "entity_id": "defrost_maksymalny_czas",
+    "name": "ডিফ্রস্টের সর্বোচ্চ সময়"
+  },
+  "defrost_interwal_odszraniania": {
+    "entity_id": "defrost_interwal_odszraniania",
+    "name": "ডিফ্রস্টের ব্যবধান"
+  },
+  "defrost_wymuszone_odszranianie_co": {
+    "entity_id": "defrost_wymuszone_odszranianie_co",
+    "name": "জোরপূর্বক ডিফ্রস্টের ব্যবধান"
+  },
+  "ilosc_przelaczen_pompy_obiegowej_total": {
+    "entity_id": "ilosc_przelaczen_pompy_obiegowej_total",
+    "name": "সঞ্চালন পাম্প চালু/বন্ধের মোট সংখ্যা"
+  },
+  "sprsun_pump_runtime_total": {
+    "entity_id": "czas_pracy_pompy_obiegowej_total",
+    "name": "সঞ্চালন পাম্পের মোট চলার সময়"
+  },
+  "sprsun_pump_runtime_daily": {
+    "entity_id": "czas_pracy_pompy_obiegowej_dzienny",
+    "name": "সঞ্চালন পাম্পের দৈনিক চলার সময়"
+  },
+  "sprsun_pump_runtime_monthly": {
+    "entity_id": "czas_pracy_pompy_obiegowej_miesieczny",
+    "name": "সঞ্চালন পাম্পের মাসিক চলার সময়"
+  },
+  "sprsun_pump_runtime_yearly": {
+    "entity_id": "czas_pracy_pompy_obiegowej_roczny",
+    "name": "সঞ্চালন পাম্পের বার্ষিক চলার সময়"
   }
 }
