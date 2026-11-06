@@ -58,7 +58,7 @@ class SprsunCoordinator(DataUpdateCoordinator):
             # HOLDING REGISTERS  (FC=3)
             # -------------------------
             BLOCK_SIZE = 120
-            MAX_REGISTER = 400
+            MAX_REGISTER = 444
 
             for start in range(0, MAX_REGISTER, BLOCK_SIZE):
                 count = min(BLOCK_SIZE, MAX_REGISTER - start)
