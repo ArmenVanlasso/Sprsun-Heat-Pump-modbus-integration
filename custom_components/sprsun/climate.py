@@ -1,314 +1,1288 @@
-# climate.py
-
+# climates.py
 from __future__ import annotations
-
-import logging
-import asyncio
-import os
-
-from homeassistant.components.climate import (
-    ClimateEntity,
-    ClimateEntityFeature,
-    HVACMode,
-)
-from homeassistant.const import UnitOfTemperature
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.config_entries import ConfigEntry
-
-from .const import DOMAIN
-from .coordinator import SprsunCoordinator
-
-_LOGGER = logging.getLogger(__name__)
-
-
-# ============================================================
-#  SETUP PLATFORM
-# ============================================================
-async def async_setup_entry(
-    hass: HomeAssistant,
-    entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
-):
-    """Tworzy encje climate na podstawie modelu i języka."""
-    data = hass.data[DOMAIN][entry.entry_id]
-
-    coordinator: SprsunCoordinator = data["coordinator"]
-    client = data["client"]
-    model = data["model"]
-
-    # 🔥 definicje climate z folderu model/lang
-    definitions = data["climates"]
-
-    entities = [
-        HeatPumpClimate(coordinator, definition, client, model)
-        for definition in definitions
-    ]
-
-    async_add_entities(entities)
-
-
-# ============================================================
-#  UNIWERSALNY SILNIK CLIMATE – odczyt HVAC + presety
-# ============================================================
-class HeatPumpClimate(ClimateEntity):
-    """Uniwersalny silnik Climate — logika zdefiniowana w climates.py."""
-
-    def __init__(self, coordinator, definition: dict, client, model: str):
-        self.coordinator = coordinator
-        self._definition = definition
-        self._client = client
-        self._model = model
-
-        # --- Logika HVAC ---
-        self._hvac_mode_register = definition.get("hvac_mode_register")
-        self._hvac_mode_values = definition.get("hvac_mode_values", {})
-
-        self._hvac_mode_register_2 = definition.get("hvac_mode_register_2")
-        self._hvac_mode_block_values = definition.get("hvac_mode_block_values", [])
-
-        # --- Temperatury ---
-        self._current_temp_reg = definition.get("current_temp_register")
-        self._target_temp_register = definition.get("target_temp_register")
-
-        self._scale = definition.get("scale", 0.1)
-        self._min_temp = definition.get("min_temp", 20)
-        self._max_temp = definition.get("max_temp", 60)
-        self._step = definition.get("temp_step", 1)
-
-        # --- Presety ---
-        self._preset_register = definition.get("preset_register")
-        self._preset_values = definition.get("preset_values", {})
-        self._preset_reverse = {
-            value: name for name, value in self._preset_values.items()
-        }
-
-        # --- Atrybuty HA ---
-        self._attr_temperature_unit = UnitOfTemperature.CELSIUS
-        self._attr_name = definition.get("name")
-        self._attr_unique_id = definition.get("unique_id")
-
-        # entity_id generowane z nazwy encji
-        slug = (
-            f"sprsun_{self._model}_{self._attr_name}"
-            .lower()
-            .replace(" ", "_")
-            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
-            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
-            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
-        )
-        self.entity_id = f"climate.{slug}"
-
-        # Zakres temperatury
-        self._attr_min_temp = self._min_temp
-        self._attr_max_temp = self._max_temp
-        self._attr_target_temperature_step = self._step
-
-    # ============================================================
-    #  HVAC MODE – tylko odczyt
-    # ============================================================
-    @property
-    def hvac_mode(self) -> HVACMode:
-
-        if self._hvac_mode_register is None:
-            return HVACMode.OFF
-
-        reg1 = self.coordinator.data.get(self._hvac_mode_register)
-
-        reg2 = None
-        if self._hvac_mode_register_2 is not None:
-            reg2 = self.coordinator.data.get(self._hvac_mode_register_2)
-
-        if reg1 is None:
-            return HVACMode.OFF
-
-        if reg2 is not None and reg2 in self._hvac_mode_block_values:
-            return HVACMode.OFF
-
-        for mode, values in self._hvac_mode_values.items():
-            if isinstance(values, (list, tuple, set)):
-                if reg1 in values:
-                    return HVACMode(mode)
-            else:
-                if reg1 == values:
-                    return HVACMode(mode)
-
-        return HVACMode.OFF
-
-    @property
-    def hvac_modes(self) -> list[HVACMode]:
-        defined_modes = self._definition.get("hvac_modes")
-        if defined_modes:
-            return [HVACMode(m) for m in defined_modes]
-
-        return [HVACMode(mode) for mode in self._hvac_mode_values.keys()]
-
-    # ============================================================
-    #  PRESETY
-    # ============================================================
-    @property
-    def preset_modes(self) -> list[str] | None:
-        if not self._preset_values:
-            return None
-        return list(self._preset_values.keys())
-
-    @property
-    def preset_mode(self) -> str | None:
-        if self._preset_register is None or not self._preset_values:
-            return None
-
-        raw = self.coordinator.data.get(self._preset_register)
-        if raw is None:
-            return None
-
-        return self._preset_reverse.get(raw)
-
-    async def async_set_preset_mode(self, preset_mode: str):
-        if self._preset_register is None or not self._preset_values:
-            return
-
-        if preset_mode not in self._preset_values:
-            _LOGGER.warning(
-                "Nieznany preset_mode '%s' dla encji %s",
-                preset_mode,
-                self.entity_id,
-            )
-            return
-
-        value = self._preset_values[preset_mode]
-
-        await self._client.write_register(self._preset_register, value)
-        await self.coordinator.async_request_refresh()
-
-    # ============================================================
-    #  IKONA
-    # ============================================================
-    @property
-    def icon(self) -> str:
-        mode = self.hvac_mode
-
-        if mode == HVACMode.HEAT:
-            return self._definition.get("icon_heat", "mdi:radiator")
-
-        if mode == HVACMode.COOL:
-            return self._definition.get("icon_cool", "mdi:snowflake")
-
-        return self._definition.get("icon_off", "mdi:radiator-off")
-
-    # ============================================================
-    #  TEMPERATURA BIEŻĄCA
-    # ============================================================
-    @property
-    def current_temperature(self) -> float | None:
-
-        if self._current_temp_reg is None:
-            return None
-
-        raw = self.coordinator.data.get(self._current_temp_reg)
-        if raw is None:
-            return None
-
-        if self._definition.get("data_type") == "int16" and raw > 32767:
-            raw -= 65536
-
-        return raw * self._scale
-
-    # ============================================================
-    #  TEMPERATURA ZADANA
-    # ============================================================
-    @property
-    def target_temperature(self) -> float | None:
-
-        if self._target_temp_register is None:
-            return None
-
-        raw = self.coordinator.data.get(self._target_temp_register)
-        if raw is None:
-            return None
-
-        if self._definition.get("data_type") == "int16" and raw > 32767:
-            raw -= 65536
-
-        return raw * self._scale
-
-    # ============================================================
-    #  FUNKCJE
-    # ============================================================
-    @property
-    def supported_features(self) -> ClimateEntityFeature:
-        features = ClimateEntityFeature(0)
-
-        if self._target_temp_register is not None:
-            features |= ClimateEntityFeature.TARGET_TEMPERATURE
-
-        if self._preset_values:
-            features |= ClimateEntityFeature.PRESET_MODE
-
-        return features
-
-    @property
-    def supported_features(self) -> ClimateEntityFeature:
-        features = ClimateEntityFeature(0)
-
-        if self._temperature_control_allowed():
-            features |= ClimateEntityFeature.TARGET_TEMPERATURE
-
-        if self._preset_values:
-            features |= ClimateEntityFeature.PRESET_MODE
-
-        return features
-    # ============================================================
-    #  ZMIANA TEMPERATURY
-    # ============================================================
-    async def async_set_temperature(self, **kwargs):
-        temp = kwargs.get("temperature")
-
-        if temp is None:
-            return
-
-        if self._target_temp_register is None:
-            return
-
-        value = int(temp / self._scale)
-
-        await self._client.write_register(
-            self._target_temp_register,
-            value,
-        )
-
-        await asyncio.sleep(0.5)
-
-        await self.coordinator.async_request_refresh()
-
-    # ============================================================
-    #  ZMIANA TRYBU HVAC – ignorujemy
-    # ============================================================
-    async def async_set_hvac_mode(self, hvac_mode: HVACMode):
-        await self.coordinator.async_request_refresh()
-
-    # ============================================================
-    #  ODŚWIEŻANIE
-    # ============================================================
-    @property
-    def should_poll(self) -> bool:
-        return False
-
-    async def async_update(self):
-        await self.coordinator.async_request_refresh()
-
-    async def async_added_to_hass(self):
-        self.async_on_remove(
-            self.coordinator.async_add_listener(self.async_write_ha_state)
-        )
-
-    # ============================================================
-    #  DEVICE INFO
-    # ============================================================
-    @property
-    def device_info(self):
-        return {
-            "identifiers": {(DOMAIN, self.coordinator.entry_id)},
-            "name": f"Pompa ciepła Sprsun {self._model.upper().replace('_', '-')}",
-            "manufacturer": "Sprsun",
-            "model": self._model.upper().replace('_', '-'),
-        }
+CLIMATES = [
+    {
+        "name": "Ogrzewanie temperatura zadana",
+        "unique_id": "ogrzewanie_temperatura_zadana",
+        "temperature_unit": "C",
+        "precision": 0,
+        "temp_step": 1,
+        "max_temp": 55,
+        "min_temp": 10,
+        "data_type": "uint16",
+        "input_type": "holding",
+        "scale": 0.1,
+        "current_temp_register": 188,
+        "target_temp_register": 1,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+            "preset_register": 0,
+            "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+        },
+    },
+    {
+        "name": "Chłodzenie temperatura zadana",
+        "unique_id": "chlodzenie_temperatura_zadana",
+        "temperature_unit": "C",
+        "precision": 0,
+        "temp_step": 1,
+        "max_temp": 25,
+        "min_temp": 12,
+        "data_type": "uint16",
+        "input_type": "holding",
+        "scale": 0.1,
+        "current_temp_register": 188,
+        "target_temp_register": 2,
+        "icon_off": "mdi:radiator-off",
+        "icon_cool": "mdi:snowflake",
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+    },
+
+    {
+        "name": "CWU temperatura zadana",
+        "unique_id": "cwu_temperatura_zadana",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 195,
+        "target_temp_register": 3,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "scale": 0.1,
+        "precision": 0,
+        "temp_step": 1,
+        "temperature_unit": "C",
+        "min_temp": 10,
+        "max_temp": 55,
+        "icon_heat": "mdi:bathtub-outline",
+        "icon_off": "mdi:bathtub",
+
+    },
+
+    {
+        "name": "Histereza ogrzewania i chłodzenia start",
+        "unique_id": "histereza_ogrzewania_i_chlodzenia_start",
+        
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 6,
+        "target_temp_register": 6,
+        "hvac_modes": ["heat", "cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "cool": 0,
+            "off": 2,
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "scale": 0.1,
+        "precision": 0,
+        "temp_step": 1,
+        "temperature_unit": "C",
+        "min_temp": 1,
+        "max_temp": 15,
+        "icon_heat": "mdi:radiator",
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:radiator-off",
+
+    },
+
+    {
+        "name": "Histereza ogrzewania i chłodzenia stop",
+        "unique_id": "histereza_ogrzewania_i_chlodzenia_stop",
+        
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 7,
+        "target_temp_register": 7,
+        "hvac_modes": ["heat", "cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "cool": 0,
+            "off": 2,
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 0,
+        "max_temp": 5,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "CWU histereza start",
+        "unique_id": "cwu_histereza_start",
+        
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 4,
+        "target_temp_register": 4,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 1,
+        "max_temp": 15,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+
+    },
+
+    {
+        "name": "CWU histereza stop",
+        "unique_id": "cwu_histereza_stop",
+        
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 5,
+        "target_temp_register": 5,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 0,
+        "max_temp": 5,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+    },
+
+    {
+        "name": "Chłodzenie temperatura zewnętrzna X1",
+        "unique_id": "chlodzenie_temperatura_zewnetrzna_x1",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 276,
+        "target_temp_register": 276,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 16,
+        "max_temp": 60,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Chłodzenie temperatura zewnętrzna X2",
+        "unique_id": "chlodzenie_temperatura_zewnetrzna_x2",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 277,
+        "target_temp_register": 277,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 16,
+        "max_temp": 60,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Chłodzenie temperatura zewnętrzna X3",
+        "unique_id": "chlodzenie_temperatura_zewnetrzna_x3",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 278,
+        "target_temp_register": 278,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 16,
+        "max_temp": 60,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Chłodzenie temperatura zewnętrzna X4",
+        "unique_id": "chlodzenie_temperatura_zewnetrzna_x4",
+        
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 279,
+        "target_temp_register": 279,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 16,
+        "max_temp": 60,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Chłodzenie temperatura zasilania Y1",
+        "unique_id": "chlodzenie_temperatura_zasilania_y1",
+        
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 336,
+        "target_temp_register": 336,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 7,
+        "max_temp": 18,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Chłodzenie temperatura zasilania Y2",
+        "unique_id": "chlodzenie_temperatura_zasilania_y2",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 288,
+        "target_temp_register": 288,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 7,
+        "max_temp": 18,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Chłodzenie temperatura zasilania Y3",
+        "unique_id": "chlodzenie_temperatura_zasilania_y3",
+        
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 289,
+        "target_temp_register": 289,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 7,
+        "max_temp": 18,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Chłodzenie temperatura zasilania Y4",
+        "unique_id": "chlodzenie_temperatura_zasilania_y4",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 290,
+        "target_temp_register": 290,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 7,
+        "max_temp": 18,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Ogrzewanie temperatura zewnętrzna X1",
+        "unique_id": "ogrzewanie_temperatura_zewnetrzna_x1",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 280,
+        "target_temp_register": 280,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": -50,
+        "max_temp": 20,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Ogrzewanie temperatura zewnętrzna X2",
+        "unique_id": "ogrzewanie_temperatura_zewnetrzna_x2",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 281,
+        "target_temp_register": 281,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": -50,
+        "max_temp": 20,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Ogrzewanie temperatura zewnętrzna X3",
+        "unique_id": "ogrzewanie_temperatura_zewnetrzna_x3",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 282,
+        "target_temp_register": 282,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": -50,
+        "max_temp": 20,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Ogrzewanie temperatura zewnętrzna X4",
+        "unique_id": "ogrzewanie_temperatura_zewnetrzna_4",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 283,
+        "target_temp_register": 283,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": -50,
+        "max_temp": 20,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Ogrzewanie temperatura zasilania Y1",
+        "unique_id": "ogrzewanie_temperatura_zasilania_y1",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 291,
+        "target_temp_register": 291,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 15,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Ogrzewanie temperatura zasilania Y2",
+        "unique_id": "ogrzewanie_temperatura_zasilania_y2",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 292,
+        "target_temp_register": 292,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 15,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Ogrzewanie temperatura zasilania Y3",
+        "unique_id": "ogrzewanie_temperatura_zasilania_y3",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 293,
+        "target_temp_register": 293,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 15,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Ogrzewanie temperatura zasilania Y4",
+        "unique_id": "ogrzewanie_temperatura_zasilania_y4",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 337,
+        "target_temp_register": 337,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 15,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "CWU temperatura zewnętrzna X1",
+        "unique_id": "cwu_temperatura_zewnetrzna_x1",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 284,
+        "target_temp_register": 284,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": -50,
+        "max_temp": 50,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+    },
+
+    {
+        "name": "CWU temperatura zewnętrzna X2",
+        "unique_id": "cwu_temperatura_zewnetrzna_x2",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 285,
+        "target_temp_register": 285,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": -50,
+        "max_temp": 50,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+    },
+
+    {
+        "name": "CWU temperatura zewnętrzna X3",
+        "unique_id": "cwu_temperatura_zewnetrzna_x3",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 286,
+        "target_temp_register": 286,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": -50,
+        "max_temp": 50,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+    },
+
+    {
+        "name": "CWU temperatura zewnętrzna X4",
+        "unique_id": "cwu_temperatura_zewnetrzna_x4",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 287,
+        "target_temp_register": 287,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": -50,
+        "max_temp": 50,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+    },
+
+    {
+        "name": "CWU temperatura zasilania Y1",
+        "unique_id": "cwu_temperatura_zasilania_y1",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 294,
+        "target_temp_register": 294,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 10,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+    },
+
+    {
+        "name": "CWU temperatura zasilania Y2",
+        "unique_id": "cwu_temperatura_zasilania_y2",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 295,
+        "target_temp_register": 295,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 10,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+    },
+
+    {
+        "name": "CWU temperatura zasilania Y3",
+        "unique_id": "cwu_temperatura_zasilania_y3",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 296,
+        "target_temp_register": 296,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 10,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+    },
+
+    {
+        "name": "CWU temperatura zasilania Y4",
+        "unique_id": "cwu_temperatura_zasilania_y4",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 297,
+        "target_temp_register": 297,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 2,
+            "off": [0, 1],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 10,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+    },
+
+    {
+        "name": "Funkcja czasowa temperatura chłodzenia X1",
+        "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x1",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 248,
+        "target_temp_register": 248,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 7,
+        "max_temp": 18,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Funkcja czasowa temperatura ogrzewania X1",
+        "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x1",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 249,
+        "target_temp_register": 249,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 15,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Funkcja czasowa temperatura chłodzenia X2",
+        "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x2",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 252,
+        "target_temp_register": 252,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 7,
+        "max_temp": 18,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Funkcja czasowa temperatura ogrzewania X2",
+        "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x2",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 253,
+        "target_temp_register": 253,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 15,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Funkcja czasowa temperatura chłodzenia X3",
+        "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x3",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 256,
+        "target_temp_register": 256,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 7,
+        "max_temp": 18,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Funkcja czasowa temperatura ogrzewania X3",
+        "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x3",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 257,
+        "target_temp_register": 257,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 15,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Funkcja czasowa temperatura chłodzenia X4",
+        "unique_id": "funkcja_czasowa_temperatura_chlodzenia_x4",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 260,
+        "target_temp_register": 260,
+        "hvac_modes": ["cool", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "cool": 0,
+            "off": [1, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 7,
+        "max_temp": 18,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_cool": "mdi:snowflake",
+        "icon_off": "mdi:snowflake-off",
+    },
+
+    {
+        "name": "Funkcja czasowa temperatura ogrzewania X4",
+        "unique_id": "funkcja_czasowa_temperatura_ogrzewania_x4",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 261,
+        "target_temp_register": 261,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": 1,
+            "off": [0, 2],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 15,
+        "max_temp": 55,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
+        "name": "Temperatura załączenia grzałki",
+        "unique_id": "temperatura_zalaczenia_grzalki",
+        "data_type": "int16",
+        "input_type": "holding",
+        "current_temp_register": 14,
+        "target_temp_register": 14,
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": [1, 2],
+            "off": 0,
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": -30,
+        "max_temp": 20,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:heating-coil",
+        "icon_off": "mdi:heating-coil",
+
+    },
+
+    {
+        "name": "Delta T",
+        "unique_id": "delta_t",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 15,
+        "target_temp_register": 15,
+        "hvac_modes": ["heat", "cool"],
+        "hvac_mode_register": 215,
+        "hvac_mode_values": {
+            "heat": [1, 2],
+            "cool": 0,
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 2,
+        "max_temp": 15,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+    },
+
+]
+DATA = CLIMATES
