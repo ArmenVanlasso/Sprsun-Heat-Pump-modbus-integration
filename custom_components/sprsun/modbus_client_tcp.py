@@ -30,13 +30,6 @@ class HeatPumpModbusTcpClient:
         self._client = AsyncModbusTcpClient(
             host=self._host, port=self._port, timeout=5,
         )
-        # każda wersja pymodbus może mieć inny sposób ustawiania unit_id
-        if hasattr(self._client, "unit_id"):
-            self._client.unit_id = self._unit_id
-        elif hasattr(self._client, "unit"):
-            self._client.unit = self._unit_id
-        elif hasattr(self._client, "slave"):
-            self._client.slave = self._unit_id
 
         await self._client.connect()
         if not getattr(self._client, "connected", False):
@@ -68,7 +61,11 @@ class HeatPumpModbusTcpClient:
             if self._client is None or not getattr(self._client, "connected", False):
                 await self.connect()
             try:
-                rr = await self._client.read_holding_registers(address=address, count=count)
+                rr = await self._client.read_holding_registers(
+                    address=address,
+                    count=count,
+                    device_id=self._unit_id,
+                )
             except ModbusException as err:
                 _LOGGER.error("Modbus TCP read error addr %s: %s", address, err)
                 return None
@@ -89,7 +86,11 @@ class HeatPumpModbusTcpClient:
             if self._client is None or not getattr(self._client, "connected", False):
                 await self.connect()
             try:
-                rr = await self._client.read_discrete_inputs(address=address, count=count)
+                rr = await self._client.read_discrete_inputs(
+                    address=address,
+                    count=count,
+                    device_id=self._unit_id,
+                )
             except ModbusException as err:
                 _LOGGER.error("Modbus TCP read DI error addr %s: %s", address, err)
                 return None
@@ -109,7 +110,11 @@ class HeatPumpModbusTcpClient:
             if self._client is None or not getattr(self._client, "connected", False):
                 await self.connect()
             try:
-                rr = await self._client.read_coils(address=address, count=count)
+                rr = await self._client.read_coils(
+                    address=address,
+                    count=count,
+                    device_id=self._unit_id,
+                )
             except ModbusException as err:
                 _LOGGER.error("Modbus TCP read coils error addr %s: %s", address, err)
                 return None
@@ -129,7 +134,11 @@ class HeatPumpModbusTcpClient:
             if self._client is None or not getattr(self._client, "connected", False):
                 await self.connect()
             try:
-                rr = await self._client.write_register(address=address, value=value)
+                rr = await self._client.write_register(
+                    address=address,
+                    value=value,
+                    device_id=self._unit_id,
+                )
             except Exception as err:
                 _LOGGER.error("Modbus TCP write register %s: %s", address, err)
                 return False
@@ -145,7 +154,9 @@ class HeatPumpModbusTcpClient:
                 await self.connect()
             try:
                 rr = await self._client.write_registers(
-                    address=address, values=values
+                    address=address,
+                    values=values,
+                    device_id=self._unit_id,
                 )
             except Exception as err:
                 _LOGGER.error("Modbus TCP write registers %s: %s", address, err)
@@ -161,7 +172,11 @@ class HeatPumpModbusTcpClient:
             if self._client is None or not getattr(self._client, "connected", False):
                 await self.connect()
             try:
-                rr = await self._client.write_coil(address=address, value=value)
+                rr = await self._client.write_coil(
+                    address=address,
+                    value=value,
+                    device_id=self._unit_id,
+                )
             except Exception as err:
                 _LOGGER.error("Modbus TCP write coil %s: %s", address, err)
                 return False
