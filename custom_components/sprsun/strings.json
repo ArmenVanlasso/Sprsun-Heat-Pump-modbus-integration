@@ -1,43 +1,108 @@
-{  "config": {
+{
+  "config": {
     "step": {
       "user": {
-        "title": "Rodzaj połączenia z pom Sprsun",
-        "description": "Wybierz, czy komunikujesz się po Ethernet (TCP), czy po portach szeregowych (RTU)."
+        "title": "Rodzaj połączenia z pompą Sprsun",
+        "description": "Wybierz, czy komunikujesz się przez Ethernet (TCP), czy przez port szeregowy (RTU).",
+        "data": {
+          "connection_type": "Rodzaj połączenia"
+        }
       },
-      "details": {
-        "title": "Szczegóły połączenia",
-        "description": "Uzupełnij dane adekwatne do wybranego typu.",
+      "tcp": {
+        "title": "Konfiguracja połączenia TCP",
+        "description": "Uzupełnij parametry połączenia z pompą przez sieć Ethernet.",
         "data": {
           "host": "Adres IP pompy",
           "port": "Port Modbus TCP",
+          "baudrate": "Prędkość transmisji [bps]",
+          "unit_id": "Adres urządzenia (Unit ID / Slave ID)",
+          "scan_interval": "Czas odpytywania [s]",
+          "model": "Model pompy",
+          "language": "Język integracji",
+          "set_fan_hours": "Ustaw początkowy czas pracy wentylatora",
+          "set_compressor_hours": "Ustaw początkowy czas pracy sprężarki"
+        },
+        "data_description": {
+          "scan_interval": "Domyślnie 30 sekund. Minimalna dozwolona wartość to 2 sekundy. Interwał krótszy niż 30 sekund może powodować problemy z komunikacją Modbus i nie jest zalecany."
+        }
+      },
+      "rtu": {
+        "title": "Konfiguracja połączenia RTU",
+        "description": "Uzupełnij parametry połączenia z pompą przez port szeregowy RS485.",
+        "data": {
           "serial_port": "Port szeregowy",
           "baudrate": "Prędkość transmisji [bps]",
-          "unit_id": "Adres (Unit ID / Slave ID)",
+          "unit_id": "Adres urządzenia (Unit ID / Slave ID)",
           "scan_interval": "Czas odpytywania [s]",
-          "model": "Model pompy"
+          "model": "Model pompy",
+          "language": "Język integracji",
+          "set_fan_hours": "Ustaw początkowy czas pracy wentylatora",
+          "set_compressor_hours": "Ustaw początkowy czas pracy sprężarki"
+        },
+        "data_description": {
+          "scan_interval": "Domyślnie 30 sekund. Minimalna dozwolona wartość to 2 sekundy. Interwał krótszy niż 30 sekund może powodować problemy z komunikacją Modbus i nie jest zalecany."
+        }
+      },
+      "offsets": {
+        "title": "Początkowe wartości liczników",
+        "description": "Podaj początkowe wartości liczników, które mają zostać ustawione.",
+        "data": {
+          "fan_hours": "Początkowy czas pracy wentylatora [godziny]",
+          "compressor_hours": "Początkowy czas pracy sprężarki [godziny]",
+          "offset_sprezarka_total": "Offset całkowitego czasu pracy sprężarki",
+          "offset_wentylator_total": "Offset całkowitego czasu pracy wentylatora",
+          "offset_defrost_total": "Offset całkowitej liczby defrostów",
+          "offset_valve_total": "Offset całkowitej liczby przełączeń zaworu 3D"
+        }
+      },
+      "reconfigure": {
+        "title": "Wybór rodzaju połączenia",
+        "description": "Wybierz rodzaj połączenia, którego parametry chcesz zmienić.",
+        "data": {
+          "connection_type": "Rodzaj połączenia"
+        }
+      },
+      "reconfigure_tcp": {
+        "title": "Rekonfiguracja połączenia TCP",
+        "description": "Zmień parametry połączenia sieciowego oraz interwał odczytu.",
+        "data": {
+          "host": "Adres IP pompy",
+          "port": "Port Modbus TCP",
+          "baudrate": "Prędkość transmisji [bps]",
+          "unit_id": "Adres urządzenia (Unit ID / Slave ID)",
+          "scan_interval": "Czas odpytywania [s]"
+        },
+        "data_description": {
+          "scan_interval": "Minimalna dozwolona wartość to 2 sekundy. Interwał krótszy niż 30 sekund może powodować problemy z komunikacją Modbus i nie jest zalecany."
+        }
+      },
+      "reconfigure_rtu": {
+        "title": "Rekonfiguracja połączenia RTU",
+        "description": "Zmień parametry połączenia szeregowego oraz interwał odczytu.",
+        "data": {
+          "serial_port": "Port szeregowy",
+          "baudrate": "Prędkość transmisji [bps]",
+          "unit_id": "Adres urządzenia (Unit ID / Slave ID)",
+          "scan_interval": "Czas odpytywania [s]"
+        },
+        "data_description": {
+          "scan_interval": "Minimalna dozwolona wartość to 2 sekundy. Interwał krótszy niż 30 sekund może powodować problemy z komunikacją Modbus i nie jest zalecany."
+        }
+      },
+      "scan_interval_warning": {
+        "title": "Ostrzeżenie dotyczące częstotliwości odczytu",
+        "description": "Wybrano interwał odczytu {scan_interval} s. Ustawienie wartości poniżej 30 sekund może powodować problemy z komunikacją Modbus i nie jest zalecane. Minimalna dozwolona wartość wynosi 2 sekundy. Czy mimo to chcesz kontynuować?",
+        "data": {
+          "confirm_fast_scan": "Potwierdzam, że chcę używać interwału krótszego niż 30 sekund"
         }
       }
     },
     "error": {
       "host_required": "Adres IP jest wymagany.",
-      "invalid_port": "Port TCP musi być 1-65535.",
-      "invalid_unit_id": "Unit ID musi być 1-255.",
-      "min_5": "Minimalna wartość to 5 sekund.",
-      "already_configured": "Takie połączenie już istnieje."
-    }
-  },
-  "options": {
-    "step": {
-      "user": {
-        "title": "Opcje integracji",
-        "description": "Zmień częstotliwość odczytów.",
-        "data": {
-          "scan_interval": "Czas odpytywania [s]"
-        }
-      }
-    },
-    "error": {
-      "min_10": "Minimalna wartość to 10 sekund."
+      "invalid_port": "Port TCP musi mieścić się w zakresie 1–65535.",
+      "invalid_unit_id": "Unit ID musi mieścić się w zakresie 1–255.",
+      "min_2": "Minimalna wartość interwału odczytu to 2 sekundy.",
+      "confirm_required": "Zaznacz potwierdzenie, aby kontynuować z interwałem krótszym niż 30 sekund."
     }
   }
 }
