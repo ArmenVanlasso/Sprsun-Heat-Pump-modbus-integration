@@ -84,7 +84,7 @@ class HeatPumpClimate(ClimateEntity):
         }
 
         # --- Atrybuty HA ---
-        self._attr_temperature_unit = UnitOfTemperature.CELSIUS
+        self._attr_native_temperature_unit = UnitOfTemperature.CELSIUS
         self._attr_name = definition.get("name")
         self._attr_unique_id = definition.get("unique_id")
 
@@ -245,7 +245,6 @@ class HeatPumpClimate(ClimateEntity):
             features |= ClimateEntityFeature.PRESET_MODE
 
         return features
-
     @property
     def supported_features(self) -> ClimateEntityFeature:
         features = ClimateEntityFeature(0)
