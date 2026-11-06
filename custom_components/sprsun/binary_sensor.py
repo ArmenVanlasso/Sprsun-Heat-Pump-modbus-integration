@@ -60,14 +60,22 @@ class SprsunBinarySensor(BinarySensorEntity):
         self._model = model
         self._def = definition
 
-        self._address = definition["address"]
+        self._register = definition.get("register")
+        self._bit = definition.get("bit")
+
+        self._address = definition.get("address")
         self._index = definition.get("index", 0)
 
         # nazwa encji — prosto z pliku model/lang
         self._attr_name = definition["name"]
 
         # unikalny ID
-        self._attr_unique_id = f"{DOMAIN}_{model}_binary_{self._address}"
+        if self._register is not None:
+            source_id = f"reg_{self._register}_bit_{self._bit}"
+        else:
+            source_id = f"di_{self._address}_{self._index}"
+
+        self._attr_unique_id = f"{DOMAIN}_{model}_binary_{source_id}"
 
         # entity_id generowane z nazwy encji
         slug = (
@@ -99,17 +107,31 @@ class SprsunBinarySensor(BinarySensorEntity):
     def icon(self):
         return self._icon_on if self.is_on else self._icon_off
 
+    
     @property
     def is_on(self):
-        """Stan z discrete inputs."""
+        """Odczyt stanu z rejestru holding lub discrete inputs."""
+
+        # Nowy sposób: bit z rejestru 16-bitowego
+        if self._register is not None:
+            raw = self.coordinator.data.get(self._register)
+
+            if raw is None or self._bit is None:
+                return False
+
+            return bool((raw >> self._bit) & 1)
+
+        # Stary sposób: discrete inputs
         bits = self.coordinator.data_discrete
-        if bits is None:
+
+        if bits is None or self._address is None:
             return False
 
         try:
             return bool(bits[self._address][self._index])
-        except Exception:
+        except (IndexError, TypeError):
             return False
+
 
     @property
     def extra_state_attributes(self):
