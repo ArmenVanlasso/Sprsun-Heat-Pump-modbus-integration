@@ -1,34 +1,43 @@
+
 # flake8: noqa
+
 DOMAIN = "sprsun"
 
 # --- nazwy głównych opcji ---------------------------------
-CONF_HOST            = "host"
-CONF_PORT            = "port"
-CONF_UNIT_ID         = "unit_id"
-CONF_SCAN_INTERVAL   = "scan_interval"
-CONF_MODEL           = "model"
+CONF_HOST = "host"
+CONF_PORT = "port"
+CONF_UNIT_ID = "unit_id"
+CONF_SCAN_INTERVAL = "scan_interval"
+CONF_MODEL = "model"
 
 # --- rodzaj połączenia TCP / RTU -------------------------
 CONF_CONNECTION_TYPE = "connection_type"
-CONF_SERIAL_PORT     = "serial_port"
-CONF_BAUDRATE        = "baudrate"
-# --- Ustawienie początkowe czasów pracy sprężarki i wentylatora
+CONF_SERIAL_PORT = "serial_port"
+CONF_BAUDRATE = "baudrate"
+
+# --- ustawienie początkowe czasów pracy sprężarki i wentylatora
 CONF_INITIAL_HOURS = "initial_hours"
 CONF_SET_FAN_HOURS = "set_fan_hours"
 CONF_FAN_HOURS = "fan_hours"
 CONF_SET_COMPRESSOR_HOURS = "set_compressor_hours"
 CONF_COMPRESSOR_HOURS = "compressor_hours"
+
 # --- język integracji ------------------------------------
-CONF_LANGUAGE        = "language"
+CONF_LANGUAGE = "language"
 
 # --- wartości domyślne -----------------------------------
-DEFAULT_PORT            = 502
-DEFAULT_UNIT_ID         = 1
-DEFAULT_SCAN_INTERVAL   = 30
-DEFAULT_BAUDRATE        = 19200
-DEFAULT_SERIAL_PORT     = "/dev/ttyUSB0"
-DEFAULT_LANGUAGE        = "EN"
+DEFAULT_PORT = 502
+DEFAULT_UNIT_ID = 1
+DEFAULT_SCAN_INTERVAL = 30
+DEFAULT_BAUDRATE = 19200
+DEFAULT_SERIAL_PORT = "/dev/ttyUSB0"
+DEFAULT_LANGUAGE = "EN"
 
+# --- interwał odczytu Modbus -----------------------------
+MIN_SCAN_INTERVAL = 2
+SCAN_INTERVAL_WARNING_THRESHOLD = 30
+
+# --- rodzaj połączenia -----------------------------------
 CONNECTION_TYPE_TCP = "tcp"
 CONNECTION_TYPE_RTU = "rtu"
 
@@ -89,15 +98,15 @@ LANGUAGES = {
 
 # --- dostępne modele -------------------------------------
 MODELS = {
-    "CGK-025V3L":   "cgk_025v3l",
+    "CGK-025V3L": "cgk_025v3l",
     "CGK-025V3L-B": "cgk_025v3l_b",
-    "CGK-030V3L":   "cgk_030v3l",
-    "CGK-040V3L":   "cgk_040v3l",
-    "CGK-050V3L":   "cgk_050v3l",
-    "CGK-060V3L":   "cgk_060v3l",
+    "CGK-030V3L": "cgk_030v3l",
+    "CGK-040V3L": "cgk_040v3l",
+    "CGK-050V3L": "cgk_050v3l",
+    "CGK-060V3L": "cgk_060v3l",
 }
 
-# --- które platformy integracji będą ładowane ----------
+# --- platformy integracji --------------------------------
 PLATFORMS = [
     "sensor",
     "binary_sensor",
