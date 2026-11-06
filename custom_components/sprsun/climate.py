@@ -245,17 +245,6 @@ class HeatPumpClimate(ClimateEntity):
             features |= ClimateEntityFeature.PRESET_MODE
 
         return features
-    @property
-    def supported_features(self) -> ClimateEntityFeature:
-        features = ClimateEntityFeature(0)
-
-        if self._temperature_control_allowed():
-            features |= ClimateEntityFeature.TARGET_TEMPERATURE
-
-        if self._preset_values:
-            features |= ClimateEntityFeature.PRESET_MODE
-
-        return features
     # ============================================================
     #  ZMIANA TEMPERATURY
     # ============================================================
