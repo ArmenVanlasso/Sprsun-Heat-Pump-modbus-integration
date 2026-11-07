@@ -1,4 +1,4 @@
-<b>Integracja: Sprsun CGK_V3L – Home Assistant (Modbus / LAN)
+<b>Integracja: Sprsun CGK_V3L/B – Home Assistant (Modbus / LAN)
 Integracja pozwala na bezpośrednie podłączenie pomp ciepła Sprsun serii CGK_V3L do Home Assistanta za pomocą Modbus (np. przez bramkę Modbus TCP lub inny konwerter).
 Celem integracji jest pełne, lokalne sterowanie oraz odczyt parametrów pracy bez użycia chmury.</b>
 
