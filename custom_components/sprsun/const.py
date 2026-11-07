@@ -96,6 +96,9 @@ LANGUAGES = {
     "isiZulu": "zu"
 }
 
+PROTOCOL_STANDARD_MODBUS = "standard_modbus"
+PROTOCOL_CUSTOM_BINARY_F4 = "custom_binary_f4"
+
 # --- dostępne modele -------------------------------------
 MODELS = {
     "CGK-025V3L": "cgk_025v3l",
@@ -104,6 +107,17 @@ MODELS = {
     "CGK-040V3L": "cgk_040v3l",
     "CGK-050V3L": "cgk_050v3l",
     "CGK-060V3L": "cgk_060v3l",
+}
+
+MODEL_PROTOCOLS = {
+    "cgk_025v3l": PROTOCOL_STANDARD_MODBUS,
+    "cgk_030v3l": PROTOCOL_STANDARD_MODBUS,
+    "cgk_040v3l": PROTOCOL_STANDARD_MODBUS,
+    "cgk_050v3l": PROTOCOL_STANDARD_MODBUS,
+    "cgk_060v3l": PROTOCOL_STANDARD_MODBUS,
+    
+    # Wszystkie wersje z końcówką _b będą korzystać z nowego klienta binarnego
+    "cgk_030v3l_b": PROTOCOL_CUSTOM_BINARY_F4,
 }
 
 # --- platformy integracji --------------------------------
