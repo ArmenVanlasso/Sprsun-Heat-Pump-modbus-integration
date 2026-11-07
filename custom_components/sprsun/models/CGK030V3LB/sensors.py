@@ -1,5 +1,10 @@
 SENSORS = [
     # --- CYFROWE / STATUSY / WYJŚCIA (Bity) ---
+
+
+
+
+
     {
         "unique_id": "d07_zaw_3_drog",
         "name": "Zawór trójdrogowy pozycja",
@@ -38,7 +43,90 @@ SENSORS = [
         "signed": True,
         "icon": "mdi:thermometer",
     },
-
+    {
+        "unique_id": "temp_zewnetrzna",
+        "name": "Temperatura zewnętrzna",
+        "register": 17,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "unique_id": "temp_sprezania",
+        "name": "Temperatura sprężania",
+        "register": 28,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "unique_id": "temp_ssania",
+        "name": "Temperatura ssania",
+        "register": 22,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "unique_id": "cisnienie_sprezania",
+        "name": "Ciśnienie sprężania",
+        "register": 48,
+        "unit": "bar",
+        "device_class": "pressure",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "icon": "mdi:gauge",
+        "description": "Na sterowniku w zakładce Parametry, pod nazwą B6: Cis.po stronie tłocznej.",
+    },
+    {
+        "unique_id": "cisnienie_ssania",
+        "name": "Ciśnienie ssania",
+        "register": 48,
+        "unit": "bar",
+        "device_class": "pressure",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "icon": "mdi:gauge",
+    },
+    {
+        "unique_id": "temp_cwu",
+        "name": "Temperatura CWU",
+        "register": 16,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "unique_id": "temp_parownika",
+        "name": "Temperatura parownika",
+        "register": 23,
+        "unit": "°C",
+        "device_class": "temperature",
+        "state_class": "measurement",
+        "scale": 0.1,
+        "signed": True,
+        "icon": "mdi:thermometer",
+    },
+    {
+        "unique_id": "y1_wentylator",
+        "name": "Y1 Wentylator",
+        "register": 197,
+        "unit": "%",
+        "scale": 0.1,
+        "icon": "mdi:fan",
+    },
 ]
 
 DATA = SENSORS
