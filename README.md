@@ -3,7 +3,8 @@ Integracja pozwala na bezpośrednie podłączenie pomp ciepła Sprsun serii CGK_
 Celem integracji jest pełne, lokalne sterowanie oraz odczyt parametrów pracy bez użycia chmury.</b>
 
 Aktualnie integracja wspiera następujące modele:
-$${\color{green} CGK025V3L, CGK030V3L, CGK040V3L, CGK050V3L, CGK060V3L }$$
+$${\color{green} CGK025V3L, CGK030V3L, CGK040V3L, CGK050V3L, CGK060V3L }$$ 
+$${\color{yellow} (CGK030V3L-B)\ w\ trakcie\ testowania}$$
 
 Integracja tworzy w Home Assistant następujące typy encji:
 
@@ -122,4 +123,4 @@ logger:
 <br>
 <b>Uwagi:</b>
 <br>
-- W miarę możliwości będę dodawał kolejne modele pomp Sprsun, które mają możliwość łączenia po modbus.
+- <b>W miarę możliwości będę dodawał kolejne modele pomp Sprsun, które mają możliwość łączenia po modbus.</b>
