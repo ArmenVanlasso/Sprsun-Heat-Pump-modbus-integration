@@ -7,7 +7,13 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-from .const import DOMAIN, DEFAULT_SCAN_INTERVAL
+from . const import (
+    DOMAIN, 
+    DEFAULT_SCAN_INTERVAL, 
+    MODEL_PROTOCOLS, 
+    PROTOCOL_CUSTOM_BINARY_F4, 
+    PROTOCOL_STANDARD_MODBUS
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,77 +59,68 @@ class SprsunCoordinator(DataUpdateCoordinator):
         """Główny cykl odczytu danych z Modbus."""
         try:
             new_data: dict[int, int] = {}
+            protocol_type = MODEL_PROTOCOLS.get(self.model, PROTOCOL_STANDARD_MODBUS)
 
-            # -------------------------
-            # HOLDING REGISTERS  (FC=3)
-            # -------------------------
-            BLOCK_SIZE = 120
-            MAX_REGISTER = 444
-
-            for start in range(0, MAX_REGISTER, BLOCK_SIZE):
-                count = min(BLOCK_SIZE, MAX_REGISTER - start)
-                regs = await self.client.read_holding_registers(start, count)
-                if regs is None:
-                    raise UpdateFailed(
-                        f"Brak danych z read_holding_registers dla bloku {start}"
-                    )
-                for offset, raw_value in enumerate(regs):
-                    reg = start + offset
-                    new_data[reg] = raw_value
-
-            # -------------------------
-            # COILS  (FC=1)  -> NEW dict
-            # -------------------------
-            # Blokujemy odczyt dla nowego modelu, bo sprzętowo obsługuje tylko holdingi (03H)
-            if self.model == "nowy_model_sprsun":
-                self.data_coils = {}
-            else:
-                try:
-                    COIL_BLOCK = 120
-                    COIL_MAX = 200
-
-                    coil_bits = []
-                    for start in range(0, COIL_MAX, COIL_BLOCK):
-                        count = min(COIL_BLOCK, COIL_MAX - start)
-                        chunk = await self.client.read_coils(start, count)
-                        if chunk:
-                            coil_bits.extend(chunk)
-
-                    # NEW: map index -> bool
-                    self.data_coils = {idx: coil_bits[idx] for idx in range(len(coil_bits))}
-
-                except Exception as err:
-                    _LOGGER.warning("Błąd odczytu coils: %s", err)
+            # 1. SERIA B (Autorski protokół masowego zrzutu binarnego)
+            if protocol_type == PROTOCOL_CUSTOM_BINARY_F4:
+                cmd = bytes([0x01, 0x03, 0x00, 0x00, 0x00, 0x78, 0x45, 0xE8])
+                raw_packet = await self.client.read_sprsun_custom_v3l(cmd, expected_length=300)
+                
+                if raw_packet and len(raw_packet) > 5:
+                    payload = raw_packet[3:-2]
+                    for i in range(len(payload) // 2):
+                        high_byte = payload[i * 2]
+                        low_byte = payload[i * 2 + 1]
+                        new_data[i] = (high_byte << 8) | low_byte
+                        
+                    self.data = new_data
                     self.data_coils = {}
+                    self.data_discrete = None
+                    self.async_set_updated_data(self.data)
+                    return self.data
+                else:
+                    raise UpdateFailed(f"Brak lub uszkodzony pakiet binarny dla modelu z serii B: {self.model}")
 
-            # -------------------------
-            # DISCRETE INPUTS  (FC=2) – kept for compat
-            # -------------------------
-            # Blokujemy odczyt dla nowego modelu, bo sprzętowo obsługuje tylko holdingi (03H)
-            if self.model == "nowy_model_sprsun":
-                self.data_discrete = None
-            else:
-                try:
-                    DISCRETE_BLOCK = 120
-                    DISCRETE_MAX = 200
+            # 2. STARE MODELE (Standardowy protokół Modbus FC=03)
+            elif protocol_type == PROTOCOL_STANDARD_MODBUS:
+                BLOCK_SIZE = 120
+                MAX_REGISTER = 444
+                for start in range(0, MAX_REGISTER, BLOCK_SIZE):
+                    count = min(BLOCK_SIZE, MAX_REGISTER - start)
+                    regs = await self.client.read_holding_registers(start, count)
+                    if regs is None:
+                        raise UpdateFailed(f"Brak danych z read_holding_registers dla bloku {start}")
+                    for offset, raw_value in enumerate(regs):
+                        new_data[start + offset] = raw_value
 
-                    bits = []
-                    for start in range(0, DISCRETE_MAX, DISCRETE_BLOCK):
-                        count = min(DISCRETE_BLOCK, DISCRETE_MAX - start)
-                        chunk = await self.client.read_discrete_inputs(start, count)
-                        if chunk:
-                            bits.extend(chunk)
+                # COILS oraz DISCRETE INPUTS dla starszych modeli
+                if self.model != "nowy_model_sprsun":
+                    try:
+                        coil_bits = []
+                        for start in range(0, 200, 120):
+                            chunk = await self.client.read_coils(start, min(120, 200 - start))
+                            if chunk: coil_bits.extend(chunk)
+                        self.data_coils = {idx: coil_bits[idx] for idx in range(len(coil_bits))}
+                    except Exception as err:
+                        _LOGGER.warning("Błąd odczytu coils: %s", err)
+                        self.data_coils = {}
 
-                    self.data_discrete = [[b] for b in bits]
-
-                except Exception as err:
-                    _LOGGER.warning("Błąd odczytu discrete inputs: %s", err)
+                    try:
+                        bits = []
+                        for start in range(0, 200, 120):
+                            chunk = await self.client.read_discrete_inputs(start, min(120, 200 - start))
+                            if chunk: bits.extend(chunk)
+                        self.data_discrete = [[b] for b in bits]
+                    except Exception as err:
+                        _LOGGER.warning("Błąd odczytu discrete inputs: %s", err)
+                        self.data_discrete = None
+                else:
+                    self.data_coils = {}
                     self.data_discrete = None
 
-            # zapisz nowe holdingi do self.data
-            self.data = new_data
-            self.async_set_updated_data(self.data)
-            return self.data
+                self.data = new_data
+                self.async_set_updated_data(self.data)
+                return self.data
 
         except Exception as err:
             _LOGGER.error("Błąd aktualizacji danych z Modbus: %s", err)
