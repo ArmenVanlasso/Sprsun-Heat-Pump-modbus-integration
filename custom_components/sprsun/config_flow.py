@@ -29,11 +29,12 @@ from .const import (
     DEFAULT_BAUDRATE,
 )
 AVAILABLE_MODELS = {
-    "CGK025V3L": "CGK025V3L",
-    "CGK030V3L": "CGK030V3L",
-    "CGK040V3L": "CGK040V3L",
-    "CGK050V3L": "CGK050V3L",
-    "CGK060V3L": "CGK060V3L",
+    "CGK025V3L": "cgk_025v3l",
+    "CGK-030V3L-B": "cgk_030v3lb",  # Nowy model z serii B
+    "CGK030V3L": "cgk_030v3l",
+    "CGK040V3L": "cgk_040v3l",
+    "CGK050V3L": "cgk_050v3l",
+    "CGK060V3L": "cgk_060v3l",
 }
 
 AVAILABLE_LANGUAGES = {
