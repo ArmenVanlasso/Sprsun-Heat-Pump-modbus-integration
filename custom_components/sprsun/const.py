@@ -102,7 +102,7 @@ PROTOCOL_CUSTOM_BINARY_F4 = "custom_binary_f4"
 # --- dostępne modele -------------------------------------
 MODELS = {
     "CGK-025V3L": "cgk_025v3l",
-    "CGK-025V3L-B": "cgk_025v3l_b",
+    "CGK-025V3LB": "cgk_025v3lb",
     "CGK-030V3L": "cgk_030v3l",
     "CGK-040V3L": "cgk_040v3l",
     "CGK-050V3L": "cgk_050v3l",
@@ -117,7 +117,7 @@ MODEL_PROTOCOLS = {
     "cgk_060v3l": PROTOCOL_STANDARD_MODBUS,
     
     # Wszystkie wersje z końcówką _b będą korzystać z nowego klienta binarnego
-    "cgk_030v3l_b": PROTOCOL_CUSTOM_BINARY_F4,
+    "cgk_030v3lb": PROTOCOL_CUSTOM_BINARY_F4,
 }
 
 # --- platformy integracji --------------------------------
