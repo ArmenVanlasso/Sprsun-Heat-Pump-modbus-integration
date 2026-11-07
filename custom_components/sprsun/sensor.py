@@ -121,6 +121,7 @@ class SprsunGenericSensor(CoordinatorEntity, SensorEntity):
 
         self._register = definition["register"]
         self._bit = definition.get("bit")
+        self._source = definition.get("source", "holding_register")
         self._scale = definition.get("scale", 1)
         self._signed = definition.get("signed", False)
 
@@ -192,7 +193,7 @@ class SprsunGenericSensor(CoordinatorEntity, SensorEntity):
     
     @property
     def native_value(self):
-        raw = self.coordinator.data.get(self._register)
+        raw = self._get_raw_value()
 
         if raw is None:
             return None
@@ -216,7 +217,7 @@ class SprsunGenericSensor(CoordinatorEntity, SensorEntity):
     @property
     def icon(self):
         if self._icon_map:
-            raw = self.coordinator.data.get(self._register)
+            raw = self._get_raw_value()
 
             if raw is None:
                 return self._attr_icon
