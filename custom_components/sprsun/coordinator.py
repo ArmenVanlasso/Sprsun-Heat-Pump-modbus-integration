@@ -74,43 +74,51 @@ class SprsunCoordinator(DataUpdateCoordinator):
             # -------------------------
             # COILS  (FC=1)  -> NEW dict
             # -------------------------
-            try:
-                COIL_BLOCK = 120
-                COIL_MAX = 200
-
-                coil_bits = []
-                for start in range(0, COIL_MAX, COIL_BLOCK):
-                    count = min(COIL_BLOCK, COIL_MAX - start)
-                    chunk = await self.client.read_coils(start, count)
-                    if chunk:
-                        coil_bits.extend(chunk)
-
-                # NEW: map index -> bool
-                self.data_coils = {idx: coil_bits[idx] for idx in range(len(coil_bits))}
-
-            except Exception as err:
-                _LOGGER.warning("Błąd odczytu coils: %s", err)
+            # Blokujemy odczyt dla nowego modelu, bo sprzętowo obsługuje tylko holdingi (03H)
+            if self.model == "nowy_model_sprsun":
                 self.data_coils = {}
+            else:
+                try:
+                    COIL_BLOCK = 120
+                    COIL_MAX = 200
+
+                    coil_bits = []
+                    for start in range(0, COIL_MAX, COIL_BLOCK):
+                        count = min(COIL_BLOCK, COIL_MAX - start)
+                        chunk = await self.client.read_coils(start, count)
+                        if chunk:
+                            coil_bits.extend(chunk)
+
+                    # NEW: map index -> bool
+                    self.data_coils = {idx: coil_bits[idx] for idx in range(len(coil_bits))}
+
+                except Exception as err:
+                    _LOGGER.warning("Błąd odczytu coils: %s", err)
+                    self.data_coils = {}
 
             # -------------------------
             # DISCRETE INPUTS  (FC=2) – kept for compat
             # -------------------------
-            try:
-                DISCRETE_BLOCK = 120
-                DISCRETE_MAX = 200
-
-                bits = []
-                for start in range(0, DISCRETE_MAX, DISCRETE_BLOCK):
-                    count = min(DISCRETE_BLOCK, DISCRETE_MAX - start)
-                    chunk = await self.client.read_discrete_inputs(start, count)
-                    if chunk:
-                        bits.extend(chunk)
-
-                self.data_discrete = [[b] for b in bits]
-
-            except Exception as err:
-                _LOGGER.warning("Błąd odczytu discrete inputs: %s", err)
+            # Blokujemy odczyt dla nowego modelu, bo sprzętowo obsługuje tylko holdingi (03H)
+            if self.model == "nowy_model_sprsun":
                 self.data_discrete = None
+            else:
+                try:
+                    DISCRETE_BLOCK = 120
+                    DISCRETE_MAX = 200
+
+                    bits = []
+                    for start in range(0, DISCRETE_MAX, DISCRETE_BLOCK):
+                        count = min(DISCRETE_BLOCK, DISCRETE_MAX - start)
+                        chunk = await self.client.read_discrete_inputs(start, count)
+                        if chunk:
+                            bits.extend(chunk)
+
+                    self.data_discrete = [[b] for b in bits]
+
+                except Exception as err:
+                    _LOGGER.warning("Błąd odczytu discrete inputs: %s", err)
+                    self.data_discrete = None
 
             # zapisz nowe holdingi do self.data
             self.data = new_data
