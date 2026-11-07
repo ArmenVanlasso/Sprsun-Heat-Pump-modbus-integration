@@ -185,3 +185,36 @@ class HeatPumpModbusTcpClient:
                 _LOGGER.error("Modbus TCP write coil error %s: %s", address, rr)
                 return False
             return True
+
+    async def read_sprsun_custom_v3l(self, request_hex: bytes, expected_length: int = 300) -> bytes | None:
+        """
+        Wysyła surową ramkę binarną i zbiera masową odpowiedź bezpośrednio przez socket TCP,
+        całkowicie omijając warstwę pymodbus (Bypass dla modeli z serii B).
+        """
+        async with self._lock:
+            reader, writer = None, None
+            try:
+                # Otwieramy niezależne, krótkie połączenie TCP do portu Elfiwa
+                reader, writer = await asyncio.wait_for(
+                    asyncio.open_connection(self._host, self._port), 
+                    timeout=4.0
+                )
+                
+                # Wysyłamy zapytanie, które zmusza pompę do masowego zrzutu
+                writer.write(request_hex)
+                await writer.drain()
+                
+                # Czekamy na odpowiedź z uwzględnieniem lekkiego buforowania magistrali
+                await asyncio.sleep(0.5)
+                
+                # Odczytujemy strumień surowych danych
+                response = await asyncio.wait_for(reader.read(expected_length), timeout=3.0)
+                return response
+
+            except Exception as err:
+                _LOGGER.error("Błąd transmisji Custom V3L TCP na %s:%s: %s", self._host, self._port, err)
+                return None
+            finally:
+                if writer:
+                    writer.close()
+                    await writer.wait_closed()
