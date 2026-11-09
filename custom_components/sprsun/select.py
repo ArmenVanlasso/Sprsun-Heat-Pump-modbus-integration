@@ -17,7 +17,7 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Rejestracja selectów dla danego modelu i języka."""
+
     data = hass.data[DOMAIN][entry.entry_id]
 
     coordinator: SprsunCoordinator = data["coordinator"]
@@ -52,7 +52,11 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
         self._def = definition
 
         self._register = definition["register"]
+        self._bit = definition.get("bit")
         self._options_map = definition["options"]
+
+        self._attr_name = definition["name"]
+        self._attr_entity_registry_enabled_default = definition.get("entity_registry_enabled_default", True)
 
         self._attr_name = definition["name"]
         self._attr_unique_id = f"{DOMAIN}_{model}_select_{self._register}"
@@ -78,14 +82,39 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
         raw = self.coordinator.data.get(self._register)
         if raw is None:
             return None
+
+        if self._bit is not None:
+            raw = (raw >> self._bit) & 1
+
         return self._options_map.get(raw)
 
     async def async_select_option(self, option: str):
-        # znajdź klucz (wartość Modbus) dla wybranej opcji
+        from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
+        protocol_type = MODEL_PROTOCOLS.get(self._model, "standard_modbus")
+        target_value = None
         for key, val in self._options_map.items():
             if val == option:
-                await self.coordinator.client.write_register(self._register, key)
-                return
+                target_value = key
+                break
+
+        if target_value is None:
+            _LOGGER.error("Nie znaleziono wartości Modbus dla opcji: %s", option)
+            return
+
+        if protocol_type == PROTOCOL_CUSTOM_BINARY_F4 and self._bit is not None:
+            current_reg_value = self.coordinator.data.get(self._register, 0)
+            
+            if target_value == 1:
+                new_reg_value = current_reg_value | (1 << self._bit)
+            else:
+                new_reg_value = current_reg_value & ~(1 << self._bit)
+                
+            _LOGGER.debug(
+                self._bit, self._register, current_reg_value, new_reg_value
+            )
+            await self.coordinator.client.write_register(self._register, new_reg_value)
+            return
+        await self.coordinator.client.write_register(self._register, target_value)
 
     @property
     def icon(self):
