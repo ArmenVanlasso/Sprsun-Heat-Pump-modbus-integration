@@ -43,29 +43,23 @@ class HeatPumpModbusRtuClient:
             timeout=5,
         )
 
-        # ID urządzenia przekazujemy bezpośrednio
-        # w każdym zapytaniu Modbus przez device_id.
-
         await self._client.connect()
 
         if not getattr(self._client, "connected", False):
             raise ConnectionError(f"Cannot connect to RTU {self._port}")
 
     async def _ensure_connected(self) -> None:
-        """Sprawdzenie połączenia i ewentualne ponowne połączenie."""
 
         if self._client is None or not getattr(self._client, "connected", False):
             await self.connect()
 
     @staticmethod
     def _response_error(response) -> bool:
-        """Sprawdzenie odpowiedzi Modbus."""
         return response is None or (
             hasattr(response, "isError") and response.isError()
         )
 
     async def close(self) -> None:
-        """Zamknięcie portu szeregowego."""
 
         if self._client is None:
             return
@@ -93,7 +87,6 @@ class HeatPumpModbusRtuClient:
     async def read_holding_registers(
         self, address: int, count: int = 1
     ) -> list[int] | None:
-        """Odczyt rejestrów holding (FC03)."""
 
         async with self._lock:
             await self._ensure_connected()
@@ -133,7 +126,6 @@ class HeatPumpModbusRtuClient:
     async def read_discrete_inputs(
         self, address: int, count: int = 1
     ) -> list[bool] | None:
-        """Odczyt wejść dyskretnych (FC02)."""
 
         async with self._lock:
             await self._ensure_connected()
@@ -171,7 +163,6 @@ class HeatPumpModbusRtuClient:
     async def read_coils(
         self, address: int, count: int = 1
     ) -> list[bool] | None:
-        """Odczyt cewek (FC01)."""
 
         async with self._lock:
             await self._ensure_connected()
@@ -207,7 +198,6 @@ class HeatPumpModbusRtuClient:
                 return None
 
     async def write_register(self, address: int, value: int) -> bool:
-        """Zapis pojedynczego rejestru (FC06)."""
 
         async with self._lock:
             await self._ensure_connected()
@@ -240,7 +230,6 @@ class HeatPumpModbusRtuClient:
     async def write_registers(
         self, address: int, values: list[int]
     ) -> bool:
-        """Zapis wielu rejestrów (FC10)."""
 
         async with self._lock:
             await self._ensure_connected()
@@ -271,7 +260,6 @@ class HeatPumpModbusRtuClient:
                 return False
 
     async def write_coil(self, address: int, value: bool) -> bool:
-        """Zapis pojedynczej cewki (FC05)."""
 
         async with self._lock:
             await self._ensure_connected()
@@ -300,3 +288,34 @@ class HeatPumpModbusRtuClient:
                     "Modbus RTU write coil %s: %s", address, err
                 )
                 return False
+
+    async def read_sprsun_custom_v3l(self, request_hex: bytes, expected_length: int = 300) -> bytes | None:
+
+        async with self._lock:
+            await self._ensure_connected()
+            try:
+                assert self._client is not None
+                
+                protocol = getattr(self._client, "protocol", None)
+                if protocol is None or not hasattr(protocol, "transport"):
+                    return None
+                    
+                transport = protocol.transport
+                if transport is None:
+                    return None
+                
+                if hasattr(protocol, "_buffer"):
+                    protocol._buffer = b""
+                
+                transport.write(request_hex)
+                
+                await asyncio.sleep(0.5)
+                
+                if hasattr(protocol, "_buffer"):
+                    return protocol._buffer
+                    
+                return None
+                
+            except Exception as err:
+                _LOGGER.error("Błąd transmisji Custom V3L RTU na porcie %s: %s", self._port, err)
+                return None
