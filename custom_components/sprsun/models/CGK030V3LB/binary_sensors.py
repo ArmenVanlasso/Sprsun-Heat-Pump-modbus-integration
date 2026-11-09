@@ -11,7 +11,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -27,7 +27,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -43,7 +43,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -59,7 +59,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -75,12 +75,12 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
     {
-        "unique_id": "flow_switch",
+        "unique_id": "flow_switch_bit5",
         "name": "Czujnik przepływu",
         "register": 3,
         "bit": 5,
@@ -91,22 +91,22 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
-{ 
-  unique_id : phase_sequence_detection , 
-  name : Kolejność faz , 
-  register : 3, 
-  bit : 6, 
-  source : holding_register , 
-  device_class: problem,
-  icon_map : { 
-    0: mdi:check-circle , 
-    1: mdi:alert-circle , 
-  }, 
-}
+    {
+        "unique_id": "phase_sequence_detection",
+        "name": "Kolejność faz",
+        "register": 3,
+        "bit": 6,
+        "source": "holding_register",
+        "device_class": "problem",
+        "icon_map": {
+            0: "mdi:check-circle",
+            1: "mdi:alert-circle",
+        },
+    },
     {
         "unique_id": "hotwater_demand",
         "name": "Hotwater demand",
@@ -119,7 +119,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -135,7 +135,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -151,7 +151,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -167,7 +167,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -183,7 +183,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -199,7 +199,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -215,7 +215,7 @@ BINARY_SENSORS = [
             1: "on",
         },
         "icon_map": {
-            0: "mdi:valve-closed",,
+            0: "mdi:valve-closed",
             1: "mdi:valve-open",
         },
     },
@@ -225,7 +225,7 @@ BINARY_SENSORS = [
         "register": 4,
         "bit": 7,
         "source": "holding_register",
-        "icon": ""mdi:snowflake-off",
+        "icon": "mdi:snowflake-off",
         "mapping": {
             0: "off",
             1: "on",
@@ -293,6 +293,7 @@ BINARY_SENSORS = [
         "mapping": {
             0: "low",
             1: "high",
+        },
     },
     {
         "unique_id": "grzalka_obudowy",
@@ -404,22 +405,6 @@ BINARY_SENSORS = [
         "icon_map": {
             0: "mdi:valve-closed",
             1: "mdi:valve-open",
-        },
-    },
-    {
-        "unique_id": "pump",
-        "name": "Pump",
-        "register": 7,
-        "bit": 6,
-        "source": "holding_register",
-        "icon": "mdi:pump-off",
-        "mapping": {
-            0: "off",
-            1: "on",
-        },
-        "icon_map": {
-            0: "mdi:pump-off",
-            1: "mdi:pump",
         },
     },
     {
