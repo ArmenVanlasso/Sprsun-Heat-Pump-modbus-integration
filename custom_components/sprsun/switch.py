@@ -15,14 +15,12 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    """Rejestracja switchy dla danego modelu i języka."""
     data = hass.data[DOMAIN][entry.entry_id]
 
     coordinator: SprsunCoordinator = data["coordinator"]
     client = data["client"]
     model: str = data["model"]
 
-    # 🔥 definicje switchy z folderu model/lang
     switches_def = data["switches"]
 
     entities = [
@@ -34,7 +32,6 @@ async def async_setup_entry(
 
 
 class SprsunSwitchEntity(SwitchEntity):
-    """Switch oparty o koordynator i rejestry Modbus."""
 
     _attr_should_poll = False
 
@@ -45,20 +42,21 @@ class SprsunSwitchEntity(SwitchEntity):
         self._model = model
         self._def = definition
 
-        self._register = definition["address"]
+        self._register = definition.get("register", definition.get("address"))
+        self._bit = definition.get("bit")
+        
         self._cmd_on = definition.get("command_on", 1)
         self._cmd_off = definition.get("command_off", 0)
+        self._attr_entity_registry_enabled_default = definition.get("entity_registry_enabled_default", True)
 
         self._icon_on = definition.get("icon_on")
         self._icon_off = definition.get("icon_off")
 
         self._verify = definition.get("verify")
 
-        # nazwa encji — prosto z pliku model/lang
         self._attr_name = definition["name"]
         self._attr_unique_id = f"{DOMAIN}_{model}_switch_{self._register}"
 
-        # entity_id generowane z nazwy encji
         slug = (
             f"sprsun_{model}_{definition['name']}"
             .lower()
@@ -80,13 +78,20 @@ class SprsunSwitchEntity(SwitchEntity):
 
     @property
     def is_on(self) -> bool:
-        """Stan włącznika z verify lub fallback."""
-        # Brak verify → fallback na holding 1000+register
+        from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
+        protocol_type = MODEL_PROTOCOLS.get(self._model, "standard_modbus")
+
+        if protocol_type == PROTOCOL_CUSTOM_BINARY_F4 and self._bit is not None:
+            raw = self.coordinator.data.get(self._register)
+            if raw is None:
+                return False
+            bit_state = (raw >> self._bit) & 1
+            return bool(bit_state) == bool(self._cmd_on)
+
         if not self._verify:
             raw = self.coordinator.data.get(1000 + self._register)
             return bool(raw) == bool(self._cmd_on)
 
-        # verify → pełna logika
         v = self._verify
         addr = v["address"]
         itype = v.get("input_type", "coil").lower()
@@ -108,12 +113,33 @@ class SprsunSwitchEntity(SwitchEntity):
         return False
 
     async def _write_value(self, value: int):
-        """Zapis przez FC5 (coil)."""
+        from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
+        protocol_type = MODEL_PROTOCOLS.get(self._model, "standard_modbus")
+
         try:
-            await self._client.write_coil(self._register, bool(value))
+            if protocol_type == PROTOCOL_CUSTOM_BINARY_F4 and self._bit is not None:
+                current_reg_value = self.coordinator.data.get(self._register, 0)
+                
+                if value == self._cmd_on:
+                    # Ustaw bit na 1 (Bitwise OR)
+                    new_reg_value = current_reg_value | (1 << self._bit)
+                else:
+                    # Wyzeruj bit na 0 (Bitwise AND z negacją maski)
+                    new_reg_value = current_reg_value & ~(1 << self._bit)
+                    
+                _LOGGER.debug(
+                    "Modyfikacja bitu switcha %s w rejestrze %s dla serii B. Stara wartość: %s, Nowa wartość: %s",
+                    self._bit, self._register, current_reg_value, new_reg_value
+                )
+                await self._client.write_register(self._register, new_reg_value)
+            
+            else:
+                await self._client.write_coil(self._register, bool(value))
+                
             await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Błąd zapisu switch %s: %s", self._attr_name, err)
+
 
     async def async_turn_on(self, **kwargs):
         await self._write_value(self._cmd_on)
