@@ -104,6 +104,7 @@ MODELS = {
     "CGK-025V3L": "cgk_025v3l",
     "CGK-025V3LB": "cgk_025v3lb",
     "CGK-030V3L": "cgk_030v3l",
+    "CGK-030V3L-B": "cgk_030v3lb",
     "CGK-040V3L": "cgk_040v3l",
     "CGK-050V3L": "cgk_050v3l",
     "CGK-060V3L": "cgk_060v3l",
@@ -116,7 +117,8 @@ MODEL_PROTOCOLS = {
     "cgk_050v3l": PROTOCOL_STANDARD_MODBUS,
     "cgk_060v3l": PROTOCOL_STANDARD_MODBUS,
     
-    # Wszystkie wersje z końcówką _b będą korzystać z nowego klienta binarnego
+    # Wszystkie wersje z końcówką b będą korzystać z nowego klienta binarnego
+#    "cgk_025v3lb": PROTOCOL_CUSTOM_BINARY_F4,
     "cgk_030v3lb": PROTOCOL_CUSTOM_BINARY_F4,
 }
 
