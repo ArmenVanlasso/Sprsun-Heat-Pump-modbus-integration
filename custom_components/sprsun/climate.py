@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import asyncio
 import os
+import re
 
 from homeassistant.components.climate import (
     ClimateEntity,
@@ -89,14 +90,16 @@ class HeatPumpClimate(ClimateEntity):
         self._attr_unique_id = definition.get("unique_id")
 
         # entity_id generowane z nazwy encji
-        slug = (
-            f"sprsun_{self._model}_{self._attr_name}"
-            .lower()
-            .replace(" ", "_")
-            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
-            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
-            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
+        # entity_id generowane z nazwy encji
+        raw_slug = f"sprsun_{self._model}_{self._attr_name}".lower()
+        raw_slug = (
+            raw_slug.replace("ą", "a").replace("ć", "c").replace("ę", "e")
+               .replace("ł", "l").replace("ń", "n").replace("ó", "o")
+               .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
+        slug = re.sub(r"[^a-z0-9_]", "_", raw_slug)
+        slug = re.sub(r"_+", "_", slug)
+        slug = slug.strip("_")
         self.entity_id = f"climate.{slug}"
 
         # Zakres temperatury
@@ -207,7 +210,7 @@ class HeatPumpClimate(ClimateEntity):
     #  TEMPERATURA BIEŻĄCA
     # ============================================================
     @property
-    def current_temperature(self) -> float | None:
+    def native_current_temperature(self) -> float | None:
 
         if self._current_temp_reg is None:
             return None
@@ -225,7 +228,7 @@ class HeatPumpClimate(ClimateEntity):
     #  TEMPERATURA ZADANA
     # ============================================================
     @property
-    def target_temperature(self) -> float | None:
+    def native_target_temperature(self) -> float | None:
 
         if self._target_temp_register is None:
             return None
