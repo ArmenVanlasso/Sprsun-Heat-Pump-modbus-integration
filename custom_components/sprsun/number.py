@@ -70,6 +70,7 @@ class SprsunNumberEntity(NumberEntity):
         self._loader = loader
 
         self._register = definition["register"]
+        self._scale = definition.get("scale", 1)
 
         unique_id = definition["unique_id"]
 
@@ -119,11 +120,15 @@ class SprsunNumberEntity(NumberEntity):
 
     @property
     def native_value(self):
-        return self.coordinator.data.get(self._register)
+        raw = self.coordinator.data.get(self._register)
+        if raw is None:
+            return None
+        return raw * self._scale
 
     async def async_set_native_value(self, value: float) -> None:
         try:
-            await self.coordinator.client.write_register(self._register, int(value))
+            val_to_write = int(value / self._scale)
+            await self.coordinator.client.write_register(self._register, val_to_write)
             await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Błąd zapisu number %s: %s", self._attr_name, err)
