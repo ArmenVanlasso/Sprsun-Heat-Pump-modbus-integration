@@ -1,9 +1,9 @@
 SENSORS = [
     # --- CYFROWE / STATUSY / WYJŚCIA (Bity) ---
     {
-        "unique_id": "temp_zasilania",
+        "unique_id": "inlet_temp",
         "name": "Temperatura zasilania",
-        "register": 18,  # 0x0012 wg dokumentacji CGK_B
+        "register": 14,  # 0x0012 wg dokumentacji CGK_B
         "unit": "°C",
         "device_class": "temperature",
         "state_class": "measurement",
@@ -12,7 +12,7 @@ SENSORS = [
         "icon": "mdi:thermometer",
     },
     {
-        "unique_id": "temp_cwu",
+        "unique_id": "hotwater_temp",
         "name": "Temperatura wody (CWU/zbiornik)",
         "register": 15,  # 0x000F wg dokumentacji CGK_B
         "unit": "°C",
@@ -23,7 +23,7 @@ SENSORS = [
         "icon": "mdi:thermometer",
     },
     {
-        "unique_id": "temp_zewnetrzna",
+        "unique_id": "ambi_temp",
         "name": "Temperatura zewnętrzna",
         "register": 17,  # 0x0011 wg dokumentacji CGK_B
         "unit": "°C",
@@ -34,9 +34,9 @@ SENSORS = [
         "icon": "mdi:thermometer",
     },
     {
-        "unique_id": "temp_powrotu",
+        "unique_id": "outlet_temp",
         "name": "Temperatura powrotu",
-        "register": 14,  # 0x000E wg dokumentacji CGK_B
+        "register": 18,  # 0x000E wg dokumentacji CGK_B
         "unit": "°C",
         "device_class": "temperature",
         "state_class": "measurement",
@@ -45,7 +45,7 @@ SENSORS = [
         "icon": "mdi:thermometer",
     },
     {
-        "unique_id": "temp_ssania",
+        "unique_id": "suct_gas_temp",
         "name": "Temperatura ssania",
         "register": 21,  # 0x0015 wg dokumentacji CGK_B
         "unit": "°C",
@@ -56,7 +56,7 @@ SENSORS = [
         "icon": "mdi:thermometer",
     },
     {
-        "unique_id": "temp_wezownicy",
+        "unique_id": "coil_temp",
         "name": "Temperatura wężownicy (parownika)",
         "register": 22,  # 0x0016 wg dokumentacji CGK_B
         "unit": "°C",
@@ -94,7 +94,7 @@ SENSORS = [
         "icon": "mdi:valve",
     },
     {
-        "unique_id": "czestotliwosc_sprezarki",
+        "unique_id": "comp_frequency",
         "name": "Częstotliwość sprężarki",
         "register": 30,  # 0x001E wg dokumentacji CGK_B
         "unit": "Hz",
@@ -163,7 +163,7 @@ SENSORS = [
         "icon": "mdi:fan",
     },
     {
-        "unique_id": "temp_odparowania",
+        "unique_id": "evap_temp",
         "name": "Temperatura odparowania",
         "register": 40,  # 0x0028 wg dokumentacji CGK_B
         "unit": "°C",
@@ -195,7 +195,7 @@ SENSORS = [
         "icon": "mdi:thermometer",
     },
     {
-        "unique_id": "cisnienie_ssania",
+        "unique_id": "suct_press",
         "name": "Ciśnienie ssania",
         "register": 47,  # 0x002F wg dokumentacji CGK_B
         "unit": "bar",
@@ -205,7 +205,7 @@ SENSORS = [
         "icon": "mdi:gauge",
     },
     {
-        "unique_id": "cisnienie_sprezania",
+        "unique_id": "disch_press",
         "name": "Ciśnienie sprężania",
         "register": 48,  # 0x0030 wg dokumentacji CGK_B
         "unit": "bar",
