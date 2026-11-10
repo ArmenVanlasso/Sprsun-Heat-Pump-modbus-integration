@@ -137,8 +137,8 @@ CLIMATES = [
         "data_type": "uint16",
         "input_type": "holding",
         "scale": 0.1,
-        "current_temp_register": 18, # Temperatura powrotu
-        "target_temp_register": 202, # Grzanie nastawa (climate)
+        "current_temp_register": 202, # 0x00CA P04 Hotwater setpoint
+        "target_temp_register": 202, # 0x00CA P04 Hotwater setpoint
         "icon_heat": "mdi:bathtub",
         "icon_off": "mdi:bathtub-outline",
         "hvac_modes": ["heat", "off"],
@@ -168,8 +168,8 @@ CLIMATES = [
         "data_type": "uint16",
         "input_type": "holding",
         "scale": 0.1,
-        "current_temp_register": 18, # Temperatura powrotu
-        "target_temp_register": 203, # Grzanie nastawa (climate)
+        "current_temp_register": 203, # 0x00CB P02 Cooling setp
+        "target_temp_register": 203, # 0x00CB P02 Cooling setp
         "icon_cool": "mdi:snowflake",
         "icon_off": "mdi:snowflake-off",
         "hvac_modes": ["cool", "off"],
@@ -199,8 +199,8 @@ CLIMATES = [
         "data_type": "uint16",
         "input_type": "holding",
         "scale": 0.1,
-        "current_temp_register": 18, # Temperatura powrotu
-        "target_temp_register": 204, # Grzanie nastawa (climate)
+        "current_temp_register": 18, # 0x00CC P01 Heating setp
+        "target_temp_register": 204, # 0x00CC P01 Heating setp
         "icon_heat": "mdi:radiator",
         "icon_off": "mdi:radiator-off",
         "hvac_modes": ["heat", "off"],
