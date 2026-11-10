@@ -81,6 +81,7 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
 
         self._icons = definition.get("icons")
         self._attr_icon = definition.get("icon")
+        self._attr_entity_registry_enabled_default = definition.get("entity_registry_enabled_default", True)
 
     @property
     def current_option(self):
@@ -115,6 +116,7 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
                 new_reg_value = current_reg_value & ~(1 << self._bit)
                 
             _LOGGER.debug(
+                "Modyfikacja bitu %s w rejestrze %s dla serii B. Stara wartość: %s, Nowa wartość: %s",
                 self._bit, self._register, current_reg_value, new_reg_value
             )
             await self.coordinator.client.write_register(self._register, new_reg_value)
