@@ -1,7 +1,8 @@
 SELECTS = [
     {
         "name": "Tryb pracy pompy",
-        "register": 55,  # 0x0036 + 1
+        "unique_id": "p06_unit_mode",
+        "register": 54,  # 0x0036
         "options": {
             0: "CWU",
             1: "Ogrzewanie",
@@ -13,7 +14,8 @@ SELECTS = [
     },
     {
         "name": "Tryb sprężarki",
-        "register": 401,  # 0x0190 + 1
+        "unique_id": "f23_compressor_mode",
+        "register": 400,  # 0x0190
         "options": {
             0: "Normal",
             1: "ECO",
@@ -24,7 +26,8 @@ SELECTS = [
     },
     {
         "name": "Tryb pracy pompy obiegowej",
-        "register": 415,  # 0x019E + 1
+        "unique_id": "g02_pump_work",
+        "register": 414,  # 0x019E
         "options": {
             0: "Interwał",
             1: "Normal",
@@ -34,7 +37,8 @@ SELECTS = [
     },
     {
         "name": "Tryb MV",
-        "register": 51,  # 0x0032 + 1
+        "unique_id": "mv_mode",
+        "register": 50,  # 0x0032
         "bit": 1,
         "options": {
             0: "Auto",
@@ -45,7 +49,8 @@ SELECTS = [
     },
     {
         "name": "Tryb AV",
-        "register": 51,  # 0x0032 + 1
+        "unique_id": "av_mode",
+        "register": 50,  # 0x0032
         "bit": 5,
         "options": {
             0: "Auto",
@@ -56,7 +61,8 @@ SELECTS = [
     },
     {
         "name": "Tryb pompy DC",
-        "register": 391,  # 0x0186 + 1
+        "unique_id": "f13_dc_pump_mode",
+        "register": 390,  # 0x0186
         "options": {
             0: "Manual",
             1: "Auto",
