@@ -55,7 +55,11 @@ class SprsunSwitchEntity(SwitchEntity):
         self._verify = definition.get("verify")
 
         self._attr_name = definition["name"]
-        self._attr_unique_id = f"{DOMAIN}_{model}_switch_{self._register}"
+        
+        if self._bit is not None:
+            self._attr_unique_id = f"{DOMAIN}_{model}_switch_{self._register}_bit_{self._bit}"
+        else:
+            self._attr_unique_id = f"{DOMAIN}_{model}_switch_{self._register}"
 
         slug = (
             f"sprsun_{model}_{definition['name']}"
