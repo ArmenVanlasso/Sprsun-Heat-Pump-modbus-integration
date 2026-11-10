@@ -11,7 +11,7 @@ CLIMATES = [
         "hvac_modes": ["heat", "off"],
         "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
         "hvac_mode_values": {
-        "haeat": [1, 3],
+        "heat": [1, 3],
         "off": [2, 4],
         },
         "preset_register": 0,
@@ -42,7 +42,7 @@ CLIMATES = [
         "hvac_modes": ["heat", "off"],
         "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
         "hvac_mode_values": {
-        "haeat": [1, 3],
+        "heat": [1, 3],
         "off": [2, 4],
         },
         "preset_register": 0,
@@ -73,7 +73,7 @@ CLIMATES = [
         "hvac_modes": ["heat", "off"],
         "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
         "hvac_mode_values": {
-        "haeat": [0, 1, 3, 4],
+        "heat": [0, 1, 3, 4],
         "off": 2,
         },
         "preset_register": 0,
@@ -104,7 +104,7 @@ CLIMATES = [
         "hvac_modes": ["heat", "off"],
         "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
         "hvac_mode_values": {
-            "haeat": [0, 1, 3, 4],
+            "heat": [0, 1, 3, 4],
             "off": 2,
         },
         "preset_register": 0,
@@ -206,7 +206,7 @@ CLIMATES = [
         "hvac_modes": ["heat", "off"],
         "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
         "hvac_mode_values": {
-            "haeat": [1, 3],
+            "heat": [1, 3],
             "off": [0, 2, 4],
         },
             "preset_register": 0,
