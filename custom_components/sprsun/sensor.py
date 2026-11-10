@@ -1,6 +1,7 @@
 import logging
 import os
 import importlib
+import re
 from datetime import datetime
 
 from homeassistant.components.sensor import SensorEntity
@@ -64,7 +65,13 @@ async def async_setup_entry(
     # LOGIC SENSORS – dynamiczne z folderu modelowego
     # -----------------------------------------------------
     try:
-        model_folder = model.upper()
+        from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
+        protocol_type = MODEL_PROTOCOLS.get(model, "standard_modbus")
+
+        if protocol_type == PROTOCOL_CUSTOM_BINARY_F4:
+            model_folder = model.upper().replace("_", "")
+        else:
+            model_folder = model.upper()
 
         logic_module = await hass.async_add_executor_job(
             importlib.import_module,
@@ -148,11 +155,15 @@ class SprsunGenericSensor(CoordinatorEntity, SensorEntity):
         # -----------------------------------------------------
         # ENTITY ID
         # -----------------------------------------------------
-        slug = (
-            f"sprsun_{model}_{translated_entity_id}"
-            .lower()
-            .replace(" ", "_")
+        raw_slug = f"sprsun_{model}_{translated_entity_id}".lower()
+        raw_slug = (
+            raw_slug.replace("ą", "a").replace("ć", "c").replace("ę", "e")
+               .replace("ł", "l").replace("ń", "n").replace("ó", "o")
+               .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
+        slug = re.sub(r"[^a-z0-9_]", "_", raw_slug)
+        slug = re.sub(r"_+", "_", slug)
+        slug = slug.strip("_")
         self.entity_id = f"sensor.{slug}"
 
         # -----------------------------------------------------
