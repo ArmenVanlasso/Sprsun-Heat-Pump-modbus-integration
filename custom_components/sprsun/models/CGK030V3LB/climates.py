@@ -19,8 +19,8 @@ CLIMATES = [
         "hvac_modes": ["heat", "off"],
         "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
         "hvac_mode_values": {
-            "heat": 1,
-            "off": [0, 2],
+            "heat": [0, 3, 4],
+            "off": [1, 2],
         },
             "preset_register": 0,
             "preset_values": {
@@ -32,6 +32,35 @@ CLIMATES = [
         },
     },
 
-
+    {
+        "name": "P02 Nastawa chłodzenie",
+        "unique_id": "p02_cooling_setpoint",
+        "temperature_unit": "C",
+        "precision": 0,
+        "temp_step": 0.5,
+        "max_temp": 30,
+        "min_temp": 12,
+        "data_type": "uint16",
+        "input_type": "holding",
+        "scale": 0.1,
+        "current_temp_register": 18, # Temperatura powrotu
+        "target_temp_register": 203, # Grzanie nastawa (climate)
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
+        "hvac_mode_values": {
+            "cool": [2, 4],
+            "off": [0, 1, 3],
+        },
+            "preset_register": 0,
+            "preset_values": {
+            "CWU": 0,
+            "Ogrzewanie": 1,
+            "Chłodzenie": 2,
+            "Ogrzewanie+CWU": 3,
+            "Chłodzenie+CWU": 4,
+        },
+    },
 ]
 DATA = CLIMATES
