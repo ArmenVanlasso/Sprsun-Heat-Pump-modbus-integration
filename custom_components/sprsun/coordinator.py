@@ -119,7 +119,6 @@ class SprsunCoordinator(DataUpdateCoordinator):
                     self.data_discrete = None
 
                 self.data = new_data
-                self.async_set_updated_data(self.data)
                 return self.data
 
         except Exception as err:
