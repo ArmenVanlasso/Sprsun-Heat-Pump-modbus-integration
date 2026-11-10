@@ -95,7 +95,7 @@ CLIMATES = [
     },
 
     {
-        "name": "CWU histereza start",
+        "name": "F40 Stop delta temp grzanie CWU",
         "unique_id": "f40_wt_constant_temperature_diffrence",
         "data_type": "uint16",
         "input_type": "holding",
@@ -104,8 +104,8 @@ CLIMATES = [
         "hvac_modes": ["heat", "off"],
         "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
         "hvac_mode_values": {
-            "haeat": [0, 3, 4],
-            "off": [1, 2],
+            "haeat": [0, 1, 3, 4],
+            "off": 2,
         },
         "preset_register": 0,
         "preset_values": {
@@ -118,6 +118,38 @@ CLIMATES = [
         "temperature_unit": "C",
         "min_temp": 1,
         "max_temp": 10,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:bathtub",
+        "icon_off": "mdi:bathtub-outline",
+
+    },
+
+    {
+        "name": "P05 Histereza CWU",
+        "unique_id": "p05_temp_diff",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 200, # P05 Temp.diff
+        "target_temp_register": 200, # P05 Temp.diff
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
+        "hvac_mode_values": {
+        "haeat": [0, 1, 3, 4],
+        "off": 2,
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 2,
+        "max_temp": 18,
         "temp_step": 1,
         "scale": 0.1,
         "precision": 0,
