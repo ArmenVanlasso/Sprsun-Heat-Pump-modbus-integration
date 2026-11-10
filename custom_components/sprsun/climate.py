@@ -175,6 +175,14 @@ class HeatPumpClimate(ClimateEntity):
             )
             return
 
+        from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
+        protocol_type = MODEL_PROTOCOLS.get(self._model, "standard_modbus")
+
+        # Blokada zapisu fikcyjnego rejestru 0 dla nowej serii pomp B
+        if protocol_type == PROTOCOL_CUSTOM_BINARY_F4 and self._preset_register == 0:
+            _LOGGER.warning("Zmiana presetu zablokowana — seria B nie obsługuje rejestru 0")
+            return
+
         value = self._preset_values[preset_mode]
 
         await self._client.write_register(self._preset_register, value)
