@@ -33,6 +33,37 @@ CLIMATES = [
     },
 
     {
+        "name": "F39 Stop delta temp grzanie CO",
+        "unique_id": "f39_ac_constant_temp_diff",
+        "data_type": "uint16",
+        "input_type": "holding",
+        "current_temp_register": 199, # F39 AC constant temp diff
+        "target_temp_register": 199, # F39 AC constant temp diff
+        "hvac_modes": ["heat", "off"],
+        "hvac_mode_register": 54, # Tryb (CWU bit 0, Ogrzewanie bit 1, Chłodzenie bit 2, Ogrzewanie+CWU bit 3, Chłodzenie+CWU bit4)
+        "hvac_mode_values": {
+        "haeat": [1, 3],
+        "off": [2, 4],
+        },
+        "preset_register": 0,
+        "preset_values": {
+            "Chłodzenie": 0,
+            "Ogrzewanie": 1,
+            "CWU": 2,
+            "Chłodzenie+CWU": 3,
+            "Ogrzewanie+CWU": 4,
+            },
+        "temperature_unit": "C",
+        "min_temp": 1,
+        "max_temp": 10,
+        "temp_step": 1,
+        "scale": 0.1,
+        "precision": 0,
+        "icon_heat": "mdi:radiator",
+        "icon_off": "mdi:radiator-off",
+    },
+
+    {
         "name": "P05 Histereza CWU",
         "unique_id": "p05_temp_diff",
         "data_type": "uint16",
