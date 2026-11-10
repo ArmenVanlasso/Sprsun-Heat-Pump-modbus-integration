@@ -56,10 +56,15 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
         self._options_map = definition["options"]
 
         self._attr_name = definition["name"]
-        self._attr_entity_registry_enabled_default = definition.get("entity_registry_enabled_default", True)
 
-        self._attr_name = definition["name"]
-        self._attr_unique_id = f"{DOMAIN}_{model}_select_{self._register}"
+        if "unique_id" in definition:
+            self._attr_unique_id = (
+                f"{DOMAIN}_{model}_{definition['unique_id']}"
+            )
+        else:
+            self._attr_unique_id = (
+                f"{DOMAIN}_{model}_select_{self._register}"
+            )
 
         raw = f"sprsun_{model}_{definition['name']}".lower()
         raw = (
