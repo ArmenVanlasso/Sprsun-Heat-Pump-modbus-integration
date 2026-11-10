@@ -1,4 +1,5 @@
 import logging
+import re
 from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -49,20 +50,24 @@ class SprsunGenericButton(ButtonEntity):
         self._attr_name = definition["name"]
 
         # unikalny ID
-        self._attr_unique_id = f"{DOMAIN}_{model}_button_{self._register}"
+        if "unique_id" in definition:
+            self._attr_unique_id = f"{DOMAIN}_{model}_button_{definition['unique_id']}"
+        else:
+            self._attr_unique_id = f"{DOMAIN}_{model}_button_{self._register}"
 
         # ikona
         self._attr_icon = definition.get("icon", "mdi:gesture-tap-button")
 
         # entity_id generowane z nazwy encji
-        slug = (
-            f"sprsun_{model}_{definition['name']}"
-            .lower()
-            .replace(" ", "_")
-            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
-            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
-            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
+        raw_slug = f"sprsun_{model}_{definition['name']}".lower()
+        raw_slug = (
+            raw_slug.replace("ą", "a").replace("ć", "c").replace("ę", "e")
+               .replace("ł", "l").replace("ń", "n").replace("ó", "o")
+               .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
+        slug = re.sub(r"[^a-z0-9_]", "_", raw_slug)
+        slug = re.sub(r"_+", "_", slug)
+        slug = slug.strip("_")
         self.entity_id = f"button.{slug}"
 
         self._attr_available = True
