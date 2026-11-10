@@ -159,6 +159,11 @@ class SprsunConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             label = f"{port} | {name}"
             ports[port] = label
 
+        # Fallback zabezpieczający przed pustym słownikiem portów
+        if not ports:
+            from .const import DEFAULT_SERIAL_PORT
+            ports[DEFAULT_SERIAL_PORT] = f"{DEFAULT_SERIAL_PORT} (Domyślny)"
+
         if user_input is not None:
             if user_input[CONF_UNIT_ID] < 1 or user_input[CONF_UNIT_ID] > 255:
                 errors[CONF_UNIT_ID] = "invalid_unit_id"
