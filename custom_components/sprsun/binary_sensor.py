@@ -3,6 +3,7 @@ from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.config_entries import ConfigEntry
+import re
 
 from .const import DOMAIN
 from .coordinator import SprsunCoordinator
@@ -30,9 +31,15 @@ async def async_setup_entry(
         for definition in sensors_def
     ]
 
-    # 🔥 Sensor aktywnych alarmów — z folderu modelowego (bez języka)
+    # Sensor aktywnych alarmów — z folderu modelowego (bez języka)
     try:
-        model_folder = model.upper()
+        from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
+        protocol_type = MODEL_PROTOCOLS.get(model, "standard_modbus")
+
+        if protocol_type == PROTOCOL_CUSTOM_BINARY_F4:
+            model_folder = model.upper().replace("_", "")
+        else:
+            model_folder = model.upper()
 
         module = __import__(
             f"custom_components.sprsun.models.{model_folder}.sensor_alarm",
@@ -78,14 +85,15 @@ class SprsunBinarySensor(BinarySensorEntity):
         self._attr_unique_id = f"{DOMAIN}_{model}_binary_{source_id}"
 
         # entity_id generowane z nazwy encji
-        slug = (
-            f"sprsun_{model}_{definition['name']}"
-            .lower()
-            .replace(" ", "_")
-            .replace("ą", "a").replace("ć", "c").replace("ę", "e")
-            .replace("ł", "l").replace("ń", "n").replace("ó", "o")
-            .replace("ś", "s").replace("ź", "z").replace("ż", "z")
+        raw_slug = f"sprsun_{model}_{definition['name']}".lower()
+        raw_slug = (
+            raw_slug.replace("ą", "a").replace("ć", "c").replace("ę", "e")
+               .replace("ł", "l").replace("ń", "n").replace("ó", "o")
+               .replace("ś", "s").replace("ź", "z").replace("ż", "z")
         )
+        slug = re.sub(r"[^a-z0-9_]", "_", raw_slug)
+        slug = re.sub(r"_+", "_", slug)
+        slug = slug.strip("_")
         self.entity_id = f"binary_sensor.{slug}"
 
         self._attr_device_class = definition.get("device_class")
