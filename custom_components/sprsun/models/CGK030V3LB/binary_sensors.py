@@ -2,7 +2,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "ac_linkage_switch",
         "name": "A/C linkage switch",
-        "register": 3,
+        "register": 2,
         "bit": 0,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -18,7 +18,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "linkage_switch",
         "name": "Linkage switch",
-        "register": 3,
+        "register": 2,
         "bit": 1,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -34,7 +34,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "heating_linkage",
         "name": "Heating linkage",
-        "register": 3,
+        "register": 2,
         "bit": 2,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -50,7 +50,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "cooling_linkage",
         "name": "Cooling linkage",
-        "register": 3,
+        "register": 2,
         "bit": 3,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -66,7 +66,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "flow_switch",
         "name": "Flow switch",
-        "register": 3,
+        "register": 2,
         "bit": 4,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -82,7 +82,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "flow_switch_bit5",
         "name": "Czujnik przepływu",
-        "register": 3,
+        "register": 2,
         "bit": 5,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -98,7 +98,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "phase_sequence_detection",
         "name": "Kolejność faz",
-        "register": 3,
+        "register": 2,
         "bit": 6,
         "source": "holding_register",
         "device_class": "problem",
@@ -110,7 +110,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "hotwater_demand",
         "name": "Hotwater demand",
-        "register": 4,
+        "register": 3,
         "bit": 0,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -126,7 +126,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "heating_demand",
         "name": "Heating demand",
-        "register": 4,
+        "register": 3,
         "bit": 1,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -142,7 +142,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "with_or_without_heating",
         "name": " With or without heating",
-        "register": 4,
+        "register": 3,
         "bit": 2,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -158,7 +158,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "with_or_without_cooling",
         "name": "With or without cooling",
-        "register": 4,
+        "register": 3,
         "bit": 3,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -174,7 +174,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "antilegionella_on",
         "name": "Antilegionella on",
-        "register": 4,
+        "register": 3,
         "bit": 4,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -190,7 +190,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "cooling_demand",
         "name": "Cooling demand",
-        "register": 4,
+        "register": 3,
         "bit": 5,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -206,7 +206,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "alarm_downtime",
         "name": "Alarm downtime",
-        "register": 4,
+        "register": 3,
         "bit": 6,
         "source": "holding_register",
         "icon": "mdi:valve-open",
@@ -222,7 +222,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "defrost",
         "name": "Defrost",
-        "register": 4,
+        "register": 3,
         "bit": 7,
         "source": "holding_register",
         "icon": "mdi:snowflake-off",
@@ -236,9 +236,9 @@ BINARY_SENSORS = [
         },
     },
     {
-        "unique_id": "sprezarka",
+        "unique_id": "compressor",
         "name": "Sprężarka",
-        "register": 5,
+        "register": 4,
         "bit": 0,
         "source": "holding_register",
         "icon": "mdi:bag-personal-off",
@@ -252,9 +252,9 @@ BINARY_SENSORS = [
         },
     },
     {
-        "unique_id": "wentylator",
+        "unique_id": "fan",
         "name": "Wentylator",
-        "register": 5,
+        "register": 4,
         "bit": 5,
         "source": "holding_register",
         "icon": "mdi:fan-off",
@@ -268,9 +268,9 @@ BINARY_SENSORS = [
         },
     },
     {
-        "unique_id": "zawor_4_drogowy",
+        "unique_id": "4_way_valve",
         "name": "Zawór 4 drogowy",
-        "register": 5,
+        "register": 4,
         "bit": 6,
         "source": "holding_register",
         "icon": "mdi:valve_closed",
@@ -284,9 +284,9 @@ BINARY_SENSORS = [
         },
     },
     {
-        "unique_id": "wysoka_lub_niska_predkosc_wentylatora",
+        "unique_id": "high_or_low_fan_speed",
         "name": "Wysoka lub niska prędkość wentylatora",
-        "register": 5,
+        "register": 4,
         "bit": 7,
         "source": "holding_register",
         "icon": "mdi:fan",
@@ -296,9 +296,9 @@ BINARY_SENSORS = [
         },
     },
     {
-        "unique_id": "grzalka_obudowy",
+        "unique_id": "hassis_heater",
         "name": "Grzałka obudowy",
-        "register": 6,
+        "register": 5,
         "bit": 0,
         "source": "holding_register",
         "icon": "mdi:radiator-disabled",
@@ -314,7 +314,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "heating_heater",
         "name": "Heating heater",
-        "register": 6,
+        "register": 5,
         "bit": 5,
         "source": "holding_register",
         "icon": "mdi:radiator-disabled",
@@ -328,9 +328,9 @@ BINARY_SENSORS = [
         },
     },
     {
-        "unique_id": "zawor_3_drogowy",
+        "unique_id": "three_way_valve",
         "name": "Zawór 3 drogowy",
-        "register": 6,
+        "register": 5,
         "bit": 6,
         "source": "holding_register",
         "icon": "mdi:valve-closed",
@@ -346,7 +346,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "hotwater_heater",
         "name": "Hotwater heater",
-        "register": 6,
+        "register": 5,
         "bit": 7,
         "source": "holding_register",
         "icon": "mdi:valve-closed",
@@ -361,8 +361,8 @@ BINARY_SENSORS = [
     },
     {
         "unique_id": "ac_pump",
-        "name": "AC pump",
-        "register": 7,
+        "name": "A/C pump",
+        "register": 6,
         "bit": 0,
         "source": "holding_register",
         "icon": "mdi:pump-off",
@@ -376,9 +376,9 @@ BINARY_SENSORS = [
         },
     },
     {
-        "unique_id": "grzalka_karteru_sprezarki",
+        "unique_id": "crank_heater",
         "name": "Grzałka karteru sprężarki",
-        "register": 7,
+        "register": 6,
         "bit": 1,
         "source": "holding_register",
         "icon": "mdi:radiator-disabled",
@@ -394,7 +394,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "assistant_solenoid_valve",
         "name": "Assistant solenoid valve",
-        "register": 7,
+        "register": 6,
         "bit": 5,
         "source": "holding_register",
         "icon": "mdi:valve-closed",
@@ -410,7 +410,7 @@ BINARY_SENSORS = [
     {
         "unique_id": "pump",
         "name": "Pump",
-        "register": 7,
+        "register": 6,
         "bit": 6,
         "source": "holding_register",
         "icon": "mdi:pump-off",
