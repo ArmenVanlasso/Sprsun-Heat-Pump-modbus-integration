@@ -107,6 +107,13 @@ class SprsunSwitchEntity(SwitchEntity):
             "IS_ON CALLED name=%s",
             self._attr_name,
         )
+        _LOGGER.warning(
+            "IS_ON DEBUG model=%s protocol=%s bit=%s register=%s",
+            self._model,
+            MODEL_PROTOCOLS.get(self._model, "standard_modbus"),
+            self._bit,
+            self._register,
+        )
         from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
         protocol_type = MODEL_PROTOCOLS.get(self._model, "standard_modbus")
 
