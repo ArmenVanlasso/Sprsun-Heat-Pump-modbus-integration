@@ -174,6 +174,7 @@ class SprsunSwitchEntity(SwitchEntity):
             _LOGGER.error("Błąd zapisu switch %s: %s", self._attr_name, err)
 
 
+
     async def async_turn_on(self, **kwargs):
         await self._write_value(self._cmd_on)
 
