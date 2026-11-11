@@ -85,6 +85,14 @@ class SprsunSwitchEntity(SwitchEntity):
         _LOGGER.info("Zgoda na zapis odblokowana dla encji switch: %s", self._attr_name)
 
     async def async_added_to_hass(self):
+        _LOGGER.warning(
+            "ENTITY ADDED name=%s entity_id=%s bit=%s register=%s",
+            self._attr_name,
+            self.entity_id,
+            self._bit,
+            self._register,
+        )
+
         self.async_on_remove(
             self.coordinator.async_add_listener(self.async_write_ha_state)
         )
