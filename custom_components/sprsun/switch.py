@@ -73,6 +73,16 @@ class SprsunSwitchEntity(SwitchEntity):
         slug = slug.strip("_")
         self.entity_id = f"switch.{slug}"
 
+        # Zabezpieczenie przed samoczynnym zapisem podczas wczytywania integracji
+        self._boot_zabezpieczony = False
+        self.coordinator.hass.async_create_task(self._zdejmij_blokade_bootu())
+
+    async def _zdejmij_blokade_bootu(self):
+        """Zdejmuje blokadę zapisu dla platformy switch po 15 sekundach od startu."""
+        import asyncio
+        await asyncio.sleep(15.0)
+        self._boot_zabezpieczony = True
+        _LOGGER.info("Zgoda na zapis odblokowana dla encji switch: %s", self._attr_name)
 
     async def async_added_to_hass(self):
         self.async_on_remove(
@@ -120,33 +130,45 @@ class SprsunSwitchEntity(SwitchEntity):
         return False
 
     async def _write_value(self, value: int):
+        """Zapis z uwzględnieniem RMW i bezpiecznej kolejki dla serii B lub FC5 dla starych pomp."""
+        if not self._boot_zabezpieczony:
+            _LOGGER.warning("Zablokowano samoczynną próbę zapisu przełącznika podczas startu integracji dla %s", self._attr_name)
+            return
+
         from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
         protocol_type = MODEL_PROTOCOLS.get(self._model, "standard_modbus")
 
         try:
+            # 1. Bezpieczny zapis Read-Modify-Write przez kolejkę koordynatora (FC06) dla nowej Serii B
             if protocol_type == PROTOCOL_CUSTOM_BINARY_F4 and self._bit is not None:
                 current_reg_value = self.coordinator.data.get(self._register, 0)
                 
                 if value == self._cmd_on:
-                    # Ustaw bit na 1 (Bitwise OR)
                     new_reg_value = current_reg_value | (1 << self._bit)
                 else:
-                    # Wyzeruj bit na 0 (Bitwise AND z negacją maski)
                     new_reg_value = current_reg_value & ~(1 << self._bit)
                     
                 _LOGGER.debug(
                     "Modyfikacja bitu switcha %s w rejestrze %s dla serii B. Stara wartość: %s, Nowa wartość: %s",
                     self._bit, self._register, current_reg_value, new_reg_value
                 )
-                await self._client.write_register(self._register, new_reg_value)
+                await self.coordinator.async_execute_safe_write(
+                    self._client.write_register,
+                    self._register,
+                    new_reg_value
+                )
             
+            # 2. Oryginalny zapis przez kolejkę koordynatora (FC05) dla starszych modeli Modbus
             else:
-                await self._client.write_coil(self._register, bool(value))
+                await self.coordinator.async_execute_safe_write(
+                    self._client.write_coil,
+                    self._register,
+                    bool(value)
+                )
                 
             await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Błąd zapisu switch %s: %s", self._attr_name, err)
-
 
     async def async_turn_on(self, **kwargs):
         await self._write_value(self._cmd_on)
