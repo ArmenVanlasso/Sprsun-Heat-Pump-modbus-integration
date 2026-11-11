@@ -116,8 +116,6 @@ class HeatPumpClimate(ClimateEntity):
         await asyncio.sleep(15.0)
         self._boot_zabezpieczony = True
         _LOGGER.info("Zgoda na zapis odblokowana dla encji climate: %s", self._attr_name)
-        self._boot_zabezpieczony = False
-        self.coordinator.hass.async_create_task(self._zdejmij_blokade_bootu())
 
     # ============================================================
     #  HVAC MODE – tylko odczyt
@@ -278,10 +276,7 @@ class HeatPumpClimate(ClimateEntity):
             return
 
         if not self._boot_zabezpieczony:
-            _LOGGER.warning(
-                "Zablokowano samoczynną próbę zapisu temperatury podczas startu integracji dla %s [Model: %s]", 
-                self._attr_name, self._model.upper().replace('_', '-')
-            )
+            _LOGGER.warning("Zablokowano samoczynną próbę zapisu temperatury podczas startu integracji dla %s", self._attr_name)
             return
 
         value = int(temp / self._scale)
