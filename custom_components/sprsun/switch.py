@@ -132,7 +132,10 @@ class SprsunSwitchEntity(SwitchEntity):
     async def _write_value(self, value: int):
         """Zapis z uwzględnieniem RMW i bezpiecznej kolejki dla serii B lub FC5 dla starych pomp."""
         if not self._boot_zabezpieczony:
-            _LOGGER.warning("Zablokowano samoczynną próbę zapisu przełącznika podczas startu integracji dla %s", self._attr_name)
+            _LOGGER.warning(
+                "Zablokowano samoczynną próbę zapisu przełącznika podczas startu integracji dla %s [Model: %s]", 
+                self._attr_name, self._model.upper().replace('_', '-')
+            )
             return
 
         from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
@@ -161,7 +164,7 @@ class SprsunSwitchEntity(SwitchEntity):
             # 2. Oryginalny zapis przez kolejkę koordynatora (FC05) dla starszych modeli Modbus
             else:
                 await self.coordinator.async_execute_safe_write(
-                    self._client.write_coil,
+                    self.coordinator.client.write_coil,
                     self._register,
                     bool(value)
                 )
@@ -169,6 +172,7 @@ class SprsunSwitchEntity(SwitchEntity):
             await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Błąd zapisu switch %s: %s", self._attr_name, err)
+
 
     async def async_turn_on(self, **kwargs):
         await self._write_value(self._cmd_on)
