@@ -165,3 +165,4 @@ class SprsunNumberEntity(NumberEntity):
             "manufacturer": "Sprsun",
             "model": self._model.upper().replace('_', '-'),
         }
+
