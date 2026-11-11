@@ -83,6 +83,17 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
         self._attr_icon = definition.get("icon")
         self._attr_entity_registry_enabled_default = definition.get("entity_registry_enabled_default", True)
 
+        # Zabezpieczenie przed samoczynnym zapisem podczas wczytywania integracji
+        self._boot_zabezpieczony = False
+        self.coordinator.hass.async_create_task(self._zdejmij_blokade_bootu())
+
+    async def _zdejmij_blokade_bootu(self):
+        """Zdejmuje blokadę zapisu dla platformy select po 15 sekundach od startu."""
+        import asyncio
+        await asyncio.sleep(15.0)
+        self._boot_zabezpieczony = True
+        _LOGGER.info("Zgoda na zapis odblokowana dla encji select: %s", self._attr_name)
+
     @property
     def current_option(self):
         raw = self.coordinator.data.get(self._register)
@@ -95,8 +106,14 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
         return self._options_map.get(raw)
 
     async def async_select_option(self, option: str):
+        """Bezpieczna zmiana opcji z uwzględnieniem masek bitowych (RMW) i kolejki rozgłoszeniowej."""
+        if not self._boot_zabezpieczony:
+            _LOGGER.warning("Zablokowano samoczynną próbę zapisu opcji select podczas startu integracji dla %s", self._attr_name)
+            return
+
         from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
         protocol_type = MODEL_PROTOCOLS.get(self._model, "standard_modbus")
+
         target_value = None
         for key, val in self._options_map.items():
             if val == option:
@@ -107,6 +124,7 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
             _LOGGER.error("Nie znaleziono wartości Modbus dla opcji: %s", option)
             return
 
+        # 1. Obsługa dla SERII B (Tryb Read-Modify-Write przez bezpieczną kolejkę koordynatora - FC06)
         if protocol_type == PROTOCOL_CUSTOM_BINARY_F4 and self._bit is not None:
             current_reg_value = self.coordinator.data.get(self._register, 0)
             
@@ -119,7 +137,20 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
                 "Modyfikacja bitu %s w rejestrze %s dla serii B. Stara wartość: %s, Nowa wartość: %s",
                 self._bit, self._register, current_reg_value, new_reg_value
             )
-            await self.coordinator.client.write_register(self._register, new_reg_value)
+            await self.coordinator.async_execute_safe_write(
+                self.coordinator.client.write_register,
+                self._register,
+                new_reg_value
+            )
+            return
+
+        # 2. Zachowanie oryginalnej logiki dla starszych modeli Modbus (Zapis przez bezpieczną kolejkę)
+        await self.coordinator.async_execute_safe_write(
+            self.coordinator.client.write_register,
+            self._register,
+            target_value
+        )
+
             return
         await self.coordinator.client.write_register(self._register, target_value)
 
