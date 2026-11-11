@@ -112,6 +112,8 @@ class SprsunNumberEntity(NumberEntity):
         self._attr_mode = NumberMode.BOX if mode == "box" else NumberMode.SLIDER
 
         self._attr_available = True
+        self._boot_zabezpieczony = False
+        self.coordinator.hass.async_create_task(self._zdejmij_blokade_bootu())
 
     async def async_added_to_hass(self) -> None:
         self.async_on_remove(
@@ -126,9 +128,17 @@ class SprsunNumberEntity(NumberEntity):
         return raw * self._scale
 
     async def async_set_native_value(self, value: float) -> None:
+        if not self._boot_zabezpieczony:
+            _LOGGER.warning("Zablokowano samoczynną próbę zapisu wartości suwaka podczas startu integracji dla %s", self._attr_name)
+            return
+
         try:
             val_to_write = int(value / self._scale)
-            await self.coordinator.client.write_register(self._register, val_to_write)
+            await self.coordinator.async_execute_safe_write(
+                self.coordinator.client.write_register,
+                self._register,
+                val_to_write
+            )
             await self.coordinator.async_request_refresh()
         except Exception as err:
             _LOGGER.error("Błąd zapisu number %s: %s", self._attr_name, err)
