@@ -112,6 +112,17 @@ class SprsunNumberEntity(NumberEntity):
         self._attr_mode = NumberMode.BOX if mode == "box" else NumberMode.SLIDER
 
         self._attr_available = True
+
+        # Zabezpieczenie przed samoczynnym zapisem podczas wczytywania integracji
+        self._boot_zabezpieczony = False
+        self.coordinator.hass.async_create_task(self._zdejmij_blokade_bootu())
+
+    async def _zdejmij_blokade_bootu(self):
+        """Zdejmuje blokadę zapisu dla platformy number po 15 sekundach od startu."""
+        await asyncio.sleep(15.0)
+        self._boot_zabezpieczony = True
+        _LOGGER.info("Zgoda na zapis odblokowana dla encji number: %s", self._attr_name)
+
         self._boot_zabezpieczony = False
         self.coordinator.hass.async_create_task(self._zdejmij_blokade_bootu())
 
