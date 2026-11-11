@@ -66,11 +66,18 @@ class SprsunCoordinator(DataUpdateCoordinator):
                 cmd = bytes([0x01, 0x03, 0x00, 0x00, 0x00, 0x78, 0x45, 0xE8])
                 raw_packet = await self.client.read_sprsun_custom_v3l(cmd, expected_length=300)
                 
-                if raw_packet and len(raw_packet) > 5:
-                    payload = raw_packet[3:-2]
+                # Nagłówek MBAP Modbus TCP (7 bajtów) + Funkcja (1 bajt) + Długość Danych (1 bajt) = 9 bajtów.
+                if raw_packet and len(raw_packet) > 9:
+                    # Odcinamy dokładnie 9 bajtów sieciowego nagłówka TCP, zostawiając czysty payload rejestrów
+                    payload = raw_packet[9:]
+                    
+                    # Parsujemy bufor. Pierwsze dwa bajty danych to rejestr o adresie Modbus 0x0000
                     for i in range(len(payload) // 2):
                         high_byte = payload[i * 2]
                         low_byte = payload[i * 2 + 1]
+                        
+                        # Każda iteracja 'i' odpowiada fizycznemu adresowi rejestru Modbus (0, 1, 2...)
+                        # Dzięki temu adres '204' w słowniku odwoła się dokładnie do 0x00CC (P01) z dokumentacji
                         new_data[i] = (high_byte << 8) | low_byte
                         
                     self.data = new_data
@@ -80,6 +87,7 @@ class SprsunCoordinator(DataUpdateCoordinator):
                     return self.data
                 else:
                     raise UpdateFailed(f"Brak lub uszkodzony pakiet binarny dla modelu z serii B: {self.model}")
+
 
             # 2. STARE MODELE (Standardowy protokół Modbus FC=03)
             elif protocol_type == PROTOCOL_STANDARD_MODBUS:
