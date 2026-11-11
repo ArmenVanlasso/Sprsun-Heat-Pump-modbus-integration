@@ -106,6 +106,8 @@ class HeatPumpClimate(ClimateEntity):
         self._attr_min_temp = self._min_temp
         self._attr_max_temp = self._max_temp
         self._attr_target_temperature_step = self._step
+        self._boot_zabezpieczony = False
+        self.coordinator.hass.async_create_task(self._zdejmij_blokade_bootu())
 
     # ============================================================
     #  HVAC MODE – tylko odczyt
@@ -262,21 +264,20 @@ class HeatPumpClimate(ClimateEntity):
     async def async_set_temperature(self, **kwargs):
         temp = kwargs.get("temperature")
 
-        if temp is None:
+        if temp is None or self._target_temp_register is None:
             return
 
-        if self._target_temp_register is None:
+        if not self._boot_zabezpieczony:
+            _LOGGER.warning("Zablokowano samoczynną próbę zapisu temperatury podczas startu integracji dla %s", self._attr_name)
             return
 
         value = int(temp / self._scale)
 
-        await self._client.write_register(
+        await self.coordinator.async_execute_safe_write(
+            self._client.write_register,
             self._target_temp_register,
-            value,
+            value
         )
-
-        await asyncio.sleep(0.5)
-
         await self.coordinator.async_request_refresh()
 
     # ============================================================
