@@ -100,9 +100,20 @@ class SprsunSwitchEntity(SwitchEntity):
 
         if protocol_type == PROTOCOL_CUSTOM_BINARY_F4 and self._bit is not None:
             raw = self.coordinator.data.get(self._register)
+
+            _LOGGER.warning(
+                "SWITCH READ [%s] register=%s raw=%s bit=%s",
+                self._attr_name,
+                self._register,
+                raw,
+                self._bit,
+            )
+
             if raw is None:
                 return False
+
             bit_state = (raw >> self._bit) & 1
+
             return bool(bit_state) == bool(self._cmd_on)
 
         if not self._verify:
