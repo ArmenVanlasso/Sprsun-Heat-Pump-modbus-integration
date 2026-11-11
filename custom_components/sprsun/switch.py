@@ -103,21 +103,26 @@ class SprsunSwitchEntity(SwitchEntity):
 
     @property
     def is_on(self) -> bool:
-        _LOGGER.warning(
-            "IS_ON CALLED name=%s",
-            self._attr_name,
-        )
-        _LOGGER.warning(
-            "IS_ON DEBUG model=%s protocol=%s bit=%s register=%s",
-            self._model,
-            MODEL_PROTOCOLS.get(self._model, "standard_modbus"),
-            self._bit,
-            self._register,
-        )
         from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
-        protocol_type = MODEL_PROTOCOLS.get(self._model, "standard_modbus")
 
-        if protocol_type == PROTOCOL_CUSTOM_BINARY_F4 and self._bit is not None:
+        protocol_type = MODEL_PROTOCOLS.get(
+            self._model,
+            "standard_modbus"
+        )
+
+        _LOGGER.warning(
+            "IS_ON DEBUG name=%s model=%s protocol=%s register=%s bit=%s verify=%s data50=%s data1050=%s",
+            self._attr_name,
+            self._model,
+            protocol_type,
+            self._register,
+            self._bit,
+            self._verify,
+            self.coordinator.data.get(50),
+            self.coordinator.data.get(1050),
+        )
+
+        if self._bit is not None:
             raw = self.coordinator.data.get(self._register)
 
             _LOGGER.warning(
@@ -133,10 +138,24 @@ class SprsunSwitchEntity(SwitchEntity):
 
             bit_state = (raw >> self._bit) & 1
 
-            return bool(bit_state) == bool(self._cmd_on)
+            _LOGGER.warning(
+                "SWITCH RESULT [%s] bit_state=%s state=%s",
+                self._attr_name,
+                bit_state,
+                bool(bit_state),
+            )
+
+            return bool(bit_state)
 
         if not self._verify:
             raw = self.coordinator.data.get(1000 + self._register)
+
+            _LOGGER.warning(
+                "SWITCH VERIFYLESS [%s] raw=%s",
+                self._attr_name,
+                raw,
+            )
+
             return bool(raw) == bool(self._cmd_on)
 
         v = self._verify
