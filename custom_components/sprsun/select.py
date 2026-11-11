@@ -1,5 +1,6 @@
 import logging
 import re
+import asyncio
 from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -17,7 +18,6 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-
     data = hass.data[DOMAIN][entry.entry_id]
 
     coordinator: SprsunCoordinator = data["coordinator"]
@@ -89,7 +89,6 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
 
     async def _zdejmij_blokade_bootu(self):
         """Zdejmuje blokadę zapisu dla platformy select po 15 sekundach od startu."""
-        import asyncio
         await asyncio.sleep(15.0)
         self._boot_zabezpieczony = True
         _LOGGER.info("Zgoda na zapis odblokowana dla encji select: %s", self._attr_name)
@@ -150,9 +149,6 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
             self._register,
             target_value
         )
-
-            return
-        await self.coordinator.client.write_register(self._register, target_value)
 
     @property
     def icon(self):
