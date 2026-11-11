@@ -140,7 +140,10 @@ class SprsunNumberEntity(NumberEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         if not self._boot_zabezpieczony:
-            _LOGGER.warning("Zablokowano samoczynną próbę zapisu wartości suwaka podczas startu integracji dla %s", self._attr_name)
+            _LOGGER.warning(
+                "Zablokowano samoczynną próbę zapisu wartości suwaka podczas startu integracji dla %s [Model: %s]", 
+                self._attr_name, self._model.upper().replace('_', '-')
+            )
             return
 
         try:
