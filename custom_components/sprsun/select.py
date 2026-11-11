@@ -107,7 +107,10 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
     async def async_select_option(self, option: str):
         """Bezpieczna zmiana opcji z uwzględnieniem masek bitowych (RMW) i kolejki rozgłoszeniowej."""
         if not self._boot_zabezpieczony:
-            _LOGGER.warning("Zablokowano samoczynną próbę zapisu opcji select podczas startu integracji dla %s", self._attr_name)
+            _LOGGER.warning(
+                "Zablokowano samoczynną próbę zapisu opcji select podczas startu integracji dla %s [Model: %s]", 
+                self._attr_name, self._model.upper().replace('_', '-')
+            )
             return
 
         from .const import MODEL_PROTOCOLS, PROTOCOL_CUSTOM_BINARY_F4
@@ -149,6 +152,7 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
             self._register,
             target_value
         )
+
 
     @property
     def icon(self):
