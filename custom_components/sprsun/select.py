@@ -154,6 +154,7 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
         )
 
 
+
     @property
     def icon(self):
         if self._icons:
