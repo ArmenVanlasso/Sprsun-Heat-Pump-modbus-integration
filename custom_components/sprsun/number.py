@@ -123,9 +123,6 @@ class SprsunNumberEntity(NumberEntity):
         self._boot_zabezpieczony = True
         _LOGGER.info("Zgoda na zapis odblokowana dla encji number: %s", self._attr_name)
 
-        self._boot_zabezpieczony = False
-        self.coordinator.hass.async_create_task(self._zdejmij_blokade_bootu())
-
     async def async_added_to_hass(self) -> None:
         self.async_on_remove(
             self.coordinator.async_add_listener(self.async_write_ha_state)
