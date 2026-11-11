@@ -278,7 +278,10 @@ class HeatPumpClimate(ClimateEntity):
             return
 
         if not self._boot_zabezpieczony:
-            _LOGGER.warning("Zablokowano samoczynną próbę zapisu temperatury podczas startu integracji dla %s", self._attr_name)
+            _LOGGER.warning(
+                "Zablokowano samoczynną próbę zapisu temperatury podczas startu integracji dla %s [Model: %s]", 
+                self._attr_name, self._model.upper().replace('_', '-')
+            )
             return
 
         value = int(temp / self._scale)
