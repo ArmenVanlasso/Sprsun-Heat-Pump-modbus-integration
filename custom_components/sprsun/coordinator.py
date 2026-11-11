@@ -1,4 +1,6 @@
 import logging
+import asyncio
+
 from datetime import timedelta
 
 from homeassistant.core import HomeAssistant
@@ -42,6 +44,8 @@ class SprsunCoordinator(DataUpdateCoordinator):
         self.data_coils: dict[int, bool] = {}
 
         # discrete inputs raw list (kept for backward compatibility)
+        self.write_lock = asyncio.Lock()
+
         self.data_discrete: list[list[bool]] | None = None
 
         update_interval = timedelta(
@@ -132,3 +136,14 @@ class SprsunCoordinator(DataUpdateCoordinator):
         except Exception as err:
             _LOGGER.error("Błąd aktualizacji danych z Modbus: %s", err)
             raise UpdateFailed(err) from err
+
+    async def async_execute_safe_write(self, write_func, *args, **kwargs):
+        """Bezpieczna kolejka zapisu zapobiegająca burzy rozgłoszeniowej na magistrali."""
+        async with self.write_lock:
+            try:
+                result = await write_func(*args, **kwargs)
+                await asyncio.sleep(0.3)
+                return result
+            except Exception as err:
+                _LOGGER.error("Błąd podczas bezpiecznego zapisu Modbus: %s", err)
+                return False
