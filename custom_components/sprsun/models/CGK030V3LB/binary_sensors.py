@@ -427,7 +427,7 @@ BINARY_SENSORS = [
         "unique_id": "hotwater_temp",
         "name": "Temperatura CWU",
         "entity_category": "diagnostic",
-        "register": 7, 0x0007
+        "register": 7, #0x0007
         "bit": 0,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -444,7 +444,7 @@ BINARY_SENSORS = [
         "unique_id": "ambi_temp",
         "name": "Temperatura zewnętrzna",
         "entity_category": "diagnostic",
-        "register": 7, 0x0007
+        "register": 7, #0x0007
         "bit": 1,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -461,7 +461,7 @@ BINARY_SENSORS = [
         "unique_id": "coil_temp",
         "name": "Temperatura parownika",
         "entity_category": "diagnostic",
-        "register": 7, 0x0007
+        "register": 7, #0x0007
         "bit": 2,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -478,7 +478,7 @@ BINARY_SENSORS = [
         "unique_id": "outlet_temp",
         "name": "Temperatura powrotu",
         "entity_category": "diagnostic",
-        "register": 7, 0x0007
+        "register": 7, #0x0007
         "bit": 4,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -495,7 +495,7 @@ BINARY_SENSORS = [
         "unique_id": "high_pressure_sensor_failure",
         "name": "Awaria czujnika wysokiego ciśnienia",
         "entity_category": "diagnostic",
-        "register": 7, 0x0007
+        "register": 7, #0x0007
         "bit": 5,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -529,7 +529,7 @@ BINARY_SENSORS = [
         "unique_id": "water_flow_failure",
         "name": "Brak przepływu wody",
         "entity_category": "diagnostic",
-        "register": 8, 0x0008
+        "register": 8, #0x0008
         "bit": 0,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -546,7 +546,7 @@ BINARY_SENSORS = [
         "unique_id": "high_protection_of_heating_water_outlet",
         "name": "High protection of heating water outlet",
         "entity_category": "diagnostic",
-        "register": 8, 0x0008
+        "register": 8, #0x0008
         "bit": 2,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -563,7 +563,7 @@ BINARY_SENSORS = [
         "unique_id": "outlet_gas_temp_failure",
         "name": " Outlet gas temp. failure",
         "entity_category": "diagnostic",
-        "register": 9, 0x0009
+        "register": 9, #0x0009
         "bit": 6,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -580,7 +580,7 @@ BINARY_SENSORS = [
         "unique_id": "water_inlet_temp_failure",
         "name": " Water inlet temp. failure",
         "entity_category": "diagnostic",
-        "register": 10, 0x000A
+        "register": 10, #0x000A
         "bit": 0,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -597,7 +597,7 @@ BINARY_SENSORS = [
         "unique_id": "exhaust_temperature_is_too_high",
         "name": "Exhaust temperature is too high",
         "entity_category": "diagnostic",
-        "register": 10, 0x000A
+        "register": 10, #0x000A
         "bit": 1,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -614,7 +614,7 @@ BINARY_SENSORS = [
         "unique_id": "low_protection_of_cooling_water_outlet",
         "name": "Low protection of cooling water outlet",
         "entity_category": "diagnostic",
-        "register": 10, 0x000A
+        "register": 10, #0x000A
         "bit": 1,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -631,7 +631,7 @@ BINARY_SENSORS = [
         "unique_id": "inlet_gas_temp_failure",
         "name": "Inlet gas temp. failure",
         "entity_category": "diagnostic",
-        "register": 10, 0x000A
+        "register": 10, #0x000A
         "bit": 1,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -648,7 +648,7 @@ BINARY_SENSORS = [
         "unique_id": "low_pressure_protection",
         "name": "Zabezpieczenie przed niskim ciśnieniem",
         "entity_category": "diagnostic",
-        "register": 11, 0x000B
+        "register": 11, #0x000B
         "bit": 0,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -665,7 +665,7 @@ BINARY_SENSORS = [
         "unique_id": "high_pressure_protection",
         "name": "Zabezpieczenie przed wysokim ciśnieniem",
         "entity_category": "diagnostic",
-        "register": 11, 0x000B
+        "register": 11, #0x000B
         "bit": 1,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -682,7 +682,7 @@ BINARY_SENSORS = [
         "unique_id": "coil_temperature_is_too_high",
         "name": "Temperatura parownika jest zbyt wysoka",
         "entity_category": "diagnostic",
-        "register": 11, 0x000B
+        "register": 11, #0x000B
         "bit": 2,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -699,7 +699,7 @@ BINARY_SENSORS = [
         "unique_id": "high_pressure_sensor_failure",
         "name": "Awaria czujnika wysokiego ciśnienia",
         "entity_category": "diagnostic",
-        "register": 11, 0x000B
+        "register": 11, #0x000B
         "bit": 6,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -716,7 +716,7 @@ BINARY_SENSORS = [
         "unique_id": "low_pressure_sensor_failure",
         "name": "Awaria czujnika niskiego ciśnienia",
         "entity_category": "diagnostic",
-        "register": 11, 0x000B
+        "register": 11, #0x000B
         "bit": 7,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -733,7 +733,7 @@ BINARY_SENSORS = [
         "unique_id": "low_pressure_sensor_failure",
         "name": "Awaria czujnika niskiego ciśnienia",
         "entity_category": "diagnostic",
-        "register": 11, 0x000B
+        "register": 11, #0x000B
         "bit": 7,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -750,7 +750,7 @@ BINARY_SENSORS = [
         "unique_id": "sec_antifreeze",
         "name": "Sec antifreeze",
         "entity_category": "diagnostic",
-        "register": 12, 0x000C
+        "register": 12, #0x000C
         "bit": 4,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -767,7 +767,7 @@ BINARY_SENSORS = [
         "unique_id": "one_antifreeze",
         "name": "One antifreeze",
         "entity_category": "diagnostic",
-        "register": 12, 0x000C
+        "register": 12, #0x000C
         "bit": 5,
         "source": "holding_register",
         "icon": "mdi:check-circle",
@@ -784,7 +784,7 @@ BINARY_SENSORS = [
         "unique_id": "ambient_temperature_is_too_low",
         "name": "Zbyt niska temperatura otoczenia",
         "entity_category": "diagnostic",
-        "register": 13, 0x000D
+        "register": 13, #0x000D
         "bit": 1,
         "source": "holding_register",
         "icon": "mdi:check-circle",
