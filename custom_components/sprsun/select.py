@@ -126,9 +126,18 @@ class SprsunGenericSelect(CoordinatorEntity, SelectEntity):
             _LOGGER.error("Nie znaleziono wartości Modbus dla opcji: %s", option)
             return
 
-        # 1. Obsługa dla SERII B (Tryb Read-Modify-Write przez bezpieczną kolejkę koordynatora - FC06)
-        if protocol_type == PROTOCOL_CUSTOM_BINARY_F4 and self._bit is not None:
+        # 1. Obsługa encji bitowych zapisanych w rejestrach
+        if self._bit is not None:
             current_reg_value = self.coordinator.data.get(self._register, 0)
+
+            _LOGGER.warning(
+                "SELECT WRITE name=%s register=%s bit=%s current=%s target=%s",
+                self._attr_name,
+                self._register,
+                self._bit,
+                current_reg_value,
+                target_value,
+            )
             
             if target_value == 1:
                 new_reg_value = current_reg_value | (1 << self._bit)
