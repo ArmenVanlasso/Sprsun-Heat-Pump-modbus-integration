@@ -152,14 +152,14 @@ SENSORS = [
         "unique_id": "dc_fan_1_speed",
         "name": "Wentylator 1 prędkość",
         "register": 38,  # 0x0026 wg dokumentacji CGK_B
-        "unit": "RPM"
+        "unit": "RPM",
         # "scale": 0.1, ?
         "icon":"mdi:fan",
     },
     {
         "unique_id": "dc_fan_2_speed",
         "name": "Wentylator 2 prędkość",
-        "unit": "RPM"
+        "unit": "RPM",
         "register": 39,  # 0x0027 wg dokumentacji CGK_B
         # "scale": 0.1, ?
         "icon":"mdi:fan",
@@ -209,7 +209,7 @@ SENSORS = [
         "unique_id": "dc_pump_speed",
         "name": "Pompa obiegowa PWM",
         "register": 46,  # 0x002E wg dokumentacji CGK_B
-        "unit": "%"
+        "unit": "%",
        # "device_class": "temperature",
         "state_class": "measurement",
        # "scale": 0.1,
@@ -240,8 +240,7 @@ SENSORS = [
         "unique_id": "dc_fan_target",
         "name": "DC fan target",
         "register": 49,  # 0x0031 wg dokumentacji CGK_B
-        "unit": "RPM"
-        # "device_class": "pressure",
+        "unit": "RPM",
         "state_class": "measurement",
         # "scale": 1,
         # "icon":"mdi:gauge",
