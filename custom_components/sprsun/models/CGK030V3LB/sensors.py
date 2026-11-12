@@ -67,7 +67,7 @@ SENSORS = [
         "icon": "mdi:thermometer",
     },
     {
-        "unique_id": "temp_sprezania",
+        "unique_id": "exhaust_temperature",
         "name": "Temperatura tłoczenia (wylot gazu)",
         "register": 27,  # 0x001B wg dokumentacji CGK_B
         "unit": "°C",
@@ -224,7 +224,7 @@ SENSORS = [
         # "icon": "mdi:gauge",
     },
     {
-        "unique_id": "d07_zaw_3_drog",
+        "unique_id": "three_way_valve",
         "name": "Zawór trójdrogowy pozycja",
         "register": 5,  # 0x0005 wg dokumentacji CGK_B
         "bit": 6,
