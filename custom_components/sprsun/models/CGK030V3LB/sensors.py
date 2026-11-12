@@ -9,7 +9,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.1,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "hotwater_temp",
@@ -20,7 +20,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.1,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "ambi_temp",
@@ -31,7 +31,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.5,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "outlet_temp",
@@ -42,7 +42,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.1,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "suct_gas_temp",
@@ -53,7 +53,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.5,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "coil_temp",
@@ -64,7 +64,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.5,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "exhaust_temperature",
@@ -75,7 +75,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 1,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "eev1_step",
@@ -83,7 +83,7 @@ SENSORS = [
         "register": 28,  # 0x001C wg dokumentacji CGK_B
         # "scale": 0.1, Jaka to skala?
         "signed": True,
-        "icon": "mdi:valve",
+        "icon":"mdi:valve",
     },
     {
         "unique_id": "eev2_step",
@@ -91,7 +91,7 @@ SENSORS = [
         "register": 29,  # 0x001D wg dokumentacji CGK_B
         # "scale": 0.1, Jaka to skala?
         "signed": True,
-        "icon": "mdi:valve",
+        "icon":"mdi:valve",
     },
     {
         "unique_id": "comp_frequency",
@@ -102,7 +102,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 1,
         "signed": True,
-        "icon": "mdi:sine-wave",
+        "icon":"mdi:sine-wave",
     },
     {
         "unique_id": "dc_bus_voltage",
@@ -113,7 +113,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 1,
         "signed": True,
-        "icon": "mdi:lightning-bolt",
+        "icon":"mdi:lightning-bolt",
     },
     {
         "unique_id": "driving_temperature",
@@ -124,7 +124,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.5,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "comp_current",
@@ -135,7 +135,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 1,
         "signed": True,
-        "icon": "mdi:current-ac",
+        "icon":"mdi:current-ac",
     },
     {
         "unique_id": "target_frequency",
@@ -146,7 +146,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 1,
         "signed": True,
-        "icon": "mdi:sine-wave",
+        "icon":"mdi:sine-wave",
     },
     {
         "unique_id": "dc_fan_1_speed",
@@ -154,7 +154,7 @@ SENSORS = [
         "register": 38,  # 0x0026 wg dokumentacji CGK_B
         "unit": "RPM"
         # "scale": 0.1, ?
-        "icon": "mdi:fan",
+        "icon":"mdi:fan",
     },
     {
         "unique_id": "dc_fan_2_speed",
@@ -162,7 +162,7 @@ SENSORS = [
         "unit": "RPM"
         "register": 39,  # 0x0027 wg dokumentacji CGK_B
         # "scale": 0.1, ?
-        "icon": "mdi:fan",
+        "icon":"mdi:fan",
     },
     {
         "unique_id": "evap_temp",
@@ -173,7 +173,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.1,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "cond_temp",
@@ -184,7 +184,7 @@ SENSORS = [
         "state_class": "measurement",
         "scale": 0.1,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
 
     {
@@ -192,7 +192,7 @@ SENSORS = [
         "unique_id": "controller_version",
         "register": 44,
         "data_type": "uint16",
-        "icon": "mdi:chip",
+        "icon":"mdi:chip",
         "entity_category": "diagnostic",
     },
 
@@ -201,7 +201,7 @@ SENSORS = [
         "unique_id": "display_version",
         "register": 45,
         "data_type": "uint16",
-        "icon": "mdi:monitor",
+        "icon":"mdi:monitor",
         "entity_category": "diagnostic",
     },
 
@@ -214,7 +214,7 @@ SENSORS = [
         "state_class": "measurement",
        # "scale": 0.1,
         "signed": True,
-        "icon": "mdi:thermometer",
+        "icon":"mdi:thermometer",
     },
     {
         "unique_id": "suct_press",
@@ -224,7 +224,7 @@ SENSORS = [
         "device_class": "pressure",
         "state_class": "measurement",
         "scale": 0.1,
-        "icon": "mdi:gauge",
+        "icon":"mdi:gauge",
     },
     {
         "unique_id": "disch_press",
@@ -234,7 +234,7 @@ SENSORS = [
         "device_class": "pressure",
         "state_class": "measurement",
         "scale": 0.1,
-        "icon": "mdi:gauge",
+        "icon":"mdi:gauge",
     },
     {
         "unique_id": "dc_fan_target",
@@ -244,7 +244,7 @@ SENSORS = [
         # "device_class": "pressure",
         "state_class": "measurement",
         # "scale": 1,
-        # "icon": "mdi:gauge",
+        # "icon":"mdi:gauge",
     },
     {
         "unique_id": "three_way_valve",
@@ -252,7 +252,7 @@ SENSORS = [
         "register": 5,  # 0x0005 wg dokumentacji CGK_B
         "bit": 6,
         "source": "holding_register",  # Zgodnie z 03H Read holding registers
-        "icon": "mdi:valve-open",
+        "icon":"mdi:valve-open",
         "mapping": {
             0: "C.O.",
             1: "C.W.U.",
