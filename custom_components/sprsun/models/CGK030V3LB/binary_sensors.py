@@ -80,8 +80,8 @@ BINARY_SENSORS = [
         },
     },
     {
-        "unique_id": "flow_switch_bit5",
-        "name": "Czujnik przepływu",
+        "unique_id": "high_pressure_switch",
+        "name": "High pressure switch",
         "register": 2,
         "bit": 5,
         "source": "holding_register",
