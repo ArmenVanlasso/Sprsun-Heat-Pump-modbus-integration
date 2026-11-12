@@ -150,14 +150,14 @@ SENSORS = [
     },
     {
         "unique_id": "dc_fan_1_speed",
-        "name": "DC fan 1 speed",
+        "name": "Wentylator 1 prędkość",
         "register": 38,  # 0x0026 wg dokumentacji CGK_B
         # "scale": 0.1, ?
         "icon": "mdi:fan",
     },
     {
         "unique_id": "dc_fan_2_speed",
-        "name": "DC fan 2 speed",
+        "name": "Wentylator 2 prędkość",
         "register": 39,  # 0x0027 wg dokumentacji CGK_B
         # "scale": 0.1, ?
         "icon": "mdi:fan",
