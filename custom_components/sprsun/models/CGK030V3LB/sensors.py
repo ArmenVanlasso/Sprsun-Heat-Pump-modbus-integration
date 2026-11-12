@@ -139,7 +139,7 @@ SENSORS = [
     },
     {
         "unique_id": "target_frequency",
-        "name": "Target frequency",
+        "name": "Docelowa częstotliwość",
         "register": 36,  # 0x0024 wg dokumentacji CGK_B
         "unit": "Hz",
         "device_class": "frequency",
